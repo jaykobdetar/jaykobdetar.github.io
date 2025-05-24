@@ -54,8 +54,8 @@ The actual website can be found at: https://973-eht-namuh-973.com
 
 ## 📊 **Usage**
 
-Open `public_sitemap.html` in any modern web browser to explore the interactive site map. Click nodes to visit the actual pages on the live website.
-
+Open `index.html` in any modern web browser to explore the interactive site map. Click nodes to visit the actual pages on the live website.
+or visit https://jaykobdetar.github.io
 ---
 
 **Created for educational purposes only. No copyright infringement intended.**
