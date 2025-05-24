@@ -14,7 +14,6 @@ This repository contains an interactive visualization of the site structure for 
 ## 🎯 **Purpose**
 
 This project serves as:
-- An **educational demonstration** of web crawling and data visualization techniques
 - A **site structure analysis** showing how pages are interconnected
 - An **archival visualization** of website organization and navigation patterns
 - A **technical exercise** in D3.js graph visualization and web analysis
