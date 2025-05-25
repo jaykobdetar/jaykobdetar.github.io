@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voynich Manuscript - High Resolution Viewer</title>
+    
+    <!-- OpenSeadragon -->
+    <script src="https://cdn.jsdelivr.net/npm/openseadragon@4.1/build/openseadragon/openseadragon.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #1a1a1a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        
+        #viewer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+        }
+        
+        /* Make the OpenSeadragon canvas background black */
+        .openseadragon-canvas {
+            background-color: #000000 !important;
+        }
+        
+        /* Override any inline styles */
+        #viewer > div {
+            background-color: #000000 !important;
+        }
+        
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            max-width: 300px;
+        }
+        
+        .controls h1 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        
+        .controls p {
+            font-size: 0.9em;
+            color: #aaaaaa;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .shortcuts {
+            font-size: 0.8em;
+            color: #888888;
+        }
+        
+        .shortcuts div {
+            margin: 5px 0;
+        }
+        
+        .shortcuts kbd {
+            background: #333333;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #ffffff;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 5;
+        }
+        
+        .loading.hidden {
+            display: none;
+        }
+        
+        .error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid #ff0000;
+            max-width: 500px;
+            display: none;
+        }
+        
+        .error.show {
+            display: block;
+        }
+        
+        .error h2 {
+            color: #ff6666;
+            margin-bottom: 10px;
+        }
+        
+        .toggle-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .toggle-info:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+        
+        .controls.hidden {
+            display: none;
+        }
+        
+        /* Black bars overlay */
+        .black-bars {
+            position: absolute;
+            background: #000;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .black-bar-left {
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 20%;
+        }
+        
+        .black-bar-right {
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 20%;
+        }
+    </style>
+</head>
+<body>
+    <div id="viewer"></div>
+    
+    <div class="loading" id="loading">
+        <h2>Loading Voynich Manuscript...</h2>
+        <p>Preparing high-resolution viewer</p>
+    </div>
+    
+    <div class="error" id="error">
+        <h2>Failed to Load Manuscript</h2>
+        <p id="error-message"></p>
+        <p style="margin-top: 20px; font-size: 0.9em;">
+            Make sure the tiles are in the correct location:<br>
+            <code>tiles/complete.dzi</code>
+        </p>
+    </div>
+    
+    <button class="toggle-info" id="toggle-info" onclick="toggleInfo()">Hide Info</button>
+    
+    <div class="controls" id="controls">
+        <h1>Voynich Manuscript</h1>
+        <p>Beinecke MS 408 - Complete ultra high-resolution scan</p>
+        <p style="font-size: 0.85em; color: #888; margin-top: 5px;">
+            Source: Yale University, Beinecke Rare Book & Manuscript Library<br>
+            Digital images courtesy of Yale University
+        </p>
+        
+        <div class="shortcuts">
+            <div><kbd>Scroll</kbd> Zoom in/out</div>
+            <div><kbd>Click + Drag</kbd> Pan around</div>
+            <div><kbd>Double-click</kbd> Quick zoom</div>
+            <div><kbd>F</kbd> Fullscreen</div>
+        </div>
+    </div>
+    
+    <script>
+        let viewer;
+        let infoVisible = true;
+        
+        function toggleInfo() {
+            infoVisible = !infoVisible;
+            const controls = document.getElementById('controls');
+            const button = document.getElementById('toggle-info');
+            
+            if (infoVisible) {
+                controls.classList.remove('hidden');
+                button.textContent = 'Hide Info';
+            } else {
+                controls.classList.add('hidden');
+                button.textContent = 'Show Info';
+            }
+        }
+        
+        // Initialize OpenSeadragon
+        window.addEventListener('load', function() {
+            const loading = document.getElementById('loading');
+            const errorDiv = document.getElementById('error');
+            const errorMessage = document.getElementById('error-message');
+            
+            try {
+                viewer = OpenSeadragon({
+                    id: "viewer",
+                    prefixUrl: "https://cdn.jsdelivr.net/npm/openseadragon@4.1/build/openseadragon/images/",
+                    tileSources: "tiles/complete.dzi",
+                    
+                    // Background color
+                    backgroundColor: '#000000',
+                    
+                    // Start position - show first page at readable zoom
+                    defaultZoomLevel: 0.5,  // Start partially zoomed in
+                    homeFillsViewer: false, // Don't fill viewer with full image
+                    
+                    // Performance settings for smooth loading
+                    immediateRender: false,  // Wait for tiles before rendering
+                    imageLoaderLimit: 6,     // Load more tiles in parallel
+                    maxImageCacheCount: 200, // Cache more tiles
+                    timeout: 120000,         // Longer timeout for large files
+                    useCanvas: true,         // Better performance
+                    
+                    // Smooth appearance
+                    minZoomImageRatio: 0.8,
+                    maxZoomPixelRatio: 4,
+                    smoothTileEdgesMinZoom: 1.1,
+                    alwaysBlend: true,       // Smooth transitions
+                    placeholderFillStyle: '#1a1a1a', // Dark placeholder
+                    
+                    // UI settings
+                    showNavigationControl: true,
+                    navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
+                    showNavigator: true,
+                    navigatorPosition: "BOTTOM_RIGHT",
+                    navigatorSizeRatio: 0.15,
+                    
+                    // Gesture settings
+                    gestureSettingsMouse: {
+                        flickEnabled: true,
+                        flickMinSpeed: 20,
+                        flickMomentum: 0.4
+                    },
+                    
+                    // Zoom settings
+                    zoomPerClick: 2,
+                    zoomPerScroll: 1.2,
+                    animationTime: 0.5,
+                    visibilityRatio: 0.5,    // Start loading tiles earlier
+                    
+                    // Mobile optimization
+                    gestureSettingsTouch: {
+                        scrollToZoom: false,
+                        clickToZoom: true,
+                        dblClickToZoom: true,
+                        pinchToZoom: true,
+                        pinchRotate: false
+                    }
+                });
+                
+                // Hide loading message when tiles start loading
+                viewer.addHandler('open', function() {
+                    loading.classList.add('hidden');
+                    
+                    // Start at top of manuscript, readable zoom
+                    viewer.viewport.panTo(new OpenSeadragon.Point(0.5, 0.05), true);
+                    viewer.viewport.zoomTo(0.8, null, true);
+                    
+                    // Add black overlay for margins
+                    const overlay = document.createElement('div');
+                    overlay.id = 'black-overlay';
+                    overlay.style.cssText = `
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        pointer-events: none;
+                        z-index: 1;
+                    `;
+                    
+                    // Create SVG mask for irregular manuscript shape
+                    overlay.innerHTML = `
+                        <svg width="100%" height="100%" style="position: absolute;">
+                            <defs>
+                                <mask id="manuscript-mask">
+                                    <!-- White rectangle = visible area -->
+                                    <rect width="100%" height="100%" fill="white"/>
+                                    <!-- Black shapes = hidden areas (customize these based on your manuscript) -->
+                                    <rect x="0" y="0" width="15%" height="100%" fill="black"/>
+                                    <rect x="85%" y="0" width="15%" height="100%" fill="black"/>
+                                </mask>
+                            </defs>
+                            <!-- Black rectangle with mask -->
+                            <rect width="100%" height="100%" fill="black" mask="url(#manuscript-mask)"/>
+                        </svg>
+                    `;
+                    
+                    viewer.canvas.appendChild(overlay);
+                });
+                
+                // Error handling
+                viewer.addHandler('open-failed', function(event) {
+                    loading.classList.add('hidden');
+                    errorDiv.classList.add('show');
+                    errorMessage.textContent = 'Could not load the manuscript tiles. ' + (event.message || '');
+                });
+                
+                // Keyboard shortcuts
+                document.addEventListener('keypress', function(e) {
+                    if (e.key === 'f' || e.key === 'F') {
+                        if (viewer.isFullPage()) {
+                            viewer.setFullScreen(false);
+                        } else {
+                            viewer.setFullScreen(true);
+                        }
+                    }
+                });
+                
+            } catch (e) {
+                loading.classList.add('hidden');
+                errorDiv.classList.add('show');
+                errorMessage.textContent = 'Failed to initialize viewer: ' + e.message;
+            }
+        });
+    </script>
+</body>
+</html>
