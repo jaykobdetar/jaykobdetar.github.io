@@ -40,15 +40,357 @@
         .nav-link:hover::after { 
             width: 100%; 
         }
-        .live-ticker { 
-            animation: smoothTicker 25s linear infinite; 
-            white-space: nowrap; 
-            overflow: hidden; 
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+        .search-highlight {
+            background: linear-gradient(120deg, #fbbf24 0%, #f59e0b 100%);
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
         }
-        @keyframes smoothTicker { 
-            0% { transform: translateX(100%); } 
-            100% { transform: translateX(-100%); } 
+        .filter-pill {
+            transition: all 0.2s ease;
+        }
+        .filter-pill:hover {
+            transform: scale(1.05);
+        }
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Header -->
+    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="index.html" class="text-3xl font-extrabold tracking-tight hover:text-indigo-200 transition">INFNEWS</a>
+            </div>
+            <nav class="hidden md:block">
+                <ul class="flex space-x-8">
+                    <li><a href="index.html" class="nav-link hover:text-indigo-200 transition font-medium">Home</a></li>
+                    <li><a href="search.html" class="nav-link hover:text-indigo-200 transition font-medium text-indigo-200">Search</a></li>
+                    <li><a href="authors.html" class="nav-link hover:text-indigo-200 transition font-medium">Authors</a></li>
+                    <li><a href="integrated/categories.html" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
+                    <li><a href="integrated/trending.html" class="nav-link hover:text-indigo-200 transition font-medium">Trending</a></li>
+                </ul>
+            </nav>
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search articles, authors..." 
+                    class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                    onkeyup="handleSearch(event)"
+                >
+                <button onclick="performSearch()" class="absolute right-3 top-3 text-gray-600 hover:text-indigo-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+                <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg mt-1 hidden max-h-60 overflow-y-auto z-50">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Results Main -->
+    <main class="container mx-auto px-4 py-10">
+        <!-- Search Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-900 mb-2">Search Results</h1>
+                    <p id="searchQuery" class="text-lg text-gray-600"></p>
+                </div>
+                <div class="text-right">
+                    <p id="searchStats" class="text-sm text-gray-500"></p>
+                    <div class="flex items-center space-x-2 mt-2">
+                        <span class="text-sm text-gray-500">Type:</span>
+                        <select id="typeFilter" onchange="filterResults()" class="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                            <option value="all">All Types</option>
+                            <option value="article">Articles</option>
+                            <option value="author">Authors</option>
+                            <option value="category">Categories</option>
+                            <option value="trending">Trending</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Search -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <div class="flex items-center space-x-4">
+                    <input 
+                        type="text" 
+                        id="mainSearchInput" 
+                        placeholder="Search for articles, authors, topics..." 
+                        class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        onkeyup="handleMainSearch(event)"
+                    >
+                    <button onclick="performMainSearch()" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Skeleton -->
+        <div id="loadingSkeleton" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="loading-skeleton h-80 rounded-xl"></div>
+            <div class="loading-skeleton h-80 rounded-xl"></div>
+            <div class="loading-skeleton h-80 rounded-xl"></div>
+        </div>
+
+        <!-- Search Results Grid -->
+        <div id="searchResults" class="space-y-8">
+            <!-- Results will be populated by JavaScript -->
+        </div>
+
+        <!-- No Results State -->
+        <div id="noResults" class="hidden text-center py-16">
+            <div class="text-6xl mb-4">🔍</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">No Results Found</h2>
+            <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                We couldn't find any content matching your search. Try different keywords or browse our categories.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="index.html" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">
+                    Browse Latest Articles
+                </a>
+                <a href="integrated/categories.html" class="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition">
+                    View Categories
+                </a>
+            </div>
+        </div>
+
+        <!-- Initial State -->
+        <div id="initialState" class="text-center py-16">
+            <div class="text-6xl mb-4">🔍</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Search Our Content</h2>
+            <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                Enter a search term above to find articles, authors, categories, and trending topics.
+            </p>
+            <div class="flex flex-wrap gap-2 justify-center">
+                <button onclick="quickSearch('AI')" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm hover:bg-indigo-200 transition">AI</button>
+                <button onclick="quickSearch('Creator Economy')" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm hover:bg-indigo-200 transition">Creator Economy</button>
+                <button onclick="quickSearch('Technology')" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm hover:bg-indigo-200 transition">Technology</button>
+                <button onclick="quickSearch('Business')" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm hover:bg-indigo-200 transition">Business</button>
+                <button onclick="quickSearch('Entertainment')" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm hover:bg-indigo-200 transition">Entertainment</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Influencer News</h3>
+                    <p class="text-gray-400 text-sm">
+                        Your trusted source for breaking influencer news, creator economy insights, and digital culture trends.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">Categories</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="integrated/categories.html" class="text-gray-400 hover:text-white transition">All Categories</a></li>
+                        <li><a href="integrated/categories/category_business.html" class="text-gray-400 hover:text-white transition">Business</a></li>
+                        <li><a href="integrated/categories/category_technology.html" class="text-gray-400 hover:text-white transition">Technology</a></li>
+                        <li><a href="integrated/categories/category_entertainment.html" class="text-gray-400 hover:text-white transition">Entertainment</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">Content</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="authors.html" class="text-gray-400 hover:text-white transition">Authors</a></li>
+                        <li><a href="integrated/trending.html" class="text-gray-400 hover:text-white transition">Trending</a></li>
+                        <li><a href="search.html" class="text-gray-400 hover:text-white transition">Search</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">Connect</h4>
+                    <div class="text-sm text-gray-400 space-y-1">
+                        <p>📧 contact@influencernews.com</p>
+                        <p>🐦 @InfluencerNews</p>
+                        <p>📍 Digital Media Hub</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center">
+                <p class="text-gray-400 text-sm">© 2024 Influencer News. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global search state
+        let currentResults = {};
+        let filteredResults = {};
+        let searchTimeout = null;
+
+        // Initialize search from URL parameters
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+            
+            if (query) {
+                document.getElementById('searchInput').value = query;
+                document.getElementById('mainSearchInput').value = query;
+                performSearch(query);
+            }
+        });
+
+        // Handle search input keypress
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            } else {
+                // Debounced suggestions
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(getSuggestions, 300);
+            }
+        }
+
+        function handleMainSearch(event) {
+            if (event.key === 'Enter') {
+                performMainSearch();
+            }
+        }
+
+        // Perform search
+        function performSearch(query = null) {
+            const searchQuery = query || document.getElementById('searchInput').value.trim();
+            
+            if (!searchQuery) {
+                showInitialState();
+                return;
+            }
+
+            // Update main input if called from header
+            if (!query) {
+                document.getElementById('mainSearchInput').value = searchQuery;
+            }
+
+            // Update URL
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('q', searchQuery);
+            window.history.pushState({}, '', newUrl);
+
+            // Show loading
+            showLoading();
+            hideInitialState();
+
+            // Call search backend
+            searchDatabase(searchQuery);
+        }
+
+        function performMainSearch() {
+            const searchQuery = document.getElementById('mainSearchInput').value.trim();
+            document.getElementById('searchInput').value = searchQuery;
+            performSearch(searchQuery);
+        }
+
+        // Quick search function
+        function quickSearch(term) {
+            document.getElementById('searchInput').value = term;
+            document.getElementById('mainSearchInput').value = term;
+            performSearch(term);
+        }
+
+        // Search the database using the backend
+        async function searchDatabase(query) {
+            try {
+                // For now, we'll simulate the search call since we can't make backend calls from static HTML
+                // In a real implementation, this would call: search_backend.py?q=${encodeURIComponent(query)}
+                
+                // Simulate database search results
+                const simulatedResults = {
+                    query: query,
+                    articles: generateSimulatedArticles(query),
+                    authors: generateSimulatedAuthors(query),
+                    categories: generateSimulatedCategories(query),
+                    trending: generateSimulatedTrending(query),
+                    total_results: 0
+                };
+
+                simulatedResults.total_results = 
+                    simulatedResults.articles.length +
+                    simulatedResults.authors.length +
+                    simulatedResults.categories.length +
+                    simulatedResults.trending.length;
+
+                currentResults = simulatedResults;
+                filteredResults = currentResults;
+                displayResults();
+                
+            } catch (error) {
+                console.error('Search error:', error);
+                showError('Search failed. Please try again.');
+            }
+        }
+
+        // Generate simulated search results (placeholder for database integration)
+        function generateSimulatedArticles(query) {
+            const articles = [
+            {
+                id: 10,
+                title: "New Platform Update Changes Everything for Creators",
+                author: "Alex Rivera",
+                date: "1 hour ago",
+                category: "Technology",
+                views: "26574",
+                image: "assets/images/articles/article_10_hero.jpg",
+                excerpt: "Major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025.",
+                readTime: "3",
+                trending: false
+            },
+        ]; html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - Influencer News</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            line-height: 1.6; 
+        }
+        .hero-title { 
+            font-family: 'Playfair Display', serif; 
+        }
+        .result-card { 
+            transition: all 0.3s ease; 
+        }
+        .result-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); 
+        }
+        .nav-link { 
+            position: relative; 
+            transition: all 0.3s ease;
+        }
+        .nav-link::after { 
+            content: ''; 
+            position: absolute; 
+            bottom: -2px; 
+            left: 0; 
+            width: 0; 
+            height: 2px; 
+            background: linear-gradient(90deg, #ffffff, #e0e7ff); 
+            transition: width 0.3s ease; 
+        }
+        .nav-link:hover::after { 
+            width: 100%; 
         }
         .search-highlight {
             background: linear-gradient(120deg, #fbbf24 0%, #f59e0b 100%);
@@ -71,11 +413,6 @@
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
-        .category-tech { color: #3b82f6; }
-        .category-fashion { color: #ec4899; }
-        .category-business { color: #10b981; }
-        .category-entertainment { color: #f59e0b; }
-        .category-charity { color: #8b5cf6; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -83,28 +420,22 @@
     <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-4">
-                    <span class="text-2xl font-bold text-white">IN</span>
-                </div>
-                <div>
-                    <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
-                    <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
-                </div>
+                <a href="index.html" class="text-3xl font-extrabold tracking-tight hover:text-indigo-200 transition">INFNEWS</a>
             </div>
             <nav class="hidden md:block">
                 <ul class="flex space-x-8">
                     <li><a href="index.html" class="nav-link hover:text-indigo-200 transition font-medium">Home</a></li>
                     <li><a href="search.html" class="nav-link hover:text-indigo-200 transition font-medium text-indigo-200">Search</a></li>
                     <li><a href="authors.html" class="nav-link hover:text-indigo-200 transition font-medium">Authors</a></li>
-                    <li><a href="search.html?category=business" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
-                    <li><a href="#contact" class="nav-link hover:text-indigo-200 transition font-medium">Contact</a></li>
+                    <li><a href="integrated/categories.html" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
+                    <li><a href="integrated/trending.html" class="nav-link hover:text-indigo-200 transition font-medium">Trending</a></li>
                 </ul>
             </nav>
             <div class="relative">
                 <input 
                     type="text" 
                     id="searchInput" 
-                    placeholder="Search breaking news..." 
+                    placeholder="Search articles, authors..." 
                     class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
                     onkeyup="handleSearch(event)"
                 >
@@ -116,19 +447,6 @@
                 <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg mt-1 hidden max-h-60 overflow-y-auto z-50">
                     <!-- Populated by JavaScript -->
                 </div>
-            </div>
-        </div>
-        
-        <div class="bg-gradient-to-r from-red-600 to-red-700 text-white py-3 overflow-hidden relative">
-            <div class="live-ticker flex items-center space-x-8">
-                <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 bg-red-400 rounded-full animate-ping"></div>
-                    <span class="font-bold text-sm">LIVE</span>
-                </div>
-                <span class="text-sm font-medium">
-                    Emma Chamberlain signs exclusive $50M deal with Netflix • PewDiePie returns to YouTube after hiatus • Charli D'Amelio launches beauty line • 
-                    <span id="current-time" class="font-bold"></span>
-                </span>
             </div>
         </div>
     </header>
@@ -145,35 +463,32 @@
                 <div class="text-right">
                     <p id="searchStats" class="text-sm text-gray-500"></p>
                     <div class="flex items-center space-x-2 mt-2">
-                        <span class="text-sm text-gray-500">Sort by:</span>
-                        <select id="sortSelect" onchange="sortResults()" class="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-400">
-                            <option value="relevance">Relevance</option>
-                            <option value="newest">Newest First</option>
-                            <option value="oldest">Oldest First</option>
-                            <option value="views">Most Viewed</option>
+                        <span class="text-sm text-gray-500">Type:</span>
+                        <select id="typeFilter" onchange="filterResults()" class="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                            <option value="all">All Types</option>
+                            <option value="article">Articles</option>
+                            <option value="author">Authors</option>
+                            <option value="category">Categories</option>
+                            <option value="trending">Trending</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <!-- Search Filters -->
-            <div class="flex flex-wrap gap-3 mb-6">
-                <span class="text-sm font-medium text-gray-700">Filter by:</span>
-                <button onclick="filterByCategory('all')" class="filter-pill bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-700 transition">
-                    All Results
-                </button>
-                <button onclick="filterByCategory('business')" class="filter-pill bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition">
-                    💼 Business
-                </button>
-                <button onclick="filterByCategory('entertainment')" class="filter-pill bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition">
-                    🎬 Entertainment
-                </button>
-                <button onclick="filterByCategory('tech')" class="filter-pill bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition">
-                    ⚡ Technology
-                </button>
-                <button onclick="filterByCategory('fashion')" class="filter-pill bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition">
-                    💄 Beauty & Fashion
-                </button>
+            <!-- Quick Search -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <div class="flex items-center space-x-4">
+                    <input 
+                        type="text" 
+                        id="mainSearchInput" 
+                        placeholder="Search for articles, authors, topics..." 
+                        class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        onkeyup="handleMainSearch(event)"
+                    >
+                    <button onclick="performMainSearch()" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">
+                        Search
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -185,7 +500,7 @@
         </div>
 
         <!-- Search Results Grid -->
-        <div id="searchResults" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="searchResults" class="space-y-8">
             <!-- Results will be populated by JavaScript -->
         </div>
 
@@ -194,434 +509,455 @@
             <div class="text-6xl mb-4">🔍</div>
             <h2 class="text-2xl font-bold text-gray-900 mb-4">No Results Found</h2>
             <p class="text-gray-600 mb-6 max-w-md mx-auto">
-                We couldn't find any articles matching your search. Try different keywords or browse our latest stories below.
+                We couldn't find any content matching your search. Try different keywords or browse our categories.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <button onclick="clearSearch()" class="bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 transition font-semibold">
-                    Clear Search
-                </button>
-                <a href="index.html" class="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-full hover:bg-gray-50 transition font-semibold">
-                    Browse Latest News
+                <a href="index.html" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">
+                    Browse Latest Articles
+                </a>
+                <a href="integrated/categories.html" class="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition">
+                    View Categories
                 </a>
             </div>
         </div>
 
-        <!-- Related Searches -->
-        <div id="relatedSearches" class="mt-12 hidden">
-            <h3 class="text-xl font-bold text-gray-900 mb-4">Related Searches</h3>
-            <div class="flex flex-wrap gap-3">
-                <!-- Populated by JavaScript -->
+        <!-- Initial State -->
+        <div id="initialState" class="text-center py-16">
+            <div class="text-6xl mb-4">🔍</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Search Our Content</h2>
+            <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                Enter a search term above to find articles, authors, categories, and trending topics.
+            </p>
+            <div class="flex flex-wrap gap-2 justify-center">
+                <button onclick="quickSearch('AI')" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm hover:bg-indigo-200 transition">AI</button>
+                <button onclick="quickSearch('Creator Economy')" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm hover:bg-indigo-200 transition">Creator Economy</button>
+                <button onclick="quickSearch('Technology')" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm hover:bg-indigo-200 transition">Technology</button>
+                <button onclick="quickSearch('Business')" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm hover:bg-indigo-200 transition">Business</button>
+                <button onclick="quickSearch('Entertainment')" class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm hover:bg-indigo-200 transition">Entertainment</button>
             </div>
         </div>
-
-        <!-- Trending Now Sidebar -->
-        <aside class="mt-12 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-6">
-            <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                <span class="text-2xl mr-2">🔥</span>
-                Trending Now
-            </h3>
-            <div class="space-y-4">
-                <div class="flex items-center space-x-3 p-3 bg-white rounded-lg hover:shadow-md transition cursor-pointer">
-                    <span class="text-sm font-bold text-gray-500">#1</span>
-                    <div>
-                        <p class="font-semibold text-sm">MrBeast Creator Fund</p>
-                        <p class="text-xs text-gray-500">1.2M searches today</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-3 p-3 bg-white rounded-lg hover:shadow-md transition cursor-pointer">
-                    <span class="text-sm font-bold text-gray-500">#2</span>
-                    <div>
-                        <p class="font-semibold text-sm">Emma Chamberlain Netflix</p>
-                        <p class="text-xs text-gray-500">847K searches today</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-3 p-3 bg-white rounded-lg hover:shadow-md transition cursor-pointer">
-                    <span class="text-sm font-bold text-gray-500">#3</span>
-                    <div>
-                        <p class="font-semibold text-sm">TikTok Algorithm Update</p>
-                        <p class="text-xs text-gray-500">623K searches today</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-16 mt-16">
+    <footer class="bg-gray-900 text-white py-12 mt-16">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div class="grid md:grid-cols-4 gap-8">
                 <div>
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
-                            <span class="text-lg font-bold">IN</span>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold">Influencer News</h3>
-                            <p class="text-sm text-gray-400">Breaking • Insights • Culture</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 mb-4">
-                        The world's leading source for influencer industry news, delivering breaking stories and exclusive insights.
+                    <h3 class="text-xl font-bold mb-4">Influencer News</h3>
+                    <p class="text-gray-400 text-sm">
+                        Your trusted source for breaking influencer news, creator economy insights, and digital culture trends.
                     </p>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
-                    <ul class="space-y-2">
-                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">Latest News</a></li>
-                        <li><a href="search.html" class="text-gray-300 hover:text-white transition">Search</a></li>
-                        <li><a href="authors.html" class="text-gray-300 hover:text-white transition">Authors</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition">Categories</a></li>
+                    <h4 class="font-semibold mb-3">Categories</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="integrated/categories.html" class="text-gray-400 hover:text-white transition">All Categories</a></li>
+                        <li><a href="integrated/categories/category_business.html" class="text-gray-400 hover:text-white transition">Business</a></li>
+                        <li><a href="integrated/categories/category_technology.html" class="text-gray-400 hover:text-white transition">Technology</a></li>
+                        <li><a href="integrated/categories/category_entertainment.html" class="text-gray-400 hover:text-white transition">Entertainment</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold mb-4">Categories</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-white transition">💼 Business</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition">🎥 Entertainment</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition">💄 Beauty & Fashion</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition">⚡ Technology</a></li>
+                    <h4 class="font-semibold mb-3">Content</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="authors.html" class="text-gray-400 hover:text-white transition">Authors</a></li>
+                        <li><a href="integrated/trending.html" class="text-gray-400 hover:text-white transition">Trending</a></li>
+                        <li><a href="search.html" class="text-gray-400 hover:text-white transition">Search</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold mb-4">Contact Info</h3>
-                    <div class="space-y-3 text-gray-300">
-                        <p>📧 news@influencernews.com</p>
-                        <p>📞 (555) 123-NEWS</p>
-                        <p>📍 123 Creator Avenue<br>Los Angeles, CA 90210</p>
+                    <h4 class="font-semibold mb-3">Connect</h4>
+                    <div class="text-sm text-gray-400 space-y-1">
+                        <p>📧 contact@influencernews.com</p>
+                        <p>🐦 @InfluencerNews</p>
+                        <p>📍 Digital Media Hub</p>
                     </div>
                 </div>
             </div>
             <div class="border-t border-gray-700 pt-8 text-center">
-                <p class="text-gray-400 text-sm">© 2025 Influencer News. All rights reserved.</p>
+                <p class="text-gray-400 text-sm">© 2024 Influencer News. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Sample search data with real content
-        const articles = [
-            {
-                id: 1,
-                title: "New Platform Update Changes Everything for Creators",
-                author: "Alex Rivera",
-                date: "1 minute ago",
-                category: "tech",
-                views: "1445629",
-                image: "https://images.unsplash.com/photo-1607827448387-a67db1383b59?w=600&h=300&fit=crop",
-                excerpt: "Major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025.",
-                readTime: "1 min",
-                trending: false
-            },
-        ];
+        // Global search state
+        let currentResults = {};
+        let filteredResults = {};
+        let searchTimeout = null;
 
-        const searchSuggestions = [
-            'MrBeast', 'Emma Chamberlain', 'TikTok algorithm', 'creator fund', 'YouTube Shorts',
-            'Charli DAmelio', 'creator economy', 'influencer marketing', 'brand partnerships',
-            'social media trends', 'content creation', 'digital marketing'
-        ];
-
-        let currentResults = [];
-        let currentQuery = '';
-
-        // Initialize page
-        window.onload = function() {
+        // Initialize search from URL parameters
+        document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const query = urlParams.get('q') || '';
+            const query = urlParams.get('q');
             
             if (query) {
                 document.getElementById('searchInput').value = query;
+                document.getElementById('mainSearchInput').value = query;
                 performSearch(query);
-            } else {
-                showAllArticles();
             }
-            
-            updateTime();
-            setInterval(updateTime, 1000);
-        };
+        });
 
+        // Handle search input keypress
         function handleSearch(event) {
-            const query = event.target.value;
-            const suggestions = document.getElementById('searchSuggestions');
-            
-            if (query.length > 1) {
-                const matches = searchSuggestions.filter(item => 
-                    item.toLowerCase().includes(query.toLowerCase())
-                ).slice(0, 5);
-                
-                if (matches.length > 0) {
-                    suggestions.innerHTML = matches.map(match => 
-                        `<div class="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0" onclick="selectSuggestion('${match}')">${match}</div>`
-                    ).join('');
-                    suggestions.classList.remove('hidden');
-                } else {
-                    suggestions.classList.add('hidden');
-                }
-            } else {
-                suggestions.classList.add('hidden');
-            }
-            
             if (event.key === 'Enter') {
                 performSearch();
+            } else {
+                // Debounced suggestions
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(getSuggestions, 300);
             }
         }
 
-        function selectSuggestion(suggestion) {
-            document.getElementById('searchInput').value = suggestion;
-            document.getElementById('searchSuggestions').classList.add('hidden');
-            performSearch(suggestion);
+        function handleMainSearch(event) {
+            if (event.key === 'Enter') {
+                performMainSearch();
+            }
         }
 
+        // Perform search
         function performSearch(query = null) {
-            currentQuery = query || document.getElementById('searchInput').value.toLowerCase();
+            const searchQuery = query || document.getElementById('searchInput').value.trim();
             
-            // Hide suggestions
-            document.getElementById('searchSuggestions').classList.add('hidden');
-            
-            if (!currentQuery.trim()) {
-                showAllArticles();
+            if (!searchQuery) {
+                showInitialState();
                 return;
             }
+
+            // Update main input if called from header
+            if (!query) {
+                document.getElementById('mainSearchInput').value = searchQuery;
+            }
+
+            // Update URL
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('q', searchQuery);
+            window.history.pushState({}, '', newUrl);
 
             // Show loading
             showLoading();
+            hideInitialState();
 
-            // Simulate search delay
-            setTimeout(() => {
-                hideLoading();
+            // Call search backend
+            searchDatabase(searchQuery);
+        }
+
+        function performMainSearch() {
+            const searchQuery = document.getElementById('mainSearchInput').value.trim();
+            document.getElementById('searchInput').value = searchQuery;
+            performSearch(searchQuery);
+        }
+
+        // Quick search function
+        function quickSearch(term) {
+            document.getElementById('searchInput').value = term;
+            document.getElementById('mainSearchInput').value = term;
+            performSearch(term);
+        }
+
+        // Search the database using the backend
+        async function searchDatabase(query) {
+            try {
+                // For now, we'll simulate the search call since we can't make backend calls from static HTML
+                // In a real implementation, this would call: search_backend.py?q=${encodeURIComponent(query)}
                 
-                // Filter articles based on search query
-                currentResults = articles.filter(article =>
-                    article.title.toLowerCase().includes(currentQuery) ||
-                    article.excerpt.toLowerCase().includes(currentQuery) ||
-                    article.author.toLowerCase().includes(currentQuery) ||
-                    article.category.toLowerCase().includes(currentQuery)
-                );
+                // Simulate database search results
+                const simulatedResults = {
+                    query: query,
+                    articles: generateSimulatedArticles(query),
+                    authors: generateSimulatedAuthors(query),
+                    categories: generateSimulatedCategories(query),
+                    trending: generateSimulatedTrending(query),
+                    total_results: 0
+                };
 
-                displayResults(currentResults, currentQuery);
-                updateURL(currentQuery);
-            }, 800);
+                simulatedResults.total_results = 
+                    simulatedResults.articles.length +
+                    simulatedResults.authors.length +
+                    simulatedResults.categories.length +
+                    simulatedResults.trending.length;
+
+                currentResults = simulatedResults;
+                filteredResults = currentResults;
+                displayResults();
+                
+            } catch (error) {
+                console.error('Search error:', error);
+                showError('Search failed. Please try again.');
+            }
         }
 
-        function showAllArticles() {
-            currentResults = articles;
-            currentQuery = '';
-            
-            document.getElementById('searchQuery').textContent = 'Showing all articles';
-            document.getElementById('searchStats').textContent = `${articles.length} articles found`;
-            
-            displayResults(articles);
-            showRelatedSearches(['MrBeast', 'Emma Chamberlain', 'TikTok', 'Creator Economy', 'YouTube']);
+        // Generate simulated search results (placeholder for database integration)
+        function generateSimulatedArticles(query) {
+            const articles = [];
+
+            const queryLower = query.toLowerCase();
+            return trending.filter(trend => 
+                trend.title.toLowerCase().includes(queryLower) ||
+                trend.description.toLowerCase().includes(queryLower)
+            );
         }
 
-        function displayResults(results, query = '') {
-            const resultsContainer = document.getElementById('searchResults');
-            const noResultsContainer = document.getElementById('noResults');
+        // Display search results
+        function displayResults() {
+            hideLoading();
             
-            if (results.length === 0) {
-                resultsContainer.innerHTML = '';
-                noResultsContainer.classList.remove('hidden');
-                document.getElementById('searchQuery').textContent = `No results for "${query}"`;
-                document.getElementById('searchStats').textContent = '0 articles found';
+            if (filteredResults.total_results === 0) {
+                showNoResults();
                 return;
             }
 
-            noResultsContainer.classList.add('hidden');
+            hideNoResults();
+            updateSearchStats();
             
-            // Update search info
-            if (query) {
-                document.getElementById('searchQuery').innerHTML = `Results for "<span class="search-highlight">${query}</span>"`;
-            }
-            document.getElementById('searchStats').textContent = `${results.length} articles found • ${Date.now() - Date.now() + 1200}ms`;
+            const resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = '';
 
-            // Display results
-            resultsContainer.innerHTML = results.map(article => createArticleCard(article, query)).join('');
+            // Create sections for each result type
+            if (filteredResults.articles.length > 0) {
+                resultsContainer.appendChild(createResultSection('Articles', filteredResults.articles, 'article'));
+            }
             
-            // Show related searches
-            if (query) {
-                const related = searchSuggestions.filter(s => 
-                    s.toLowerCase() !== query.toLowerCase() && 
-                    s.toLowerCase().includes(query.split(' ')[0])
-                ).slice(0, 5);
-                showRelatedSearches(related);
+            if (filteredResults.authors.length > 0) {
+                resultsContainer.appendChild(createResultSection('Authors', filteredResults.authors, 'author'));
+            }
+            
+            if (filteredResults.categories.length > 0) {
+                resultsContainer.appendChild(createResultSection('Categories', filteredResults.categories, 'category'));
+            }
+            
+            if (filteredResults.trending.length > 0) {
+                resultsContainer.appendChild(createResultSection('Trending Topics', filteredResults.trending, 'trending'));
             }
         }
 
-        function createArticleCard(article, query = '') {
-            const highlightText = (text, query) => {
-                if (!query) return text;
-                const regex = new RegExp(`(${query})`, 'gi');
-                return text.replace(regex, '<span class="search-highlight">$1</span>');
-            };
+        // Create a result section
+        function createResultSection(title, items, type) {
+            const section = document.createElement('div');
+            section.className = 'mb-8';
+            
+            const header = document.createElement('h2');
+            header.className = 'text-2xl font-bold text-gray-900 mb-4';
+            header.textContent = `${title} (${items.length})`;
+            section.appendChild(header);
+            
+            const grid = document.createElement('div');
+            grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+            
+            items.forEach(item => {
+                grid.appendChild(createResultCard(item, type));
+            });
+            
+            section.appendChild(grid);
+            return section;
+        }
 
-            const trendingBadge = article.trending ? 
-                '<div class="absolute top-4 left-4"><span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">🔥 TRENDING</span></div>' : '';
-
-            return `
-                <div class="result-card bg-white rounded-xl shadow-lg overflow-hidden">
-                    <div class="relative">
-                        <img src="${article.image}" alt="${article.title}" class="w-full h-48 object-cover">
-                        ${trendingBadge}
-                        <div class="absolute top-4 right-4">
-                            <span class="category-${article.category} bg-white/90 px-2 py-1 rounded text-xs font-bold uppercase">${article.category}</span>
+        // Create individual result card
+        function createResultCard(item, type) {
+            const card = document.createElement('div');
+            card.className = 'result-card bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition cursor-pointer';
+            card.onclick = () => window.location.href = item.url;
+            
+            let content = '';
+            
+            if (type === 'article') {
+                content = `
+                    <div class="flex items-center mb-2">
+                        <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs">
+                            ${item.category_icon} ${item.category_name}
+                        </span>
+                        <span class="text-gray-500 text-sm ml-auto">${formatDate(item.publication_date)}</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 line-clamp-2">${highlightQuery(item.title)}</h3>
+                    <p class="text-gray-600 mb-4 line-clamp-2">${highlightQuery(item.subtitle)}</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">By ${item.author_name}</span>
+                        <span class="text-indigo-600 text-sm font-medium">Read →</span>
+                    </div>
+                `;
+            } else if (type === 'author') {
+                content = `
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-lg">👤</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">${highlightQuery(item.name)}</h3>
+                            <span class="text-gray-500 text-sm">${item.article_count} articles</span>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-2 mb-3 text-sm text-gray-500">
-                            <span>${article.author}</span>
-                            <span>•</span>
-                            <span>${article.date}</span>
-                            <span>•</span>
-                            <span>${article.readTime} read</span>
+                    <p class="text-gray-600 mb-4 line-clamp-3">${highlightQuery(item.bio)}</p>
+                    <div class="text-sm text-gray-500 mb-4">
+                        <strong>Expertise:</strong> ${highlightQuery(item.expertise)}
+                    </div>
+                    <span class="text-indigo-600 text-sm font-medium">View Profile →</span>
+                `;
+            } else if (type === 'category') {
+                content = `
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">${item.icon}</span>
+                        <div>
+                            <h3 class="text-xl font-semibold">${highlightQuery(item.name)}</h3>
+                            <span class="text-gray-500 text-sm">${item.article_count} articles</span>
                         </div>
-                        <h3 class="text-lg font-bold mb-3 hover:text-indigo-600 transition cursor-pointer line-clamp-2">
-                            ${highlightText(article.title, query)}
-                        </h3>
-                        <p class="text-gray-700 mb-4 text-sm line-clamp-3">
-                            ${highlightText(article.excerpt, query)}
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-4 text-sm text-gray-500">
-                                <span class="flex items-center">
-                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
-                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    ${article.views}
-                                </span>
-                                <span class="flex items-center">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                    </svg>
-                                    ${Math.floor(Math.random() * 500) + 100}
-                                </span>
+                    </div>
+                    <p class="text-gray-600 mb-4">${highlightQuery(item.description)}</p>
+                    <span class="text-indigo-600 text-sm font-medium">Browse Category →</span>
+                `;
+            } else if (type === 'trending') {
+                content = `
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">${item.icon}</span>
+                        <div>
+                            <h3 class="text-xl font-semibold">${highlightQuery(item.title)}</h3>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-red-500 text-sm">🔥 ${item.heat_score}</span>
+                                <span class="text-gray-500 text-sm">${item.article_count} articles</span>
                             </div>
-                            <button class="text-indigo-600 hover:text-indigo-800 font-semibold text-sm" onclick="openArticle(${article.id})">
-                                Read More →
-                            </button>
                         </div>
                     </div>
-                </div>
-            `;
+                    <p class="text-gray-600 mb-4">${highlightQuery(item.description)}</p>
+                    <span class="text-indigo-600 text-sm font-medium">View Trend →</span>
+                `;
+            }
+            
+            card.innerHTML = content;
+            return card;
+        }
+
+        // Filter results by type
+        function filterResults() {
+            const typeFilter = document.getElementById('typeFilter').value;
+            
+            if (typeFilter === 'all') {
+                filteredResults = currentResults;
+            } else {
+                filteredResults = {
+                    ...currentResults,
+                    articles: typeFilter === 'article' ? currentResults.articles : [],
+                    authors: typeFilter === 'author' ? currentResults.authors : [],
+                    categories: typeFilter === 'category' ? currentResults.categories : [],
+                    trending: typeFilter === 'trending' ? currentResults.trending : [],
+                };
+                
+                filteredResults.total_results = 
+                    filteredResults.articles.length +
+                    filteredResults.authors.length +
+                    filteredResults.categories.length +
+                    filteredResults.trending.length;
+            }
+            
+            displayResults();
+        }
+
+        // Get search suggestions
+        async function getSuggestions() {
+            const query = document.getElementById('searchInput').value.trim();
+            
+            if (query.length < 2) {
+                hideSuggestions();
+                return;
+            }
+
+            // Simulate suggestions (in real implementation, call backend)
+            const suggestions = [
+                query + ' technology',
+                query + ' creator economy',
+                query + ' business trends',
+                query + ' AI tools'
+            ].slice(0, 3);
+
+            showSuggestions(suggestions);
+        }
+
+        // Show/hide suggestions
+        function showSuggestions(suggestions) {
+            const container = document.getElementById('searchSuggestions');
+            container.innerHTML = '';
+            
+            suggestions.forEach(suggestion => {
+                const item = document.createElement('div');
+                item.className = 'p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100';
+                item.textContent = suggestion;
+                item.onclick = () => {
+                    document.getElementById('searchInput').value = suggestion;
+                    performSearch(suggestion);
+                    hideSuggestions();
+                };
+                container.appendChild(item);
+            });
+            
+            container.classList.remove('hidden');
+        }
+
+        function hideSuggestions() {
+            document.getElementById('searchSuggestions').classList.add('hidden');
+        }
+
+        // Utility functions
+        function highlightQuery(text) {
+            const query = currentResults.query || '';
+            if (!query || !text) return text;
+            
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays < 7) return `${diffDays} days ago`;
+            if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
+            
+            return date.toLocaleDateString();
+        }
+
+        function updateSearchStats() {
+            document.getElementById('searchQuery').textContent = `Results for "${currentResults.query}"`;
+            document.getElementById('searchStats').textContent = `${filteredResults.total_results} results found`;
         }
 
         function showLoading() {
             document.getElementById('loadingSkeleton').classList.remove('hidden');
-            document.getElementById('searchResults').style.opacity = '0.3';
         }
 
         function hideLoading() {
             document.getElementById('loadingSkeleton').classList.add('hidden');
-            document.getElementById('searchResults').style.opacity = '1';
         }
 
-        function showRelatedSearches(searches) {
-            if (searches.length === 0) return;
-            
-            const container = document.getElementById('relatedSearches');
-            const content = searches.map(search => 
-                `<button onclick="performSearch('${search}')" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm hover:bg-indigo-50 hover:border-indigo-300 transition">
-                    ${search}
-                </button>`
-            ).join('');
-            
-            container.innerHTML = `
-                <h3 class="text-xl font-bold text-gray-900 mb-4">Related Searches</h3>
-                <div class="flex flex-wrap gap-3">${content}</div>
-            `;
-            container.classList.remove('hidden');
+        function showNoResults() {
+            document.getElementById('noResults').classList.remove('hidden');
+            document.getElementById('searchQuery').textContent = `No results for "${currentResults.query}"`;
         }
 
-        function filterByCategory(category) {
-            // Update filter buttons
-            document.querySelectorAll('.filter-pill').forEach(btn => {
-                btn.className = 'filter-pill bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition';
-            });
-            event.target.className = 'filter-pill bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-700 transition';
-
-            showLoading();
-            
-            setTimeout(() => {
-                hideLoading();
-                
-                let filteredResults;
-                if (category === 'all') {
-                    filteredResults = currentQuery ? 
-                        articles.filter(article =>
-                            article.title.toLowerCase().includes(currentQuery) ||
-                            article.excerpt.toLowerCase().includes(currentQuery) ||
-                            article.author.toLowerCase().includes(currentQuery)
-                        ) : articles;
-                } else {
-                    filteredResults = (currentQuery ? currentResults : articles).filter(article => 
-                        article.category === category
-                    );
-                }
-                
-                displayResults(filteredResults, currentQuery);
-            }, 500);
+        function hideNoResults() {
+            document.getElementById('noResults').classList.add('hidden');
         }
 
-        function sortResults() {
-            const sortBy = document.getElementById('sortSelect').value;
-            let sortedResults = [...currentResults];
-            
-            switch(sortBy) {
-                case 'newest':
-                    sortedResults.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    break;
-                case 'oldest':
-                    sortedResults.sort((a, b) => new Date(a.date) - new Date(b.date));
-                    break;
-                case 'views':
-                    sortedResults.sort((a, b) => parseInt(b.views.replace(/[^0-9]/g, '')) - parseInt(a.views.replace(/[^0-9]/g, '')));
-                    break;
-                default: // relevance
-                    // Keep original order for relevance
-                    break;
-            }
-            
-            displayResults(sortedResults, currentQuery);
+        function showInitialState() {
+            document.getElementById('initialState').classList.remove('hidden');
+            document.getElementById('searchQuery').textContent = '';
+            document.getElementById('searchStats').textContent = '';
         }
 
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            currentQuery = '';
-            showAllArticles();
-            updateURL('');
+        function hideInitialState() {
+            document.getElementById('initialState').classList.add('hidden');
         }
 
-        function openArticle(id) {
-            window.location.href = `article.html?id=${id}`;
+        function showError(message) {
+            hideLoading();
+            // You could implement a proper error display here
+            console.error(message);
         }
 
-        function updateURL(query) {
-            const url = new URL(window.location);
-            if (query) {
-                url.searchParams.set('q', query);
-            } else {
-                url.searchParams.delete('q');
-            }
-            window.history.pushState({}, '', url);
-        }
-
-        function updateTime() {
-            const now = new Date();
-            const options = { 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                hour12: true, 
-                timeZoneName: 'short' 
-            };
-            const timeElement = document.getElementById('current-time');
-            if (timeElement) {
-                timeElement.textContent = now.toLocaleString('en-US', options);
-            }
-        }
-
-        // Close search suggestions when clicking outside
+        // Hide suggestions when clicking outside
         document.addEventListener('click', function(event) {
             if (!event.target.closest('#searchInput') && !event.target.closest('#searchSuggestions')) {
-                document.getElementById('searchSuggestions').classList.add('hidden');
+                hideSuggestions();
             }
         });
     </script>

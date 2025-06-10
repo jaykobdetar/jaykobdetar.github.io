@@ -111,6 +111,16 @@
         .social-stat:hover {
             transform: scale(1.05);
         }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -139,7 +149,8 @@
                     <li><a href="index.html" class="nav-link hover:text-indigo-200 transition font-medium text-indigo-200">Home</a></li>
                     <li><a href="search.html" class="nav-link hover:text-indigo-200 transition font-medium">Search</a></li>
                     <li><a href="authors.html" class="nav-link hover:text-indigo-200 transition font-medium">Authors</a></li>
-                    <li><a href="search.html?category=business" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
+                    <li><a href="integrated/categories.html" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
+                    <li><a href="integrated/trending.html" class="nav-link hover:text-indigo-200 transition font-medium">Trending</a></li>
                     <li><a href="#contact" class="nav-link hover:text-indigo-200 transition font-medium">Contact</a></li>
                 </ul>
             </nav>
@@ -283,14 +294,14 @@
 
                 <div class="article-card bg-white rounded-xl shadow-lg overflow-hidden md:col-span-2 lg:col-span-1">
                     <div class="relative">
-                        <img src="https://images.unsplash.com/photo-1607827448387-a67db1383b59?w=600&h=300&fit=crop" alt="New Platform Update Changes Everything for Creators" class="w-full h-48 object-cover">
+                        <img src="assets/images/articles/article_10_hero.jpg" alt="New Platform Update Changes Everything for Creators" class="w-full h-48 object-cover" loading="lazy">
                         <div class="absolute top-4 right-4">
-                            <span class="category-tech bg-white/90 px-2 py-1 rounded text-xs font-bold uppercase">tech</span>
+                            <span class="category-Technology bg-white/90 px-2 py-1 rounded text-xs font-bold uppercase">Technology</span>
                         </div>
                     </div>
                     <div class="p-6">
                         <div class="flex items-center gap-2 mb-3">
-                            <span class="text-gray-500 text-sm">Alex Rivera • 1 minute ago</span>
+                            <span class="text-gray-500 text-sm">Alex Rivera • 1 hour ago</span>
                         </div>
                         <h3 class="text-lg font-bold mb-3 hover:text-indigo-600 transition cursor-pointer">
                             New Platform Update Changes Everything for Creators
@@ -299,8 +310,8 @@
                             Major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025.
                         </p>
                         <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-500">👁 1445629 views</span>
-                            <a href="article_1.html" class="text-indigo-600 font-medium cursor-pointer">Read →</a>
+                            <span class="text-gray-500">👁 26,574 views</span>
+                            <a href="integrated/articles/article_10.html" class="text-indigo-600 font-medium cursor-pointer">Read →</a>
                         </div>
                     </div>
                 </div>
@@ -514,16 +525,97 @@
             }, 1500);
         }
 
+        let currentPage = 1;
+        const articlesPerPage = 6;
+        let allArticles = []; // Will be populated with actual articles
+        
         function loadMoreArticles() {
             const btn = document.getElementById('loadMoreBtn');
+            const grid = document.getElementById('articlesGrid');
+            
+            // Show loading state
             btn.textContent = 'Loading...';
             btn.disabled = true;
             
+            // Simulate API call delay
             setTimeout(() => {
+                const startIndex = currentPage * articlesPerPage;
+                const endIndex = startIndex + articlesPerPage;
+                const nextArticles = allArticles.slice(startIndex, endIndex);
+                
+                if (nextArticles.length > 0) {
+                    // Add new articles to grid
+                    nextArticles.forEach(article => {
+                        const articleCard = createArticleCard(article);
+                        grid.insertAdjacentHTML('beforeend', articleCard);
+                    });
+                    
+                    currentPage++;
+                    
+                    // Add smooth scroll animation
+                    const newCards = grid.querySelectorAll('.article-card');
+                    const latestCard = newCards[newCards.length - nextArticles.length];
+                    if (latestCard) {
+                        latestCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    btn.textContent = 'No more articles';
+                    btn.disabled = true;
+                    return;
+                }
+                
+                // Reset button
                 btn.textContent = 'Load More Stories';
                 btn.disabled = false;
-                alert('More articles loaded! In a real implementation, this would load additional content via AJAX.');
-            }, 2000);
+                
+                // Hide button if no more articles
+                if (endIndex >= allArticles.length) {
+                    btn.textContent = 'No more articles';
+                    btn.disabled = true;
+                }
+            }, 800);
+        }
+        
+        function createArticleCard(article) {
+            const timeAgo = formatTimeAgo(article.date);
+            return `
+                <div class="article-card bg-white rounded-xl shadow-lg overflow-hidden" style="opacity: 0; animation: fadeInUp 0.5s ease forwards;">
+                    <div class="relative">
+                        <img src="${article.image}" alt="${article.title}" class="w-full h-48 object-cover" loading="lazy">
+                        <div class="absolute top-4 right-4">
+                            <span class="category-${article.category} bg-white/90 px-2 py-1 rounded text-xs font-bold uppercase">${article.category}</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="text-gray-500 text-sm">${article.author} • ${timeAgo}</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-3 hover:text-indigo-600 transition cursor-pointer">
+                            ${article.title}
+                        </h3>
+                        <p class="text-gray-700 mb-4 text-sm">
+                            ${article.excerpt}
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">👁 ${article.views} views</span>
+                            <a href="integrated/articles/article_${article.id}.html" class="text-indigo-600 font-medium cursor-pointer">Read →</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function formatTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / (1000 * 60));
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+            
+            if (diffMins < 60) return `${diffMins} minutes ago`;
+            if (diffHours < 24) return `${diffHours} hours ago`;
+            return `${diffDays} days ago`;
         }
 
         function handleSearch(event) {

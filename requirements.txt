@@ -1,0 +1,24 @@
+# Influencer News CMS - Python Dependencies
+# 
+# This project is designed to work with Python's built-in libraries only.
+# No external dependencies are required for basic functionality.
+
+# Built-in libraries used:
+# - tkinter (GUI interface) - included with Python
+# - pathlib (file path handling) - included with Python 3.4+
+# - json (database storage) - included with Python
+# - datetime (timestamp handling) - included with Python
+# - threading (GUI responsiveness) - included with Python
+# - webbrowser (opening website) - included with Python
+
+# Optional dependencies for development:
+# pytest>=7.0.0        # For running automated tests (future)
+# black>=22.0.0         # For code formatting (development)
+# flake8>=4.0.0         # For linting (development)
+# mypy>=0.900           # For type checking (development)
+
+# Note: This file is included for completeness and future extensibility.
+# Currently, you can run the application with just Python 3.7+ and no additional packages.
+# 
+# To install development dependencies (if added in the future):
+# pip install -r requirements-dev.txt

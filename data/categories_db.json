@@ -1,0 +1,144 @@
+{
+  "categories": [
+    {
+      "name": "Creator Economy",
+      "slug": "creator-economy",
+      "icon": "💰",
+      "color": "green",
+      "description": "Business of content creation and monetization strategies",
+      "extended_description": "The Creator Economy represents the class of businesses built by over 50 million independent content creators, curators, and community builders including social media influencers, bloggers, and videographers, plus the software and finance tools designed to help them with growth and monetization.\n\nThis category covers everything from platform monetization features and creator funds to brand partnerships and alternative revenue streams. We track the latest developments in how creators are building sustainable businesses and the tools that support them.\n\nKey areas of coverage include:\n- Platform monetization updates (YouTube, TikTok, Instagram, etc.)\n- Creator funds and grant programs\n- Brand partnership trends and rates\n- Alternative monetization strategies\n- Creator-focused startups and tools\n- Economic analysis and market trends\n\nWhether you're a creator looking to grow your business or a brand wanting to understand the creator landscape, this category provides essential insights into the rapidly evolving creator economy.",
+      "featured": true,
+      "sort_order": 1,
+      "article_count": 0,
+      "parent_category": null,
+      "keywords": [
+        "monetization",
+        "sponsorships",
+        "brand deals",
+        "creator funds",
+        "revenue streams"
+      ],
+      "filename": "creator-economy.txt",
+      "id": 3
+    },
+    {
+      "name": "Technology",
+      "slug": "tech",
+      "icon": "🚀",
+      "color": "blue",
+      "description": "Platform updates, AI tools, and tech innovations for creators",
+      "extended_description": "Platform updates, AI tools, and tech innovations for creators\n\nThis category covers all aspects of technology in the influencer and creator space, providing comprehensive coverage of trends, news, and insights.",
+      "featured": true,
+      "sort_order": 1,
+      "article_count": 0,
+      "parent_category": null,
+      "keywords": [
+        "tech",
+        "content creation"
+      ],
+      "filename": "tech.txt",
+      "id": 6
+    },
+    {
+      "name": "Business",
+      "slug": "business",
+      "icon": "💼",
+      "color": "green",
+      "description": "Creator economy, monetization, and business strategies",
+      "extended_description": "Creator economy, monetization, and business strategies\n\nThis category covers all aspects of business in the influencer and creator space, providing comprehensive coverage of trends, news, and insights.",
+      "featured": true,
+      "sort_order": 2,
+      "article_count": 0,
+      "parent_category": null,
+      "keywords": [
+        "business",
+        "content creation"
+      ],
+      "filename": "business.txt",
+      "id": 1
+    },
+    {
+      "name": "Entertainment",
+      "slug": "entertainment",
+      "icon": "🎬",
+      "color": "orange",
+      "description": "Celebrity news, drama, and exclusive interviews from the influencer world",
+      "extended_description": "The Entertainment category is your destination for all the latest celebrity news, creator drama, and exclusive interviews from the influencer world. We cover everything from high-profile collaborations to controversial feuds that shape the digital landscape.\n\nOur entertainment coverage includes:\n\nCelebrity Collaborations - When creators team up with traditional celebrities or each other, we're there to cover the partnerships that matter. From music videos to brand campaigns, we track the biggest collabs in the industry.\n\nCreator Drama - The influencer world is never short on drama. We provide balanced coverage of controversies, feuds, and reconciliations, always focusing on the facts while respecting all parties involved.\n\nExclusive Interviews - Our team secures sit-downs with the biggest names in the creator economy, bringing you insights and stories you won't find anywhere else.\n\nRelationship News - From creator couples to friendship dynamics, we cover the relationships that fans care about most.\n\nPlatform Drama - When creators clash with platforms or each other over algorithm changes, monetization, or content policies, we break down what it means for the community.",
+      "featured": true,
+      "sort_order": 2,
+      "article_count": 0,
+      "parent_category": null,
+      "keywords": [
+        "celebrity",
+        "drama",
+        "interviews",
+        "collaborations",
+        "feuds",
+        "relationships"
+      ],
+      "filename": "entertainment.txt",
+      "id": 4
+    },
+    {
+      "name": "Fashion & Beauty",
+      "slug": "fashion",
+      "icon": "💄",
+      "color": "pink",
+      "description": "Fashion trends, beauty collaborations, and style content",
+      "extended_description": "Fashion trends, beauty collaborations, and style content\n\nThis category covers all aspects of fashion & beauty in the influencer and creator space, providing comprehensive coverage of trends, news, and insights.",
+      "featured": true,
+      "sort_order": 3,
+      "article_count": 0,
+      "parent_category": null,
+      "keywords": [
+        "fashion",
+        "content creation"
+      ],
+      "filename": "fashion.txt",
+      "id": 5
+    },
+    {
+      "name": "Technology",
+      "slug": "technology",
+      "icon": "🚀",
+      "color": "blue",
+      "description": "Platform updates, AI tools, and tech innovations for creators",
+      "extended_description": "The Technology category covers the technical innovations and platform changes that impact creators daily. From algorithm updates to new AI tools, we keep you informed about the tech that powers the creator economy.\n\nMajor areas of coverage:\n\nPlatform Updates - Detailed analysis of changes to YouTube, TikTok, Instagram, Twitch, and other platforms. We break down algorithm changes, new features, and policy updates that affect creator success.\n\nAI and Creator Tools - The latest AI tools for content creation, editing, and audience growth. We review and explain new software that can transform creator workflows.\n\nStreaming Technology - Updates on streaming platforms, OBS, encoding technologies, and the technical side of live content creation.\n\nAnalytics and Data - Deep dives into creator analytics tools, audience insights platforms, and data-driven strategies for growth.\n\nEmerging Platforms - Coverage of new platforms and technologies that could become the next big thing for creators.\n\nTechnical Tutorials - How-to guides for creators looking to improve their technical setup, from camera gear to editing software.",
+      "featured": true,
+      "sort_order": 3,
+      "article_count": 0,
+      "parent_category": null,
+      "keywords": [
+        "AI",
+        "platforms",
+        "algorithms",
+        "tools",
+        "software",
+        "streaming",
+        "innovation"
+      ],
+      "filename": "technology.txt",
+      "id": 7
+    },
+    {
+      "name": "Charity & Social Impact",
+      "slug": "charity",
+      "icon": "❤️",
+      "color": "purple",
+      "description": "Creator charity work and social impact initiatives",
+      "extended_description": "Creator charity work and social impact initiatives\n\nThis category covers all aspects of charity & social impact in the influencer and creator space, providing comprehensive coverage of trends, news, and insights.",
+      "featured": true,
+      "sort_order": 5,
+      "article_count": 0,
+      "parent_category": null,
+      "keywords": [
+        "charity",
+        "content creation"
+      ],
+      "filename": "charity.txt",
+      "id": 2
+    }
+  ],
+  "next_id": 8,
+  "last_integration": "2025-06-09T16:11:32.453739"
+}

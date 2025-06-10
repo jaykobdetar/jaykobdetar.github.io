@@ -1,0 +1,45 @@
+Name: [Full Name]
+Title: [Job Title/Position]
+Bio: [Brief bio description - one sentence]
+Image: [Profile image URL or path]
+Location: [City, State/Country]
+Expertise: [Comma-separated list of expertise areas]
+Email: [email@domain.com]
+Twitter: [@handle]
+LinkedIn: [https://linkedin.com/in/profile]
+
+---
+
+[Extended biography content goes here. This section can contain multiple paragraphs describing the author's background, experience, achievements, and expertise.
+
+You can include:
+- Career highlights
+- Educational background
+- Notable work or publications
+- Personal interests
+- Professional philosophy
+
+This content will be displayed in the "About" section of the author's profile page.]
+
+EXAMPLE:
+================
+
+Name: Sarah Johnson
+Title: Senior Business Reporter
+Bio: Former TechCrunch senior writer specializing in creator economy trends and digital business models
+Image: https://images.unsplash.com/photo-1494790108755-2616c395d75b?w=400&h=400&fit=crop&crop=face
+Location: San Francisco, CA
+Expertise: Creator Economy, Business Analysis, Startup Coverage, Digital Marketing
+Email: sarah.johnson@influencernews.com
+Twitter: @sarahjtech
+LinkedIn: https://linkedin.com/in/sarahjohnson
+
+---
+
+Sarah Johnson brings over 8 years of technology journalism experience to Influencer News, where she covers the intersection of creativity and commerce in the digital age. Before joining our team, she was a senior writer at TechCrunch, where she specialized in covering emerging trends in the creator economy and digital business models.
+
+Her work has been featured in major publications including Wired, Fast Company, and The Information. Sarah has a particular expertise in analyzing platform monetization strategies and their impact on content creators. She has interviewed hundreds of successful creators, from micro-influencers to major YouTube stars, giving her unique insights into the challenges and opportunities facing digital entrepreneurs.
+
+Sarah holds a Master's degree in Digital Media from Stanford University and a Bachelor's in Journalism from UC Berkeley. When she's not writing about the latest creator economy developments, she enjoys photography and hosts a weekly podcast about sustainable business practices in the digital space.
+
+Her reporting has helped break several major stories about platform policy changes and their effects on creator communities, making her one of the most trusted voices in creator economy journalism.

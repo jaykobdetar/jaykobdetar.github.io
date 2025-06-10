@@ -1,0 +1,24 @@
+Name: Creator Economy
+Slug: creator-economy
+Icon: 💰
+Color: green
+Description: Business of content creation and monetization strategies
+Featured: true
+Sort_Order: 1
+Keywords: monetization, sponsorships, brand deals, creator funds, revenue streams
+
+---
+
+The Creator Economy represents the class of businesses built by over 50 million independent content creators, curators, and community builders including social media influencers, bloggers, and videographers, plus the software and finance tools designed to help them with growth and monetization.
+
+This category covers everything from platform monetization features and creator funds to brand partnerships and alternative revenue streams. We track the latest developments in how creators are building sustainable businesses and the tools that support them.
+
+Key areas of coverage include:
+- Platform monetization updates (YouTube, TikTok, Instagram, etc.)
+- Creator funds and grant programs
+- Brand partnership trends and rates
+- Alternative monetization strategies
+- Creator-focused startups and tools
+- Economic analysis and market trends
+
+Whether you're a creator looking to grow your business or a brand wanting to understand the creator landscape, this category provides essential insights into the rapidly evolving creator economy.

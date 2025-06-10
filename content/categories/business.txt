@@ -1,0 +1,14 @@
+Name: Business
+Slug: business
+Icon: 💼
+Color: green
+Description: Creator economy, monetization, and business strategies
+Featured: true
+Sort_Order: 2
+Keywords: business, content creation
+
+---
+
+Creator economy, monetization, and business strategies
+
+This category covers all aspects of business in the influencer and creator space, providing comprehensive coverage of trends, news, and insights.

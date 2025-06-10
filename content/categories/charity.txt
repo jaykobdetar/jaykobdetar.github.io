@@ -1,0 +1,14 @@
+Name: Charity & Social Impact
+Slug: charity
+Icon: ❤️
+Color: purple
+Description: Creator charity work and social impact initiatives
+Featured: true
+Sort_Order: 5
+Keywords: charity, content creation
+
+---
+
+Creator charity work and social impact initiatives
+
+This category covers all aspects of charity & social impact in the influencer and creator space, providing comprehensive coverage of trends, news, and insights.

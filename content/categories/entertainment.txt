@@ -1,0 +1,24 @@
+Name: Entertainment
+Slug: entertainment
+Icon: 🎬
+Color: orange
+Description: Celebrity news, drama, and exclusive interviews from the influencer world
+Featured: true
+Sort_Order: 2
+Keywords: celebrity, drama, interviews, collaborations, feuds, relationships
+
+---
+
+The Entertainment category is your destination for all the latest celebrity news, creator drama, and exclusive interviews from the influencer world. We cover everything from high-profile collaborations to controversial feuds that shape the digital landscape.
+
+Our entertainment coverage includes:
+
+Celebrity Collaborations - When creators team up with traditional celebrities or each other, we're there to cover the partnerships that matter. From music videos to brand campaigns, we track the biggest collabs in the industry.
+
+Creator Drama - The influencer world is never short on drama. We provide balanced coverage of controversies, feuds, and reconciliations, always focusing on the facts while respecting all parties involved.
+
+Exclusive Interviews - Our team secures sit-downs with the biggest names in the creator economy, bringing you insights and stories you won't find anywhere else.
+
+Relationship News - From creator couples to friendship dynamics, we cover the relationships that fans care about most.
+
+Platform Drama - When creators clash with platforms or each other over algorithm changes, monetization, or content policies, we break down what it means for the community.
