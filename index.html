@@ -211,6 +211,25 @@
         .mobile-nav-item:hover {
             background: rgba(255, 255, 255, 0.1);
         }
+        
+        /* Mobile Search Overlay */
+        .mobile-search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        
+        .mobile-search-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -233,18 +252,46 @@
             </div>
         </div>
         <nav class="py-4">
-            <a href="index.html" class="mobile-nav-item">Home</a>
-            <a href="search.html" class="mobile-nav-item">Search</a>
-            <a href="authors.html" class="mobile-nav-item">Authors</a>
-            <a href="integrated/categories.html" class="mobile-nav-item">Categories</a>
-            <a href="integrated/trending.html" class="mobile-nav-item">Trending</a>
-            <a href="#contact" class="mobile-nav-item">Contact</a>
+            <a href="index.html" class="mobile-nav-item">🏠 Home</a>
+            <a href="search.html" class="mobile-nav-item">🔍 Search</a>
+            <a href="authors.html" class="mobile-nav-item">👥 Authors</a>
+            <a href="integrated/categories.html" class="mobile-nav-item">📂 Categories</a>
+            <a href="integrated/trending.html" class="mobile-nav-item">🔥 Trending</a>
+            <a href="#contact" class="mobile-nav-item">📧 Contact</a>
         </nav>
         <div class="p-6 mt-auto">
             <div class="bg-indigo-700 rounded-lg p-4">
                 <h3 class="text-white font-bold mb-2">Newsletter</h3>
                 <p class="text-indigo-200 text-sm mb-3">Get the latest influencer news</p>
                 <button class="bg-white text-indigo-700 px-4 py-2 rounded-md text-sm font-semibold w-full">Subscribe</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Search Overlay -->
+    <div class="mobile-search-overlay" id="mobileSearchOverlay">
+        <div class="p-4 bg-indigo-900">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-white font-bold text-lg">Search</h3>
+                <button class="text-white text-2xl" id="closeMobileSearch">&times;</button>
+            </div>
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="mobileSearchInput" 
+                    placeholder="Search articles, authors..." 
+                    class="w-full p-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    onkeyup="handleMobileSearch(event)"
+                >
+                <button onclick="performMobileSearch()" class="absolute right-4 top-4 text-gray-600 hover:text-indigo-600 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+            </div>
+            <!-- Mobile Search Suggestions -->
+            <div id="mobileSearchSuggestions" class="mt-4 bg-white rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
+                <!-- Populated by JavaScript -->
             </div>
         </div>
     </div>
@@ -286,8 +333,8 @@
                     <li><a href="#contact" class="nav-link hover:text-indigo-200 transition font-medium">Contact</a></li>
                 </ul>
             </nav>
-            <!-- Enhanced Search Bar -->
-            <div class="relative">
+            <!-- Enhanced Search Bar - Desktop Only -->
+            <div class="relative hidden md:block">
                 <input 
                     type="text" 
                     id="searchInput" 
@@ -305,6 +352,13 @@
                     <!-- Populated by JavaScript -->
                 </div>
             </div>
+            
+            <!-- Mobile Search Button -->
+            <button class="md:hidden text-white p-2" id="mobileSearchToggle" aria-label="Toggle mobile search">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
         </div>
         
         <!-- Enhanced Live Ticker -->
@@ -332,41 +386,41 @@
         </div>
         
         <div class="hero-content container mx-auto px-4">
-            <h2 class="hero-title text-6xl font-bold mb-6 leading-tight">
+            <h2 class="hero-title text-4xl md:text-6xl font-bold mb-6 leading-tight">
                 The Future of 
                 <span class="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
                     Influence
                 </span>
                 <br>Starts Here
             </h2>
-            <p class="text-xl mb-8 max-w-3xl mx-auto leading-relaxed opacity-90">
+            <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto leading-relaxed opacity-90">
                 Breaking stories, exclusive interviews, and deep insights from the world's most influential creators. 
                 Stay ahead of the trends that shape digital culture.
             </p>
             
             <!-- CTA Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                <a href="#articles" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-full hover:from-indigo-700 hover:to-purple-700 transition text-lg font-semibold shadow-lg hover:shadow-xl">
+                <a href="#articles" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full hover:from-indigo-700 hover:to-purple-700 transition text-base md:text-lg font-semibold shadow-lg hover:shadow-xl">
                     🔥 Latest Breaking News
                 </a>
-                <a href="#newsletter" class="glassmorphism text-white px-8 py-4 rounded-full hover:bg-white/20 transition text-lg font-semibold">
+                <a href="#newsletter" class="glassmorphism text-white px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-white/20 transition text-base md:text-lg font-semibold">
                     📧 Join 50K+ Subscribers
                 </a>
             </div>
 
             <!-- Live Stats -->
-            <div class="grid grid-cols-3 gap-8 max-w-2xl mx-auto glassmorphism rounded-2xl p-6">
+            <div class="grid grid-cols-3 gap-4 md:gap-8 max-w-2xl mx-auto glassmorphism rounded-2xl p-4 md:p-6">
                 <div class="social-stat text-center">
-                    <div class="text-2xl font-bold" id="liveReaders">47,892</div>
-                    <div class="text-sm opacity-75">Live Readers</div>
+                    <div class="text-xl md:text-2xl font-bold" id="liveReaders">47,892</div>
+                    <div class="text-xs md:text-sm opacity-75">Live Readers</div>
                 </div>
                 <div class="social-stat text-center">
-                    <div class="text-2xl font-bold">156</div>
-                    <div class="text-sm opacity-75">Stories Today</div>
+                    <div class="text-xl md:text-2xl font-bold">156</div>
+                    <div class="text-xs md:text-sm opacity-75">Stories Today</div>
                 </div>
                 <div class="social-stat text-center">
-                    <div class="text-2xl font-bold">2.1M</div>
-                    <div class="text-sm opacity-75">Monthly Views</div>
+                    <div class="text-xl md:text-2xl font-bold">2.1M</div>
+                    <div class="text-xs md:text-sm opacity-75">Monthly Views</div>
                 </div>
             </div>
         </div>
@@ -848,6 +902,85 @@
         document.querySelectorAll('.mobile-nav-item').forEach(item => {
             item.addEventListener('click', closeMobileMenuFunc);
         });
+        
+        // Mobile Search Functionality
+        const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+        const closeMobileSearch = document.getElementById('closeMobileSearch');
+        const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
+        const mobileSearchInput = document.getElementById('mobileSearchInput');
+        const mobileSearchSuggestions = document.getElementById('mobileSearchSuggestions');
+        
+        function openMobileSearch() {
+            mobileSearchOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // Focus on search input after animation
+            setTimeout(() => {
+                mobileSearchInput.focus();
+            }, 300);
+        }
+        
+        function closeMobileSearchFunc() {
+            mobileSearchOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            mobileSearchSuggestions.classList.add('hidden');
+            mobileSearchInput.value = '';
+        }
+        
+        if (mobileSearchToggle) {
+            mobileSearchToggle.addEventListener('click', openMobileSearch);
+        }
+        
+        if (closeMobileSearch) {
+            closeMobileSearch.addEventListener('click', closeMobileSearchFunc);
+        }
+        
+        if (mobileSearchOverlay) {
+            mobileSearchOverlay.addEventListener('click', function(e) {
+                if (e.target === mobileSearchOverlay) {
+                    closeMobileSearchFunc();
+                }
+            });
+        }
+        
+        function handleMobileSearch(event) {
+            const query = event.target.value.toLowerCase();
+            
+            if (query.length > 1) {
+                const matches = searchData.filter(item => 
+                    item.toLowerCase().includes(query)
+                ).slice(0, 5);
+                
+                if (matches.length > 0) {
+                    mobileSearchSuggestions.innerHTML = matches.map(match => 
+                        `<div class="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0" onclick="selectMobileSuggestion('${match}')">${match}</div>`
+                    ).join('');
+                    mobileSearchSuggestions.classList.remove('hidden');
+                } else {
+                    mobileSearchSuggestions.classList.add('hidden');
+                }
+            } else {
+                mobileSearchSuggestions.classList.add('hidden');
+            }
+            
+            if (event.key === 'Enter') {
+                performMobileSearch();
+            }
+        }
+        
+        function selectMobileSuggestion(suggestion) {
+            mobileSearchInput.value = suggestion;
+            mobileSearchSuggestions.classList.add('hidden');
+            performMobileSearch();
+        }
+        
+        function performMobileSearch() {
+            const query = mobileSearchInput.value;
+            if (query.trim()) {
+                // Close mobile search and redirect to search page
+                closeMobileSearchFunc();
+                window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+            }
+        }
         
         // Add some analytics simulation
         setTimeout(() => {

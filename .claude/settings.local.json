@@ -8,7 +8,11 @@
       "Bash(mkdir:*)",
       "Bash(npx tailwindcss:*)",
       "Bash(npm install)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(pip3 install:*)",
+      "Bash(pip install:*)",
+      "Bash(python3:*)",
+      "Bash(python:*)"
     ],
     "deny": []
   }
