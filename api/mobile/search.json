@@ -1,0 +1,122 @@
+{
+  "success": true,
+  "data": {
+    "articles": [
+      {
+        "id": 10,
+        "title": "New Platform Update Changes Everything for Creators",
+        "excerpt": "Major social media platform announces algorithm changes that could reshape how creators build audiences and earn reve...",
+        "author": "Alex Rivera",
+        "category": "Technology",
+        "date": "2025-06-10T15:08:29.873127",
+        "slug": "new-platform-update-changes-everything-for-creators",
+        "search_text": "new platform update changes everything for creators major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025. alex rivera technology"
+      }
+    ],
+    "authors": [
+      {
+        "slug": "jessica-kim",
+        "name": "Jessica Kim",
+        "title": "",
+        "bio": "Former Vogue digital editor covering beauty influencer partnerships",
+        "search_text": "jessica kim  former vogue digital editor covering beauty influencer partnerships"
+      },
+      {
+        "slug": "maria-lopez",
+        "name": "Maria Lopez",
+        "title": "",
+        "bio": "Wellness and lifestyle expert covering creator mental health and work-life balance",
+        "search_text": "maria lopez  wellness and lifestyle expert covering creator mental health and work-life balance"
+      },
+      {
+        "slug": "alex-rivera",
+        "name": "Alex Rivera",
+        "title": "",
+        "bio": "Platform algorithm specialist and former software engineer",
+        "search_text": "alex rivera  platform algorithm specialist and former software engineer"
+      },
+      {
+        "slug": "sarah-chen",
+        "name": "Sarah Chen",
+        "title": "",
+        "bio": "Creator economy expert with 8 years experience covering the business of content creation and influencer marketing",
+        "search_text": "sarah chen  creator economy expert with 8 years experience covering the business of content creation and influencer marketing"
+      },
+      {
+        "slug": "michael-torres",
+        "name": "Michael Torres",
+        "title": "",
+        "bio": "Celebrity culture and entertainment industry veteran with over 10 years covering influencer drama and collaborations",
+        "search_text": "michael torres  celebrity culture and entertainment industry veteran with over 10 years covering influencer drama and collaborations"
+      }
+    ],
+    "categories": [
+      {
+        "slug": "technology",
+        "name": "Technology",
+        "description": "Latest in tech, AI, and digital innovation",
+        "search_text": "technology latest in tech, ai, and digital innovation"
+      },
+      {
+        "slug": "business",
+        "name": "Business",
+        "description": "Business strategies and entrepreneurship",
+        "search_text": "business business strategies and entrepreneurship"
+      },
+      {
+        "slug": "entertainment",
+        "name": "Entertainment",
+        "description": "Movies, music, and pop culture",
+        "search_text": "entertainment movies, music, and pop culture"
+      },
+      {
+        "slug": "fashion",
+        "name": "Fashion",
+        "description": "Style trends and fashion industry news",
+        "search_text": "fashion style trends and fashion industry news"
+      },
+      {
+        "slug": "creator-economy",
+        "name": "Creator Economy",
+        "description": "Insights into the creator economy",
+        "search_text": "creator economy insights into the creator economy"
+      },
+      {
+        "slug": "charity",
+        "name": "Charity & Social Impact",
+        "description": "Creator charity work and social impact initiatives",
+        "search_text": "charity & social impact creator charity work and social impact initiatives"
+      }
+    ],
+    "trending": [
+      {
+        "slug": "ai-content-creation-revolution",
+        "topic": "AI Content Creation Revolution",
+        "description": "The AI content creation revolution is transforming how creators produce and distribute content. With tools like ChatG...",
+        "search_text": "ai content creation revolution the ai content creation revolution is transforming how creators produce and distribute content. with tools like chatgpt, midjourney, and elevenlabs becoming mainstream, creators are reimagining their workflows and pushing creative boundaries."
+      },
+      {
+        "slug": "creator-burnout-crisis",
+        "topic": "Creator Burnout Crisis",
+        "description": "Creator burnout has become a critical issue in 2024, with high-profile creators taking breaks and speaking openly abo...",
+        "search_text": "creator burnout crisis creator burnout has become a critical issue in 2024, with high-profile creators taking breaks and speaking openly about mental health challenges. the constant pressure to produce content, maintain engagement, and adapt to algorithm changes is taking its toll."
+      },
+      {
+        "slug": "mrbeast-creator-fund",
+        "topic": "MrBeast Creator Fund",
+        "description": "The MrBeast Creator Fund announcement has taken the influencer world by storm, with creators across all platforms dis...",
+        "search_text": "mrbeast creator fund the mrbeast creator fund announcement has taken the influencer world by storm, with creators across all platforms discussing the implications of this $100m initiative. the fund represents one of the largest direct creator support programs ever announced by an individual creator."
+      }
+    ]
+  },
+  "error": null,
+  "meta": {
+    "total_articles": 1,
+    "total_authors": 5,
+    "total_categories": 6,
+    "total_trending": 3,
+    "generated_at": "2025-06-11T07:18:44.911391",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

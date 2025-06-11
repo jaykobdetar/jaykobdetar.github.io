@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "data": {
+    "slug": "business",
+    "name": "Business",
+    "description": "Business strategies and entrepreneurship",
+    "mobile_optimized": true,
+    "recent_articles": [],
+    "article_count": 0
+  },
+  "error": null,
+  "meta": {
+    "generated_at": "2025-06-11T07:18:44.837306",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

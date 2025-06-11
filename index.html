@@ -8,6 +8,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Influencer News">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+    <meta name="msapplication-TileImage" content="assets/icons/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#4f46e5">
     <style>
         body { 
             font-family: 'Inter', sans-serif; 
@@ -417,9 +427,12 @@
                 <div class="article-card bg-white rounded-xl shadow-lg overflow-hidden md:col-span-2 lg:col-span-1">
                     <div class="relative">
                         <picture>
-                            <source media="(max-width: 640px)" srcset="assets/images/articles/article_10_hero_mobile.jpg 320w, assets/images/articles/article_10_hero_mobile@2x.jpg 640w" sizes="100vw">
-                            <source media="(max-width: 1024px)" srcset="assets/images/articles/article_10_hero_tablet.jpg 768w, assets/images/articles/article_10_hero_tablet@2x.jpg 1536w" sizes="50vw">
-                            <img src="assets/images/articles/article_10_hero.jpg" alt="New Platform Update Changes Everything for Creators" class="w-full h-48 object-cover" loading="lazy">
+                            <source media="(max-width: 640px)" srcset="assets/images/responsive/img_27_mobile_320x160.webp 320w, assets/images/responsive/img_27_mobile_480x240.webp 480w, assets/images/responsive/img_27_mobile_640x320.webp 640w" type="image/webp" sizes="100vw">
+                            <source media="(max-width: 1024px)" srcset="assets/images/responsive/img_27_tablet_768x384.webp 768w, assets/images/responsive/img_27_tablet_1024x512.webp 1024w" type="image/webp" sizes="50vw">
+                            <source srcset="assets/images/responsive/img_27_desktop_1200x600.webp 1200w" type="image/webp" sizes="33vw">
+                            <source media="(max-width: 640px)" srcset="assets/images/responsive/img_27_mobile_320x160.jpeg 320w, assets/images/responsive/img_27_mobile_480x240.jpeg 480w, assets/images/responsive/img_27_mobile_640x320.jpeg 640w" sizes="100vw">
+                            <source media="(max-width: 1024px)" srcset="assets/images/responsive/img_27_tablet_768x384.jpeg 768w, assets/images/responsive/img_27_tablet_1024x512.jpeg 1024w" sizes="50vw">
+                            <img src="assets/images/responsive/img_27_desktop_1200x600.jpeg" alt="New Platform Update Changes Everything for Creators" class="w-full h-48 object-cover" loading="lazy">
                         </picture>
                         <div class="absolute top-4 right-4">
                             <span class="category-Technology bg-white/90 px-2 py-1 rounded text-xs font-bold uppercase">Technology</span>
@@ -840,6 +853,133 @@
         setTimeout(() => {
             console.log('📊 Analytics: Page viewed, user engagement tracked');
         }, 2000);
+        
+        // Service Worker Registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('✓ Service Worker registered successfully');
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // Show update notification
+                                    showUpdateNotification();
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.log('❌ Service Worker registration failed:', error);
+                    });
+            });
+        }
+        
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallPromotion();
+        });
+        
+        function showInstallPromotion() {
+            const installBanner = document.createElement('div');
+            installBanner.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #4f46e5, #7c3aed);
+                color: white;
+                padding: 16px;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                animation: slideUp 0.3s ease;
+            `;
+            
+            installBanner.innerHTML = `
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">📱 Install Influencer News</div>
+                    <div style="font-size: 14px; opacity: 0.9;">Get faster access and offline reading</div>
+                </div>
+                <div>
+                    <button id="installButton" style="background: white; color: #4f46e5; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; margin-right: 8px; cursor: pointer;">Install</button>
+                    <button id="dismissInstall" style="background: transparent; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 12px; border-radius: 8px; cursor: pointer;">×</button>
+                </div>
+            `;
+            
+            document.body.appendChild(installBanner);
+            
+            // Install button handler
+            document.getElementById('installButton').addEventListener('click', () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('✓ PWA installation accepted');
+                        }
+                        deferredPrompt = null;
+                        installBanner.remove();
+                    });
+                }
+            });
+            
+            // Dismiss button handler
+            document.getElementById('dismissInstall').addEventListener('click', () => {
+                installBanner.remove();
+            });
+            
+            // Auto dismiss after 10 seconds
+            setTimeout(() => {
+                if (installBanner.parentNode) {
+                    installBanner.remove();
+                }
+            }, 10000);
+        }
+        
+        function showUpdateNotification() {
+            const updateBanner = document.createElement('div');
+            updateBanner.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 16px;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            `;
+            
+            updateBanner.innerHTML = `
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">🔄 Update Available</div>
+                    <div style="font-size: 14px; opacity: 0.9;">Refresh to get the latest features</div>
+                </div>
+                <button id="refreshButton" style="background: white; color: #10b981; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer;">Refresh</button>
+            `;
+            
+            document.body.appendChild(updateBanner);
+            
+            document.getElementById('refreshButton').addEventListener('click', () => {
+                window.location.reload();
+            });
+        }
     </script>
+    
+    <!-- Mobile Touch Enhancements -->
+    <script src="assets/js/mobile-touch.js"></script>
 </body>
 </html>
