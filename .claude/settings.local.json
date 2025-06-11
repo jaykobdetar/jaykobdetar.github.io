@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(mv:*)",
+      "Bash(mkdir:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npm install)",
+      "Bash(ls:*)"
+    ],
+    "deny": []
+  }
+}

@@ -1,3 +1,4 @@
+View site/template here https://jaykobdetar.github.io/index.html
 # Influencer News CMS Documentation
 
 Welcome to the complete documentation for the Influencer News CMS - a modern, database-driven content management system for influencer and creator economy news.

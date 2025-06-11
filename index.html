@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Influencer News - Your Source for Influencer Culture</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/styles.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
@@ -122,8 +122,123 @@
             }
         }
     </style>
+    <style>
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: #312e81;
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+        
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            z-index: 999;
+        }
+        
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .hamburger {
+            width: 30px;
+            height: 24px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+        
+        .mobile-nav-item {
+            display: block;
+            padding: 1rem 2rem;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s ease;
+        }
+        
+        .mobile-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="p-6 border-b border-indigo-700">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-lg font-bold text-white">IN</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Menu</h2>
+                    </div>
+                </div>
+                <button class="text-white text-2xl" id="closeMobileMenu">&times;</button>
+            </div>
+        </div>
+        <nav class="py-4">
+            <a href="index.html" class="mobile-nav-item">Home</a>
+            <a href="search.html" class="mobile-nav-item">Search</a>
+            <a href="authors.html" class="mobile-nav-item">Authors</a>
+            <a href="integrated/categories.html" class="mobile-nav-item">Categories</a>
+            <a href="integrated/trending.html" class="mobile-nav-item">Trending</a>
+            <a href="#contact" class="mobile-nav-item">Contact</a>
+        </nav>
+        <div class="p-6 mt-auto">
+            <div class="bg-indigo-700 rounded-lg p-4">
+                <h3 class="text-white font-bold mb-2">Newsletter</h3>
+                <p class="text-indigo-200 text-sm mb-3">Get the latest influencer news</p>
+                <button class="bg-white text-indigo-700 px-4 py-2 rounded-md text-sm font-semibold w-full">Subscribe</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- News Alert Banner -->
     <div class="alert-banner text-white text-center py-3 relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
@@ -144,6 +259,13 @@
                     <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
                 </div>
             </div>
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden hamburger" id="mobileMenuToggle" aria-label="Toggle mobile menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
             <nav class="hidden md:block">
                 <ul class="flex space-x-8">
                     <li><a href="index.html" class="nav-link hover:text-indigo-200 transition font-medium text-indigo-200">Home</a></li>
@@ -294,7 +416,11 @@
 
                 <div class="article-card bg-white rounded-xl shadow-lg overflow-hidden md:col-span-2 lg:col-span-1">
                     <div class="relative">
-                        <img src="assets/images/articles/article_10_hero.jpg" alt="New Platform Update Changes Everything for Creators" class="w-full h-48 object-cover" loading="lazy">
+                        <picture>
+                            <source media="(max-width: 640px)" srcset="assets/images/articles/article_10_hero_mobile.jpg 320w, assets/images/articles/article_10_hero_mobile@2x.jpg 640w" sizes="100vw">
+                            <source media="(max-width: 1024px)" srcset="assets/images/articles/article_10_hero_tablet.jpg 768w, assets/images/articles/article_10_hero_tablet@2x.jpg 1536w" sizes="50vw">
+                            <img src="assets/images/articles/article_10_hero.jpg" alt="New Platform Update Changes Everything for Creators" class="w-full h-48 object-cover" loading="lazy">
+                        </picture>
                         <div class="absolute top-4 right-4">
                             <span class="category-Technology bg-white/90 px-2 py-1 rounded text-xs font-bold uppercase">Technology</span>
                         </div>
@@ -673,6 +799,43 @@
             });
         });
 
+        // Mobile Menu Functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuToggle.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenuFunc() {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', openMobileMenu);
+        }
+        
+        if (closeMobileMenu) {
+            closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+        }
+        
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', closeMobileMenuFunc);
+        }
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-nav-item').forEach(item => {
+            item.addEventListener('click', closeMobileMenuFunc);
+        });
+        
         // Add some analytics simulation
         setTimeout(() => {
             console.log('📊 Analytics: Page viewed, user engagement tracked');

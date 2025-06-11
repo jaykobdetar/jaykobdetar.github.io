@@ -23,7 +23,7 @@ class SearchBackend:
         self.db = DatabaseManager()
     
     def search_all(self, query: str, limit: int = 20, offset: int = 0, 
-                   content_type: str = 'all') -> Dict[str, Any]:
+                   content_type: str = 'all', device_type: str = 'desktop') -> Dict[str, Any]:
         """Search across all content types with pagination"""
         results = {
             'query': query,
@@ -190,6 +190,93 @@ class SearchBackend:
         # Remove duplicates and limit
         unique_suggestions = list(dict.fromkeys(suggestions))
         return unique_suggestions[:limit]
+    
+    def search_mobile_optimized(self, query: str, limit: int = 10, offset: int = 0) -> Dict[str, Any]:
+        """Search optimized for mobile devices with smaller payloads"""
+        results = {
+            'query': query,
+            'articles': [],
+            'total_results': 0,
+            'has_more': False
+        }
+        
+        if not query or len(query.strip()) < 2:
+            return results
+        
+        # Search articles using mobile view for optimized data
+        article_query = """
+        SELECT * FROM article_mobile_view 
+        WHERE title LIKE ? OR excerpt LIKE ? 
+        ORDER BY publication_date DESC 
+        LIMIT ? OFFSET ?
+        """
+        search_pattern = f"%{query}%"
+        article_results = self.db.execute_query(
+            article_query, 
+            (search_pattern, search_pattern, limit, offset)
+        )
+        
+        for article_data in article_results:
+            article = Article.from_dict(article_data)
+            results['articles'].append(article.to_mobile_dict())
+        
+        # Get total count for pagination
+        count_query = """
+        SELECT COUNT(*) as total FROM article_mobile_view 
+        WHERE title LIKE ? OR excerpt LIKE ?
+        """
+        count_result = self.db.execute_query(count_query, (search_pattern, search_pattern))
+        total_count = count_result[0]['total'] if count_result else 0
+        
+        results['total_results'] = total_count
+        results['has_more'] = (offset + limit) < total_count
+        
+        return results
+    
+    def get_mobile_suggestions(self, query: str, limit: int = 3) -> List[Dict[str, str]]:
+        """Get mobile-optimized search suggestions"""
+        if not query or len(query.strip()) < 2:
+            return []
+        
+        suggestions = []
+        search_pattern = f"%{query}%"
+        
+        # Get article suggestions with mobile titles
+        article_query = """
+        SELECT COALESCE(mobile_title, title) as title, slug 
+        FROM articles 
+        WHERE COALESCE(mobile_title, title) LIKE ? 
+        LIMIT ?
+        """
+        article_results = self.db.execute_query(article_query, (search_pattern, limit))
+        
+        for row in article_results:
+            suggestions.append({
+                'text': row['title'],
+                'type': 'article',
+                'url': f"integrated/articles/article_{row['slug']}.html"
+            })
+        
+        return suggestions[:limit]
+    
+    def detect_device_type(self, user_agent: str) -> str:
+        """Detect device type from user agent string"""
+        if not user_agent:
+            return 'desktop'
+        
+        user_agent = user_agent.lower()
+        
+        # Mobile devices
+        mobile_keywords = ['mobile', 'android', 'iphone', 'ipod', 'blackberry', 'windows phone']
+        if any(keyword in user_agent for keyword in mobile_keywords):
+            return 'mobile'
+        
+        # Tablet devices
+        tablet_keywords = ['tablet', 'ipad', 'kindle', 'playbook']
+        if any(keyword in user_agent for keyword in tablet_keywords):
+            return 'tablet'
+        
+        return 'desktop'
 
 def handle_cgi_request():
     """Handle CGI-style request for search"""

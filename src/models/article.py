@@ -31,6 +31,11 @@ class Article(BaseModel):
         self.content: str = kwargs.get('content', '')
         self.view_count: int = kwargs.get('view_count', 0)
         
+        # Mobile-specific fields
+        self.mobile_title: Optional[str] = kwargs.get('mobile_title')
+        self.mobile_excerpt: Optional[str] = kwargs.get('mobile_excerpt')
+        self.mobile_hero_image_id: Optional[int] = kwargs.get('mobile_hero_image_id')
+        
         # Handle tags as JSON
         tags = kwargs.get('tags')
         if isinstance(tags, str):
@@ -199,12 +204,162 @@ class Article(BaseModel):
         db = self.get_db()
         return db.get_image('article', self.id, 'thumbnail')
     
-    def increment_view_count(self) -> None:
-        """Increment the view count"""
+    def increment_view_count(self, device_type: str = 'desktop') -> None:
+        """Increment the view count and track mobile metrics"""
         db = self.get_db()
         query = "UPDATE articles SET view_count = view_count + 1 WHERE id = ?"
         db.execute_write(query, (self.id,))
         self.view_count += 1
+        
+        # Track mobile-specific metrics
+        self.track_mobile_view(device_type)
+    
+    def track_mobile_view(self, device_type: str) -> None:
+        """Track mobile-specific view metrics"""
+        db = self.get_db()
+        
+        # Get today's date
+        from datetime import date
+        today = date.today().isoformat()
+        
+        # Update or insert mobile metrics
+        query = """
+        INSERT INTO mobile_metrics (article_id, mobile_views, tablet_views, desktop_views, date_recorded)
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(article_id, date_recorded) DO UPDATE SET
+            mobile_views = mobile_views + CASE WHEN ? = 'mobile' THEN 1 ELSE 0 END,
+            tablet_views = tablet_views + CASE WHEN ? = 'tablet' THEN 1 ELSE 0 END,
+            desktop_views = desktop_views + CASE WHEN ? = 'desktop' THEN 1 ELSE 0 END
+        """
+        
+        mobile_inc = 1 if device_type == 'mobile' else 0
+        tablet_inc = 1 if device_type == 'tablet' else 0
+        desktop_inc = 1 if device_type == 'desktop' else 0
+        
+        try:
+            db.execute_write(query, (
+                self.id, mobile_inc, tablet_inc, desktop_inc, today,
+                device_type, device_type, device_type
+            ))
+        except Exception:
+            # Fallback for SQLite without UPSERT support
+            fallback_query = """
+            INSERT OR IGNORE INTO mobile_metrics (article_id, date_recorded) VALUES (?, ?);
+            UPDATE mobile_metrics SET 
+                mobile_views = mobile_views + ?,
+                tablet_views = tablet_views + ?,
+                desktop_views = desktop_views + ?
+            WHERE article_id = ? AND date_recorded = ?
+            """
+            db.execute_write(fallback_query, (
+                self.id, today, mobile_inc, tablet_inc, desktop_inc, self.id, today
+            ))
+    
+    def get_mobile_title(self) -> str:
+        """Get mobile-optimized title"""
+        return self.mobile_title or self.title
+    
+    def get_mobile_excerpt(self) -> str:
+        """Get mobile-optimized excerpt"""
+        if self.mobile_excerpt:
+            return self.mobile_excerpt
+        elif self.subtitle:
+            return self.subtitle
+        else:
+            # Generate excerpt from content (first 150 chars)
+            import re
+            clean_content = re.sub(r'<[^>]+>', '', self.content)
+            return clean_content[:150] + '...' if len(clean_content) > 150 else clean_content
+    
+    def get_mobile_hero_image(self) -> Optional[Dict[str, Any]]:
+        """Get mobile-specific hero image"""
+        db = self.get_db()
+        if self.mobile_hero_image_id:
+            query = "SELECT * FROM images WHERE id = ?"
+            result = db.execute_query(query, (self.mobile_hero_image_id,))
+            return result[0] if result else None
+        else:
+            return self.get_hero_image()
+    
+    def get_responsive_images(self, image_type: str = 'hero') -> Dict[str, List[Dict[str, Any]]]:
+        """Get responsive image variants for different screen sizes"""
+        db = self.get_db()
+        
+        # Get the base image
+        base_image = db.get_image('article', self.id, image_type)
+        if not base_image:
+            return {}
+        
+        # Get all variants for this image
+        query = """
+        SELECT * FROM image_variants 
+        WHERE image_id = ? 
+        ORDER BY variant_type, width
+        """
+        variants = db.execute_query(query, (base_image['id'],))
+        
+        # Group by variant type
+        grouped_variants = {}
+        for variant in variants:
+            variant_type = variant['variant_type']
+            if variant_type not in grouped_variants:
+                grouped_variants[variant_type] = []
+            grouped_variants[variant_type].append(variant)
+        
+        return grouped_variants
+    
+    def get_mobile_metrics(self, days: int = 30) -> Dict[str, Any]:
+        """Get mobile metrics for this article"""
+        db = self.get_db()
+        query = """
+        SELECT 
+            SUM(mobile_views) as total_mobile_views,
+            SUM(tablet_views) as total_tablet_views,
+            SUM(desktop_views) as total_desktop_views,
+            AVG(avg_load_time_ms) as avg_load_time,
+            AVG(bounce_rate) as avg_bounce_rate,
+            AVG(scroll_depth_percent) as avg_scroll_depth
+        FROM mobile_metrics 
+        WHERE article_id = ? AND date_recorded >= date('now', '-{} days')
+        """.format(days)
+        
+        result = db.execute_query(query, (self.id,))
+        return result[0] if result else {}
+    
+    @classmethod
+    def find_mobile_optimized(cls, limit: int = 20, offset: int = 0) -> List['Article']:
+        """Find articles optimized for mobile using mobile view"""
+        db = cls.get_db()
+        query = """
+        SELECT * FROM article_mobile_view 
+        ORDER BY publication_date DESC 
+        LIMIT ? OFFSET ?
+        """
+        results = db.execute_query(query, (limit, offset))
+        return [cls.from_dict(data) for data in results]
+    
+    def to_mobile_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary optimized for mobile API responses"""
+        return {
+            'id': self.id,
+            'title': self.get_mobile_title(),
+            'slug': self.slug,
+            'excerpt': self.get_mobile_excerpt(),
+            'author': {
+                'name': self.author_name,
+                'slug': self.author_slug
+            },
+            'category': {
+                'name': self.category_name,
+                'slug': self.category_slug,
+                'icon': self.category_icon
+            },
+            'publication_date': self.publication_date,
+            'read_time': self.read_time,
+            'view_count': self.view_count,
+            'hero_image': self.get_mobile_hero_image(),
+            'responsive_images': self.get_responsive_images()
+        }
     
     def __repr__(self) -> str:
         return f"<Article id={self.id} slug='{self.slug}' title='{self.title}'>"

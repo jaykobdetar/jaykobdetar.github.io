@@ -1,0 +1,18 @@
+{
+  "name": "influencer-news-mobile",
+  "version": "1.0.0",
+  "description": "Mobile-optimized Influencer News Site",
+  "main": "index.js",
+  "scripts": {
+    "build-css": "tailwindcss -i ./src/input.css -o ./assets/css/styles.css --watch",
+    "build-css-prod": "tailwindcss -i ./src/input.css -o ./assets/css/styles.min.css --minify",
+    "dev": "npm run build-css",
+    "build": "npm run build-css-prod"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  },
+  "keywords": ["mobile", "responsive", "news", "influencer"],
+  "author": "Influencer News Team",
+  "license": "MIT"
+}
