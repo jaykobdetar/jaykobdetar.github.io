@@ -3,89 +3,89 @@
   "data": {
     "articles": [
       {
-        "id": 10,
+        "id": 1,
         "title": "New Platform Update Changes Everything for Creators",
         "excerpt": "Major social media platform announces algorithm changes that could reshape how creators build audiences and earn reve...",
         "author": "Alex Rivera",
         "category": "Technology",
-        "date": "2025-06-10T15:08:29.873127",
+        "date": "2025-06-11T16:14:44.739810",
         "slug": "new-platform-update-changes-everything-for-creators",
         "search_text": "new platform update changes everything for creators major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025. alex rivera technology"
       }
     ],
     "authors": [
       {
+        "slug": "alex-rivera",
+        "name": "Alex Rivera",
+        "title": null,
+        "bio": "Platform algorithm specialist and former software engineer with extensive experience in their field",
+        "search_text": "alex rivera none platform algorithm specialist and former software engineer with extensive experience in their field"
+      },
+      {
         "slug": "jessica-kim",
         "name": "Jessica Kim",
-        "title": "",
+        "title": null,
         "bio": "Former Vogue digital editor covering beauty influencer partnerships",
-        "search_text": "jessica kim  former vogue digital editor covering beauty influencer partnerships"
+        "search_text": "jessica kim none former vogue digital editor covering beauty influencer partnerships"
       },
       {
         "slug": "maria-lopez",
         "name": "Maria Lopez",
-        "title": "",
+        "title": null,
         "bio": "Wellness and lifestyle expert covering creator mental health and work-life balance",
-        "search_text": "maria lopez  wellness and lifestyle expert covering creator mental health and work-life balance"
-      },
-      {
-        "slug": "alex-rivera",
-        "name": "Alex Rivera",
-        "title": "",
-        "bio": "Platform algorithm specialist and former software engineer",
-        "search_text": "alex rivera  platform algorithm specialist and former software engineer"
-      },
-      {
-        "slug": "sarah-chen",
-        "name": "Sarah Chen",
-        "title": "",
-        "bio": "Creator economy expert with 8 years experience covering the business of content creation and influencer marketing",
-        "search_text": "sarah chen  creator economy expert with 8 years experience covering the business of content creation and influencer marketing"
+        "search_text": "maria lopez none wellness and lifestyle expert covering creator mental health and work-life balance"
       },
       {
         "slug": "michael-torres",
         "name": "Michael Torres",
-        "title": "",
+        "title": null,
         "bio": "Celebrity culture and entertainment industry veteran with over 10 years covering influencer drama and collaborations",
-        "search_text": "michael torres  celebrity culture and entertainment industry veteran with over 10 years covering influencer drama and collaborations"
+        "search_text": "michael torres none celebrity culture and entertainment industry veteran with over 10 years covering influencer drama and collaborations"
+      },
+      {
+        "slug": "sarah-chen",
+        "name": "Sarah Chen",
+        "title": null,
+        "bio": "Creator economy expert with 8 years experience covering the business of content creation and influencer marketing",
+        "search_text": "sarah chen none creator economy expert with 8 years experience covering the business of content creation and influencer marketing"
       }
     ],
     "categories": [
       {
-        "slug": "technology",
-        "name": "Technology",
-        "description": "Latest in tech, AI, and digital innovation",
-        "search_text": "technology latest in tech, ai, and digital innovation"
-      },
-      {
         "slug": "business",
         "name": "Business",
-        "description": "Business strategies and entrepreneurship",
-        "search_text": "business business strategies and entrepreneurship"
-      },
-      {
-        "slug": "entertainment",
-        "name": "Entertainment",
-        "description": "Movies, music, and pop culture",
-        "search_text": "entertainment movies, music, and pop culture"
-      },
-      {
-        "slug": "fashion",
-        "name": "Fashion",
-        "description": "Style trends and fashion industry news",
-        "search_text": "fashion style trends and fashion industry news"
-      },
-      {
-        "slug": "creator-economy",
-        "name": "Creator Economy",
-        "description": "Insights into the creator economy",
-        "search_text": "creator economy insights into the creator economy"
+        "description": "Creator economy, monetization, and business strategies",
+        "search_text": "business creator economy, monetization, and business strategies"
       },
       {
         "slug": "charity",
         "name": "Charity & Social Impact",
         "description": "Creator charity work and social impact initiatives",
         "search_text": "charity & social impact creator charity work and social impact initiatives"
+      },
+      {
+        "slug": "creator-economy",
+        "name": "Creator Economy",
+        "description": "Business of content creation and monetization strategies",
+        "search_text": "creator economy business of content creation and monetization strategies"
+      },
+      {
+        "slug": "entertainment",
+        "name": "Entertainment",
+        "description": "Celebrity news, drama, and exclusive interviews from the influencer world",
+        "search_text": "entertainment celebrity news, drama, and exclusive interviews from the influencer world"
+      },
+      {
+        "slug": "fashion",
+        "name": "Fashion & Beauty",
+        "description": "Fashion trends, beauty collaborations, and style content",
+        "search_text": "fashion & beauty fashion trends, beauty collaborations, and style content"
+      },
+      {
+        "slug": "technology",
+        "name": "Technology",
+        "description": "Platform updates, AI tools, and tech innovations for creators",
+        "search_text": "technology platform updates, ai tools, and tech innovations for creators"
       }
     ],
     "trending": [
@@ -115,7 +115,7 @@
     "total_authors": 5,
     "total_categories": 6,
     "total_trending": 3,
-    "generated_at": "2025-06-11T07:18:44.911391",
+    "generated_at": "2025-06-11T16:24:46.537871",
     "cache_duration": 300
   },
   "mobile_optimized": true

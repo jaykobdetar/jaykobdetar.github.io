@@ -1,86 +1,71 @@
 # 📝 Article Formatting Guide
 
-## Quick Setup Instructions
+## Dynamic Template System
 
-1. **Save your HTML files with these exact names:**
-   - `index.html` (homepage)
-   - `search.html` (search page) 
-   - `article.html` (article template)
-   - `authors.html` (authors page)
-   - `404.html` (404/no results page)
+This guide covers the new granular template system that uses dynamic field placeholders instead of hardcoded examples.
 
-2. **Save the Python script as:** `integrate_articles.py`
+### Template Structure
 
-3. **Create your articles in the `articles/` folder** (script creates this automatically)
+All templates now use `{{variable}}` placeholders that are replaced with actual content from your content management system.
 
-## 📄 Article Text File Format
+## 📄 Dynamic Article Template Format
 
-Create `.txt` files in the `articles/` folder using this exact format:
+The new template system uses dynamic placeholders. Reference the `docs/templates/article_template.txt` for the complete structure:
 
 ```
-Title: Your Article Title Here
-Author: Sarah Chen
-Category: business
-Image: https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&h=300&fit=crop
-Tags: keyword1, keyword2, keyword3
-Excerpt: Brief description that appears on homepage and search results. Keep under 200 characters for best display.
+Title: {{article.title}}
+Slug: {{article.slug}}
+Author: {{article.author.name}}
+Category: {{article.category.slug}}
+Status: {{article.status}}
+Featured: {{article.featured}}
+Trending: {{article.trending}}
+Image: {{article.image_url}}
+Tags: {{article.tags}}
+Excerpt: {{article.excerpt}}
+Publish_Date: {{article.publish_date}}
 
 ---
 
-Your opening paragraph goes here. This should hook the reader and introduce the topic compellingly.
-
-## First Section Heading
-
-Write your content here. You can have multiple paragraphs in each section.
-
-This is another paragraph in the same section.
-
-## Special Formatting Options
-
-### Information Boxes
-[INFO] Use this format for important information that needs to be highlighted with a blue background.
-
-### Bullet Lists
-Create lists like this:
-
-- First point
-- Second point  
-- Third point with more details
-
-### Quotes
-> This is how you create a blockquote. It will be beautifully styled. - Quote Author
-
-## More Content Sections
-
-Continue adding sections with ## headings. Each section will be properly formatted with HTML styling.
-
-## Conclusion
-
-End with a strong conclusion that provides value to readers.
+{{article.content}}
 ```
 
-## 🎯 Available Authors
+### Content Formatting Guidelines
 
-Choose from these pre-configured authors (case-insensitive):
+Use these formatting options in your `{{article.content}}`:
 
-- **Sarah Chen** - Senior Business Reporter (Business, Creator Economy)
-- **Michael Torres** - Entertainment Editor (Celebrity News, Entertainment)  
-- **Alex Rivera** - Tech Correspondent (Algorithms, Platform Updates)
-- **Jessica Kim** - Beauty & Fashion Editor (Beauty, Fashion, Collabs)
-- **David Park** - Markets & Economics Editor (Market Analysis, Data)
+**Section Headings**: Use `##` for main sections
+**Information Boxes**: Use `[INFO] Your message here`
+**Quotes**: Use `> Quote text - Author`
+**Lists**: Standard markdown bullet and numbered lists
+**Emphasis**: Use `**bold**` and `*italic*` formatting
 
-*You can also use any custom author name - the script will create a basic profile automatically.*
+## 🎯 Dynamic Author System
 
-## 📂 Categories
+Authors are now managed through the database system with dynamic fields:
 
-Choose from these categories (affects color styling):
+- `{{author.name}}` - Full author name
+- `{{author.title}}` - Job title/position
+- `{{author.bio}}` - Brief description
+- `{{author.expertise}}` - Comma-separated expertise areas
+- `{{author.location}}` - Geographic location
+- Social links: `{{author.twitter}}`, `{{author.linkedin}}`
 
-- `business` (green)
-- `entertainment` (orange)
-- `tech` (blue) 
-- `fashion` (pink)
-- `charity` (purple)
-- `beauty` (pink)
+Refer to `docs/templates/author_template.txt` for complete author field structure.
+
+## 📂 Dynamic Category System
+
+Categories use dynamic fields with customizable colors:
+
+- `{{category.name}}` - Display name
+- `{{category.slug}}` - URL identifier
+- `{{category.color}}` - Theme color
+- `{{category.icon}}` - Emoji representation
+- `{{category.description}}` - Brief description
+
+Available colors: blue, green, red, purple, orange, pink, yellow, indigo, teal, gray
+
+Refer to `docs/templates/category_template.txt` for complete structure.
 
 ## 🖼️ Images
 
@@ -96,25 +81,28 @@ Add relevant tags separated by commas:
 Tags: MrBeast, creator fund, YouTube, philanthropy, business
 ```
 
-## 🚀 Usage Instructions
+## 🚀 Content Management Instructions
 
-1. **Create your article file:**
-   ```
-   articles/my_new_article.txt
-   ```
-
-2. **Run the integration script:**
+1. **Use the new content management tools:**
    ```bash
-   python integrate_articles.py
+   # Sync all content
+   python3 scripts/sync_content.py
+   
+   # Use GUI manager
+   python3 scripts/content_manager.py
    ```
 
-3. **The script will automatically:**
-   - ✅ Create individual article pages (`article_1.html`, etc.)
-   - ✅ Update homepage with latest articles
-   - ✅ Update search page with new content
-   - ✅ Generate realistic view counts and metrics
-   - ✅ Calculate reading time
-   - ✅ Create proper links between pages
+2. **Template Integration:**
+   - Replace `{{variable}}` placeholders with actual content
+   - Use database-driven content management
+   - Generate HTML from template system
+
+3. **The system automatically:**
+   - ✅ Generates pages from dynamic templates
+   - ✅ Updates all content relationships
+   - ✅ Maintains consistent formatting
+   - ✅ Handles metadata and SEO fields
+   - ✅ Manages content linking and navigation
 
 ## 📊 What Gets Generated
 
@@ -159,49 +147,31 @@ For each article, the script creates:
 - Check spelling against available authors list
 - Custom names work but won't have detailed bios
 
-## 📝 Example Article File
+## 📝 Template Reference
 
-Save this as `articles/sample_news.txt`:
+Refer to the dynamic templates in `docs/templates/` for complete structure:
 
-```
-Title: New Platform Update Changes Everything for Creators
-Author: Alex Rivera  
-Category: tech
-Image: https://images.unsplash.com/photo-1607827448387-a67db1383b59?w=600&h=300&fit=crop
-Tags: platform update, algorithm, creators, monetization
-Excerpt: Major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue.
+- `article_template.txt` - Complete article structure with all dynamic fields
+- `author_template.txt` - Author profile template
+- `category_template.txt` - Category definition template  
+- `trending_template.txt` - Trending topic template
 
----
+### Key Dynamic Fields:
 
-In a surprise announcement today, one of the world's largest social media platforms revealed significant changes to its recommendation algorithm that could fundamentally alter the creator landscape.
+**Articles**: `{{article.title}}`, `{{article.content}}`, `{{article.author.name}}`
+**Authors**: `{{author.name}}`, `{{author.bio}}`, `{{author.expertise}}`
+**Categories**: `{{category.name}}`, `{{category.color}}`, `{{category.description}}`
+**Trending**: `{{trending.title}}`, `{{trending.heat_score}}`, `{{trending.analysis}}`
 
-## What's Changing
+## 🎉 Ready to Manage Content!
 
-The new algorithm will prioritize several key factors:
-
-- Longer engagement times over quick views
-- Community interaction and responses  
-- Original content over reposts
-- Consistent posting schedules
-
-[INFO] These changes go into effect starting next month, giving creators time to adapt their strategies.
-
-## Impact on Creators
-
-> This could be the biggest shift we've seen since the platform launched. Creators need to think long-term now. - Industry Expert
-
-Early testing shows creators who focus on community building are seeing significant growth, while those relying on viral trends are experiencing decreased reach.
-
-## Looking Forward
-
-The platform's commitment to rewarding quality content over viral moments represents a maturation of the creator economy that could benefit serious content creators in the long run.
-```
-
-## 🎉 Ready to Publish!
-
-Once you've created your article file, just run:
+Use the new content management system:
 ```bash
-python integrate_articles.py
+# Sync all content types
+python3 scripts/sync_content.py
+
+# Use GUI for visual management
+python3 scripts/content_manager.py
 ```
 
-Your new article will be automatically integrated into the entire website with professional styling and proper navigation!
+Your content will be automatically generated from dynamic templates with professional styling and proper relationships!

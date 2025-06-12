@@ -2,7 +2,10 @@
 
 from typing import Dict, Any, Optional
 from datetime import datetime
-from src.database import DatabaseManager
+try:
+    from ..database import DatabaseManager
+except ImportError:
+    from src.database import DatabaseManager
 
 class BaseModel:
     """Base class for all database models"""
@@ -106,6 +109,12 @@ class BaseModel:
                             fk_dict = dict(fk)
                             if fk_dict['table'] == table_name:
                                 fk_column = fk_dict['from']
+                                
+                                # Validate column and table names to prevent SQL injection/errors
+                                if not fk_column or not fk_column.replace('_', '').isalnum():
+                                    continue
+                                if not target_table or not target_table.replace('_', '').isalnum():
+                                    continue
                                 
                                 # Check if any records reference our ID
                                 query = f'SELECT COUNT(*) as count FROM {target_table} WHERE {fk_column} = ?'

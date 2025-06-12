@@ -19,7 +19,7 @@ cd Template_News_Site-main
 python3 --version
 
 # Verify database
-python3 sync_content.py check
+python scripts/sync_content.py status
 ```
 
 Expected output:
@@ -43,7 +43,7 @@ file:///path/to/Template_News_Site-main/index.html
 ### 3. Check Content Status
 ```bash
 # View current content
-python3 sync_content.py stats
+python scripts/sync_content.py stats
 ```
 
 Expected output:
@@ -60,13 +60,13 @@ Images         :  12
 ### 4. Test Content Management
 ```bash
 # Check system status
-python3 sync_content.py status
+python scripts/sync_content.py status
 
 # View content statistics
-python3 sync_content.py stats
+python scripts/sync_content.py stats
 
 # Sync all content to HTML (most common command)
-python3 sync_content.py
+python scripts/sync_content.py
 ```
 
 ### 5. Add Your First Content
@@ -76,7 +76,7 @@ cp docs/templates/article_template.txt content/articles/my-first-article.txt
 
 # Edit the file with your content
 # Then sync to generate HTML
-python3 sync_content.py articles
+python scripts/sync_content.py articles
 ```
 
 ## 🎯 What You Have Now
@@ -89,8 +89,8 @@ python3 sync_content.py articles
 - **Search**: `search.html` with database-powered search
 
 ### ✅ Content Management Tools
-- **CLI Tool**: `sync_content.py` for command-line management
-- **GUI Tool**: `content_manager.py` for visual management (requires tkinter)
+- **CLI Tool**: `scripts/sync_content.py` for command-line management
+- **GUI Tool**: `scripts/content_manager.py` for visual management (requires tkinter)
 - **Templates**: Ready-to-use content templates in `docs/templates/`
 
 ### ✅ Database System

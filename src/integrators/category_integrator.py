@@ -7,9 +7,14 @@ Handles category content integration with database
 
 from pathlib import Path
 from typing import Dict, List, Any
-from .base_integrator import BaseIntegrator
-from ..models.category import Category
-from ..models.article import Article
+try:
+    from .base_integrator import BaseIntegrator
+    from ..models.category import Category
+    from ..models.article import Article
+except ImportError:
+    from src.integrators.base_integrator import BaseIntegrator
+    from src.models.category import Category
+    from src.models.article import Article
 
 
 class CategoryIntegrator(BaseIntegrator):
@@ -46,14 +51,22 @@ class CategoryIntegrator(BaseIntegrator):
     def create_category_page(self, category):
         """Create individual category page"""
         try:
+            # Get path manager for this location
+            path_manager = self.get_path_manager(f"integrated/categories/category_{category.slug}.html")
+            base_path = path_manager.get_base_path()
+            
             # Read template
-            template_content = self.get_category_template()
+            template_content = self.get_category_template(base_path)
             
             # Get articles in this category
             articles = Article.find_all(category_id=category.id)
             
             # Generate article cards
-            articles_html = self.generate_article_cards(articles, category.slug)
+            articles_html = self.generate_article_cards(articles, category.slug, base_path)
+            
+            # Generate dynamic search data
+            search_data = self.generate_dynamic_search_data()
+            search_data_js = str(search_data).replace("'", '"')  # Convert to JS array format
             
             # Replace placeholders
             replacements = {
@@ -61,14 +74,13 @@ class CategoryIntegrator(BaseIntegrator):
                 '{{CATEGORY_DESCRIPTION}}': getattr(category, 'description', f'Latest news and updates about {category.name.lower()}'),
                 '{{CATEGORY_COLOR}}': getattr(category, 'color', '#4F46E5'),
                 '{{ARTICLES_CONTENT}}': articles_html,
-                '{{ARTICLE_COUNT}}': str(len(articles))
+                '{{ARTICLE_COUNT}}': str(len(articles)),
+                '{{SEARCH_DATA}}': search_data_js
             }
             
             content = template_content
             for placeholder, value in replacements.items():
                 content = content.replace(placeholder, value)
-                
-            # No navigation path fixes needed since file is in main integrated dir
             
             # Save file
             filename = self.integrated_dir / f"category_{category.slug}.html"
@@ -83,17 +95,24 @@ class CategoryIntegrator(BaseIntegrator):
     def create_categories_listing(self, categories):
         """Create categories listing page"""
         try:
+            # Get path manager for this location
+            path_manager = self.get_path_manager("integrated/categories.html")
+            base_path = path_manager.get_base_path()
+            
             # Read template
-            template_content = self.get_categories_listing_template()
+            template_content = self.get_categories_listing_template(base_path)
             
             # Generate category cards
-            categories_html = self.generate_category_cards(categories)
+            categories_html = self.generate_category_cards(categories, base_path)
+            
+            # Generate dynamic search data
+            search_data = self.generate_dynamic_search_data()
+            search_data_js = str(search_data).replace("'", '"')  # Convert to JS array format
             
             # Replace placeholders
             content = template_content.replace('{{CATEGORIES_CONTENT}}', categories_html)
             content = content.replace('{{CATEGORY_COUNT}}', str(len(categories)))
-            
-            # No navigation path fixes needed since file is in main integrated dir
+            content = content.replace('{{SEARCH_DATA}}', search_data_js)
             
             # Save file (listing goes in main integrated dir, not subfolder)
             from pathlib import Path
@@ -109,7 +128,7 @@ class CategoryIntegrator(BaseIntegrator):
             traceback.print_exc()
             raise
             
-    def generate_category_cards(self, categories):
+    def generate_category_cards(self, categories, base_path=""):
         """Generate HTML for category cards"""
         cards_html = ""
         
@@ -141,7 +160,7 @@ class CategoryIntegrator(BaseIntegrator):
             
         return cards_html
         
-    def generate_article_cards(self, articles, category_slug):
+    def generate_article_cards(self, articles, category_slug, base_path=""):
         """Generate HTML for article cards in category"""
         if not articles:
             return '''
@@ -162,10 +181,21 @@ class CategoryIntegrator(BaseIntegrator):
             views = getattr(article, 'views', 0)
             views_formatted = f"{views:,}" if isinstance(views, int) else str(views)
             
+            # Handle image URL properly - use proper assets structure
+            image_url = getattr(article, 'image_url', None)
+            if not image_url or image_url == 'None' or image_url is None:
+                image_url = f"{base_path}assets/placeholders/article_placeholder.svg"
+            elif image_url.startswith('http'):
+                # External URLs should be converted to local assets
+                image_url = f"{base_path}assets/images/articles/article_{article.id}_hero.jpg"
+            elif not image_url.startswith(('/', 'assets')):
+                # Ensure proper assets folder structure
+                image_url = f"{base_path}assets/images/articles/{image_url}"
+            
             cards_html += f'''
             <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                 <div class="relative">
-                    <img src="{getattr(article, 'image_url', '/assets/placeholders/article_placeholder.svg')}" 
+                    <img src="{image_url}" 
                          alt="{self.escape_html(article.title)}" 
                          class="w-full h-48 object-cover">
                 </div>
@@ -174,14 +204,14 @@ class CategoryIntegrator(BaseIntegrator):
                         <span class="text-gray-500 text-sm">{author_name} • {self.format_date_relative(getattr(article, 'created_at', ''))}</span>
                     </div>
                     <h3 class="text-lg font-bold mb-3 hover:text-indigo-600 transition">
-                        <a href="../articles/article_{article.id}.html">{self.escape_html(article.title)}</a>
+                        <a href="{base_path}integrated/articles/article_{article.id}.html">{self.escape_html(article.title)}</a>
                     </h3>
                     <p class="text-gray-700 mb-4 text-sm">
                         {self.escape_html(getattr(article, 'excerpt', article.title)[:150])}...
                     </p>
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-500">👁 {views_formatted} views</span>
-                        <a href="../articles/article_{article.id}.html" 
+                        <a href="{base_path}integrated/articles/article_{article.id}.html" 
                            class="text-indigo-600 font-medium">Read →</a>
                     </div>
                 </div>
@@ -189,16 +219,66 @@ class CategoryIntegrator(BaseIntegrator):
             '''
             
         return cards_html
+    
+    def generate_dynamic_search_data(self):
+        """Generate dynamic search data from database"""
+        try:
+            # Get categories, authors, and popular article titles
+            from ..models.category import Category
+            from ..models.author import Author
+            from ..models.article import Article
+            
+            search_items = []
+            
+            # Add category names
+            categories = Category.find_all()
+            for category in categories:
+                search_items.append(category.name)
+            
+            # Add author names
+            authors = Author.find_all(limit=20)  # Top 20 authors
+            for author in authors:
+                search_items.append(author.name)
+            
+            # Add popular article titles (first few words)
+            articles = Article.find_all(limit=15)  # Top 15 articles
+            for article in articles:
+                # Extract first 2-3 significant words from title
+                title_words = article.title.split()[:3]
+                if len(title_words) >= 2:
+                    search_items.append(' '.join(title_words))
+            
+            # Add some general search terms if list is too short
+            if len(search_items) < 10:
+                fallback_terms = [
+                    'Creator Economy', 'Social Media', 'Content Creation', 
+                    'Brand Partnerships', 'Influencer Marketing', 'Platform Updates',
+                    'YouTube', 'TikTok', 'Instagram', 'Trending Content'
+                ]
+                search_items.extend(fallback_terms)
+            
+            # Remove duplicates and limit to reasonable number
+            search_items = list(dict.fromkeys(search_items))[:20]
+            
+            return search_items
+            
+        except Exception as e:
+            self.update_progress(f"Error generating search data: {e}")
+            # Fallback to basic terms
+            return [
+                'Creator Economy', 'Social Media', 'Content Creation',
+                'Brand Partnerships', 'Influencer Marketing', 'Platform Updates'
+            ]
         
-    def get_category_template(self):
+    def get_category_template(self, base_path=""):
         """Get category page template"""
-        return '''<!DOCTYPE html>
+        return ('''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{CATEGORY_NAME}} - Influencer News</title>
-    <link rel="stylesheet" href="../assets/css/styles.min.css">
+    <link rel="stylesheet" href="{base_path}assets/css/styles.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
@@ -319,11 +399,11 @@ class CategoryIntegrator(BaseIntegrator):
         </div>
         <nav class="p-6">
             <ul class="space-y-4">
-                <li><a href="../../index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Home</a></li>
-                <li><a href="../../search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Search</a></li>
-                <li><a href="../../authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Authors</a></li>
-                <li><a href="../categories.html" class="mobile-nav-item block text-indigo-200 text-lg py-2 border-b border-indigo-600/30">Categories</a></li>
-                <li><a href="../trending.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Trending</a></li>
+                <li><a href="{base_path}index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Home</a></li>
+                <li><a href="{base_path}search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Search</a></li>
+                <li><a href="{base_path}authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Authors</a></li>
+                <li><a href="{base_path}integrated/categories.html" class="mobile-nav-item block text-indigo-200 text-lg py-2 border-b border-indigo-600/30">Categories</a></li>
+                <li><a href="{base_path}integrated/trending.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Trending</a></li>
             </ul>
         </nav>
     </div>
@@ -361,11 +441,11 @@ class CategoryIntegrator(BaseIntegrator):
             <div class="flex items-center space-x-4">
                 <nav class="hidden md:block">
                     <ul class="flex space-x-8">
-                        <li><a href="../../index.html" class="hover:text-indigo-200 transition font-medium">Home</a></li>
-                        <li><a href="../../search.html" class="hover:text-indigo-200 transition font-medium">Search</a></li>
-                        <li><a href="../../authors.html" class="hover:text-indigo-200 transition font-medium">Authors</a></li>
-                        <li><a href="../categories.html" class="hover:text-indigo-200 transition font-medium text-indigo-200">Categories</a></li>
-                        <li><a href="../trending.html" class="hover:text-indigo-200 transition font-medium">Trending</a></li>
+                        <li><a href="{base_path}index.html" class="hover:text-indigo-200 transition font-medium">Home</a></li>
+                        <li><a href="{base_path}search.html" class="hover:text-indigo-200 transition font-medium">Search</a></li>
+                        <li><a href="{base_path}authors.html" class="hover:text-indigo-200 transition font-medium">Authors</a></li>
+                        <li><a href="{base_path}integrated/categories.html" class="hover:text-indigo-200 transition font-medium text-indigo-200">Categories</a></li>
+                        <li><a href="{base_path}integrated/trending.html" class="hover:text-indigo-200 transition font-medium">Trending</a></li>
                     </ul>
                 </nav>
                 
@@ -456,11 +536,7 @@ class CategoryIntegrator(BaseIntegrator):
         const mobileSearchInput = document.getElementById('mobileSearchInput');
         const mobileSearchSuggestions = document.getElementById('mobileSearchSuggestions');
         
-        const searchData = [
-            'MrBeast', 'Emma Chamberlain', 'PewDiePie', 'Charli DAmelio', 'Logan Paul',
-            'Creator Economy', 'TikTok Algorithm', 'YouTube Shorts', 'Instagram Reels',
-            'Brand Partnerships', 'Influencer Marketing', 'Social Media Trends'
-        ];
+        const searchData = {{SEARCH_DATA}};
         
         function openMobileSearch() {
             mobileSearchOverlay.classList.add('active');
@@ -530,13 +606,13 @@ class CategoryIntegrator(BaseIntegrator):
             if (query.trim()) {
                 // Close mobile search and redirect to search page
                 closeMobileSearchFunc();
-                window.location.href = `../../search.html?q=${encodeURIComponent(query)}`;
+                window.location.href = `{base_path}search.html?q=${encodeURIComponent(query)}`;
             }
         }
 
     </script>
 </body>
-</html>'''
+</html>''').replace('{base_path}', base_path)
 
     # Required abstract methods
     def parse_content_file(self, file_path: Path) -> Dict[str, Any]:
@@ -634,15 +710,15 @@ class CategoryIntegrator(BaseIntegrator):
             self.update_progress(f"Error processing category: {str(e)}")
             return False
 
-    def get_categories_listing_template(self):
+    def get_categories_listing_template(self, base_path=""):
         """Get categories listing template"""
-        return '''<!DOCTYPE html>
+        return ('''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Categories - Influencer News</title>
-    <link rel="stylesheet" href="../assets/css/styles.min.css">
+    <link rel="stylesheet" href="{base_path}assets/css/styles.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
@@ -763,11 +839,11 @@ class CategoryIntegrator(BaseIntegrator):
         </div>
         <nav class="p-6">
             <ul class="space-y-4">
-                <li><a href="../../index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Home</a></li>
-                <li><a href="../../search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Search</a></li>
-                <li><a href="../../authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Authors</a></li>
-                <li><a href="../categories.html" class="mobile-nav-item block text-indigo-200 text-lg py-2 border-b border-indigo-600/30">Categories</a></li>
-                <li><a href="../trending.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Trending</a></li>
+                <li><a href="{base_path}index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Home</a></li>
+                <li><a href="{base_path}search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Search</a></li>
+                <li><a href="{base_path}authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Authors</a></li>
+                <li><a href="{base_path}integrated/categories.html" class="mobile-nav-item block text-indigo-200 text-lg py-2 border-b border-indigo-600/30">Categories</a></li>
+                <li><a href="{base_path}integrated/trending.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Trending</a></li>
             </ul>
         </nav>
     </div>
@@ -805,11 +881,11 @@ class CategoryIntegrator(BaseIntegrator):
             <div class="flex items-center space-x-4">
                 <nav class="hidden md:block">
                     <ul class="flex space-x-8">
-                        <li><a href="../../index.html" class="hover:text-indigo-200 transition font-medium">Home</a></li>
-                        <li><a href="../../search.html" class="hover:text-indigo-200 transition font-medium">Search</a></li>
-                        <li><a href="../../authors.html" class="hover:text-indigo-200 transition font-medium">Authors</a></li>
-                        <li><a href="../categories.html" class="hover:text-indigo-200 transition font-medium text-indigo-200">Categories</a></li>
-                        <li><a href="../trending.html" class="hover:text-indigo-200 transition font-medium">Trending</a></li>
+                        <li><a href="{base_path}index.html" class="hover:text-indigo-200 transition font-medium">Home</a></li>
+                        <li><a href="{base_path}search.html" class="hover:text-indigo-200 transition font-medium">Search</a></li>
+                        <li><a href="{base_path}authors.html" class="hover:text-indigo-200 transition font-medium">Authors</a></li>
+                        <li><a href="{base_path}integrated/categories.html" class="hover:text-indigo-200 transition font-medium text-indigo-200">Categories</a></li>
+                        <li><a href="{base_path}integrated/trending.html" class="hover:text-indigo-200 transition font-medium">Trending</a></li>
                     </ul>
                 </nav>
                 
@@ -900,11 +976,7 @@ class CategoryIntegrator(BaseIntegrator):
         const mobileSearchInput = document.getElementById('mobileSearchInput');
         const mobileSearchSuggestions = document.getElementById('mobileSearchSuggestions');
         
-        const searchData = [
-            'MrBeast', 'Emma Chamberlain', 'PewDiePie', 'Charli DAmelio', 'Logan Paul',
-            'Creator Economy', 'TikTok Algorithm', 'YouTube Shorts', 'Instagram Reels',
-            'Brand Partnerships', 'Influencer Marketing', 'Social Media Trends'
-        ];
+        const searchData = {{SEARCH_DATA}};
         
         function openMobileSearch() {
             mobileSearchOverlay.classList.add('active');
@@ -974,13 +1046,14 @@ class CategoryIntegrator(BaseIntegrator):
             if (query.trim()) {
                 // Close mobile search and redirect to search page
                 closeMobileSearchFunc();
-                window.location.href = `../../search.html?q=${encodeURIComponent(query)}`;
+                window.location.href = `{base_path}search.html?q=${encodeURIComponent(query)}`;
             }
         }
 
     </script>
 </body>
-</html>'''
+</html>''').replace('{base_path}', base_path)
+    
     def update_all_listing_pages(self):
         """Update all listing pages with current categories from database"""
         self.update_progress("Updating category listing pages...")

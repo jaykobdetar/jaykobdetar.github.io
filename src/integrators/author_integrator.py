@@ -8,8 +8,12 @@ Manages author profiles and generates author pages using SQLite database
 import random
 from pathlib import Path
 from typing import Dict, List, Any, Optional
-from .base_integrator import BaseIntegrator
-from ..models import Author, Article, Image
+try:
+    from .base_integrator import BaseIntegrator
+    from ..models import Author, Article, Image
+except ImportError:
+    from src.integrators.base_integrator import BaseIntegrator
+    from src.models import Author, Article, Image
 
 
 class AuthorIntegrator(BaseIntegrator):
@@ -112,10 +116,14 @@ class AuthorIntegrator(BaseIntegrator):
         author = Author(
             name=content_data['name'],
             slug=slug,
+            title=content_data['title'],
             bio=content_data['bio'],
+            location=content_data.get('location'),
             expertise=', '.join(content_data['expertise']),
-            linkedin_url=content_data.get('linkedin'),
-            twitter_handle=content_data.get('twitter')
+            linkedin=content_data.get('linkedin'),
+            twitter=content_data.get('twitter'),
+            rating=content_data.get('rating', 0.0),
+            joined_date=content_data.get('joined_date', '2025-01-01')
         )
         author.save()
         
@@ -154,7 +162,7 @@ class AuthorIntegrator(BaseIntegrator):
             )
         else:
             # Use placeholder
-            img_tag = f'<img src="{base_path}assets/placeholders/author_placeholder.jpg" alt="{author.name}" class="rounded-full object-cover">'
+            img_tag = f'<img src="{base_path}assets/placeholders/author_placeholder.svg" alt="{author.name}" class="rounded-full object-cover">'
         
         # Create HTML content for author page with mobile support
         html_content = f'''<!DOCTYPE html>
@@ -292,7 +300,7 @@ class AuthorIntegrator(BaseIntegrator):
         }}
     
         /* Mobile Menu Styles */
-        .mobile-menu {
+        .mobile-menu {{
             position: fixed;
             top: 0;
             right: -100%;
@@ -302,13 +310,13 @@ class AuthorIntegrator(BaseIntegrator):
             background: #312e81;
             transition: right 0.3s ease-in-out;
             z-index: 1000;
-        }
+        }}
         
-        .mobile-menu.active {
+        .mobile-menu.active {{
             right: 0;
-        }
+        }}
         
-        .mobile-menu-overlay {
+        .mobile-menu-overlay {{
             position: fixed;
             top: 0;
             left: 0;
@@ -319,14 +327,14 @@ class AuthorIntegrator(BaseIntegrator):
             visibility: hidden;
             transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
             z-index: 999;
-        }
+        }}
         
-        .mobile-menu-overlay.active {
+        .mobile-menu-overlay.active {{
             opacity: 1;
             visibility: visible;
-        }
+        }}
         
-        .hamburger {
+        .hamburger {{
             width: 30px;
             height: 24px;
             position: relative;
@@ -334,44 +342,44 @@ class AuthorIntegrator(BaseIntegrator):
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-        }
+        }}
         
-        .hamburger span {
+        .hamburger span {{
             display: block;
             width: 100%;
             height: 3px;
             background: white;
             border-radius: 3px;
             transition: all 0.3s ease-in-out;
-        }
+        }}
         
-        .hamburger.active span:nth-child(1) {
+        .hamburger.active span:nth-child(1) {{
             transform: rotate(45deg) translate(8px, 8px);
-        }
+        }}
         
-        .hamburger.active span:nth-child(2) {
+        .hamburger.active span:nth-child(2) {{
             opacity: 0;
-        }
+        }}
         
-        .hamburger.active span:nth-child(3) {
+        .hamburger.active span:nth-child(3) {{
             transform: rotate(-45deg) translate(8px, -8px);
-        }
+        }}
         
-        .mobile-nav-item {
+        .mobile-nav-item {{
             display: block;
             padding: 1rem 2rem;
             color: white;
             text-decoration: none;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             transition: background 0.3s ease;
-        }
+        }}
         
-        .mobile-nav-item:hover {
+        .mobile-nav-item:hover {{
             background: rgba(255, 255, 255, 0.1);
-        }
+        }}
         
         /* Mobile Search Overlay */
-        .mobile-search-overlay {
+        .mobile-search-overlay {{
             position: fixed;
             top: 0;
             left: 0;
@@ -382,12 +390,12 @@ class AuthorIntegrator(BaseIntegrator):
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-        }
+        }}
         
-        .mobile-search-overlay.active {
+        .mobile-search-overlay.active {{
             opacity: 1;
             visibility: visible;
-        }
+        }}
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -536,10 +544,10 @@ class AuthorIntegrator(BaseIntegrator):
                     </div>
                     <div>
                         <h1 class="text-4xl font-bold text-white mb-2">{self.escape_html(author.name)}</h1>
-                        <p class="text-xl text-indigo-100 mb-4">Senior Correspondent</p>
+                        <p class="text-xl text-indigo-100 mb-4">{self.escape_html(author.title or 'Contributor')}</p>
                         <div class="flex space-x-4">
                             {'<span class="bg-indigo-500 text-white px-3 py-1 rounded-full text-sm">✓ Verified</span>' if hasattr(author, 'verified') else ''}
-                            <span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm">📍 {self.escape_html(getattr(author, 'location', 'Remote'))}</span>
+                            {f'<span class="bg-white/20 text-white px-3 py-1 rounded-full text-sm">📍 {self.escape_html(author.location)}</span>' if author.location else ''}
                         </div>
                     </div>
                 </div>
@@ -567,11 +575,11 @@ class AuthorIntegrator(BaseIntegrator):
                                 <div class="text-sm text-gray-600">Articles</div>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg text-center">
-                                <div class="text-2xl font-bold text-indigo-600">4.8</div>
+                                <div class="text-2xl font-bold text-indigo-600">{author.rating if hasattr(author, 'rating') and author.rating else 'N/A'}</div>
                                 <div class="text-sm text-gray-600">Rating</div>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg text-center">
-                                <div class="text-2xl font-bold text-indigo-600">2020</div>
+                                <div class="text-2xl font-bold text-indigo-600">{author.joined_date.split('-')[0] if author.joined_date else 'N/A'}</div>
                                 <div class="text-sm text-gray-600">Joined</div>
                             </div>
                         </div>
@@ -583,8 +591,8 @@ class AuthorIntegrator(BaseIntegrator):
                             <h3 class="text-xl font-semibold mb-4">Connect</h3>
                             <div class="space-y-3">
                                 {f'<a href="mailto:{author.email}" class="flex items-center text-gray-700 hover:text-indigo-600"><span class="mr-2">📧</span> Email</a>' if hasattr(author, 'email') and author.email else ''}
-                                {f'<a href="{author.get_twitter_url()}" target="_blank" class="flex items-center text-gray-700 hover:text-indigo-600"><span class="mr-2">🐦</span> Twitter</a>' if author.twitter_handle else ''}
-                                {f'<a href="{author.get_full_linkedin_url()}" target="_blank" class="flex items-center text-gray-700 hover:text-indigo-600"><span class="mr-2">💼</span> LinkedIn</a>' if author.linkedin_url else ''}
+                                {f'<a href="{author.get_twitter_url()}" target="_blank" class="flex items-center text-gray-700 hover:text-indigo-600"><span class="mr-2">🐦</span> Twitter</a>' if author.twitter else ''}
+                                {f'<a href="{author.get_full_linkedin_url()}" target="_blank" class="flex items-center text-gray-700 hover:text-indigo-600"><span class="mr-2">💼</span> LinkedIn</a>' if author.linkedin else ''}
                             </div>
                         </div>
                     </div>
@@ -797,7 +805,7 @@ class AuthorIntegrator(BaseIntegrator):
                     base_path
                 )
             else:
-                img_tag = f'<img src="{base_path}assets/placeholders/article_placeholder.jpg" alt="{article.title}" class="w-full h-48 object-cover">'
+                img_tag = f'<img src="{base_path}assets/placeholders/article_placeholder.svg" alt="{article.title}" class="w-full h-48 object-cover">'
             
             card = f'''
             <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition">
@@ -855,7 +863,7 @@ class AuthorIntegrator(BaseIntegrator):
                     base_path
                 )
             else:
-                img_tag = f'<img src="{base_path}assets/placeholders/author_placeholder.jpg" alt="{author.name}" class="w-24 h-24 rounded-full object-cover">'
+                img_tag = f'<img src="{base_path}assets/placeholders/author_placeholder.svg" alt="{author.name}" class="w-24 h-24 rounded-full object-cover">'
             
             article_count = author.get_article_count()
             
@@ -869,7 +877,7 @@ class AuthorIntegrator(BaseIntegrator):
                                 {self.escape_html(author.name)}
                             </a>
                         </h3>
-                        <p class="text-gray-600">Senior Correspondent</p>
+                        <p class="text-gray-600">{self.escape_html(author.title or 'Contributor')}</p>
                     </div>
                 </div>
                 <p class="text-gray-700 mb-4 line-clamp-3">{self.escape_html(author.bio)}</p>

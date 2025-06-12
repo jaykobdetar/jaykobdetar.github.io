@@ -7,12 +7,19 @@ Integrates articles with progress callbacks for GUI
 
 import random
 import datetime
+import json
 from pathlib import Path
 from typing import Dict, List, Any
-from .base_integrator import BaseIntegrator
-from ..models.article import Article
-from ..models.author import Author
-from ..models.category import Category
+try:
+    from .base_integrator import BaseIntegrator
+    from ..models.article import Article
+    from ..models.author import Author
+    from ..models.category import Category
+except ImportError:
+    from src.integrators.base_integrator import BaseIntegrator
+    from src.models.article import Article
+    from src.models.author import Author
+    from src.models.category import Category
 
 
 class ArticleIntegrator(BaseIntegrator):
@@ -26,35 +33,35 @@ class ArticleIntegrator(BaseIntegrator):
             'sarah chen': {
                 'name': 'Sarah Chen',
                 'title': 'Senior Business Reporter',
-                'image': 'https://images.unsplash.com/photo-1494790108755-2616c395d75b?w=50&h=50&fit=crop&crop=face',
+                'image': 'assets/images/authors/sarah_chen_profile.jpg',
                 'bio': 'Former TechCrunch senior writer specializing in creator economy trends.',
                 'expertise': ['Creator Economy', 'Business', 'Startups']
             },
             'michael torres': {
                 'name': 'Michael Torres', 
                 'title': 'Entertainment Editor',
-                'image': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face',
+                'image': 'assets/images/authors/michael_torres_profile.jpg',
                 'bio': 'Celebrity culture and entertainment industry veteran.',
                 'expertise': ['Celebrity News', 'Entertainment', 'Exclusive Interviews']
             },
             'alex rivera': {
                 'name': 'Alex Rivera',
                 'title': 'Tech Correspondent', 
-                'image': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face',
+                'image': 'assets/images/authors/alex_rivera_profile.jpg',
                 'bio': 'Platform algorithm specialist and former software engineer.',
                 'expertise': ['Algorithms', 'Platform Updates', 'Tech Analysis']
             },
             'jessica kim': {
                 'name': 'Jessica Kim',
                 'title': 'Beauty & Fashion Editor',
-                'image': 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face', 
+                'image': 'assets/images/authors/jessica_kim_profile.jpg', 
                 'bio': 'Former Vogue digital editor covering beauty influencer partnerships.',
                 'expertise': ['Beauty', 'Fashion', 'Influencer Collabs']
             },
             'david park': {
                 'name': 'David Park',
                 'title': 'Markets & Economics Editor',
-                'image': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face',
+                'image': 'assets/images/authors/david_park_profile.jpg',
                 'bio': 'Former Goldman Sachs analyst specializing in creator economy.',
                 'expertise': ['Market Analysis', 'Economics', 'Data Science']
             }
@@ -81,7 +88,7 @@ class ArticleIntegrator(BaseIntegrator):
                 author_info = self.authors.get(author_key, {
                     'name': author_name,
                     'title': 'Contributor',
-                    'image': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face',
+                    'image': 'assets/placeholders/author_placeholder.svg',
                     'bio': 'Contributing writer for Influencer News.',
                     'expertise': ['General']
                 })
@@ -146,7 +153,7 @@ class ArticleIntegrator(BaseIntegrator):
         author_info = self.authors.get(author_key, {
             'name': metadata['author'],
             'title': 'Contributor',
-            'image': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face',
+            'image': 'assets/placeholders/author_placeholder.svg',
             'bio': 'Contributing writer for Influencer News.',
             'expertise': [metadata.get('category', 'General').title()]
         })
@@ -256,9 +263,16 @@ class ArticleIntegrator(BaseIntegrator):
     
     def create_content_page(self, article: Dict[str, Any]):
         """Create individual article page"""
+        # Get path manager for this location
+        path_manager = self.get_path_manager(f"integrated/articles/article_{article['id']}.html")
+        base_path = path_manager.get_base_path()
+        
         # Read the article template
         with open('article.html', 'r', encoding='utf-8') as f:
             template = f.read()
+        
+        # Replace {base_path} placeholders with actual base path
+        template = template.replace('{base_path}', base_path)
         
         # Format numbers with commas
         views_formatted = f"{int(article['views']):,}"
@@ -278,25 +292,21 @@ class ArticleIntegrator(BaseIntegrator):
             '1,247,892': views_formatted,
             '24,156': likes_formatted,
             '2,847': comments_formatted,
+            # Fix breadcrumb replacements
+            'search.html?q=business': f"search.html?q={article['category'].lower()}",
+            '>Business<': f">{article['category'].title()}<",
+            '>MrBeast Creator Fund<': f">{article['title'][:50] + '...' if len(article['title']) > 50 else article['title']}<",
+            # Fix sidebar author references
+            'Jessica Kim': article['author_info']['name'],
+            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face': article['author_info']['image'].replace('w=50&h=50', 'w=80&h=80'),
+            'Follow Sarah': f"Follow {article['author_info']['name'].split()[0]}",
+            # Fix share functionality
+            '"MrBeast Announces Revolutionary $100M Creator Support Fund"': f'"{article["title"]}"',
+            'alt="MrBeast Creator Fund Announcement"': f'alt="{article["title"]}"',
         }
         
         # Apply replacements
         for old, new in replacements.items():
-            template = template.replace(old, new)
-        
-        # Fix navigation links for subfolder structure (articles are in integrated/articles/)
-        navigation_fixes = {
-            'href="index.html"': 'href="../../index.html"',
-            'href="search.html"': 'href="../../search.html"',
-            'href="authors.html"': 'href="../../authors.html"',
-            'href="integrated/categories.html"': 'href="../categories.html"',
-            'href="integrated/trending.html"': 'href="../trending.html"',
-            'href="search.html?category=business"': 'href="../../search.html?category=business"',
-            'href="search.html?q=business"': 'href="../../search.html?q=business"',
-            "window.location.href = `search.html?q=": "window.location.href = `../../search.html?q="
-        }
-        
-        for old, new in navigation_fixes.items():
             template = template.replace(old, new)
         
         # Replace content
@@ -540,12 +550,12 @@ End your article with a strong conclusion that ties everything together and prov
                 slug=slug,
                 author_id=author.id,
                 category_id=category.id,
-                publication_date=content_data.get('date', datetime.datetime.now().isoformat()),
+                publish_date=content_data.get('date', datetime.datetime.now().isoformat()),
                 content=content_data.get('content', ''),
-                subtitle=content_data.get('excerpt', ''),
-                read_time=content_data.get('read_time', 5),
-                tags=content_data.get('tags', []),
-                meta_description=content_data.get('excerpt', '')
+                excerpt=content_data.get('excerpt', ''),
+                read_time_minutes=content_data.get('read_time', 5),
+                tags_json=json.dumps(content_data.get('tags', [])),
+                seo_description=content_data.get('excerpt', '')
             )
             
             # Save to database
@@ -582,7 +592,7 @@ End your article with a strong conclusion that ties everything together and prov
             author_info = self.authors.get(author_key, {
                 'name': author_name,
                 'title': 'Contributor',
-                'image': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face',
+                'image': 'assets/placeholders/author_placeholder.svg',
                 'bio': 'Contributing writer for Influencer News.',
                 'expertise': ['General']
             })

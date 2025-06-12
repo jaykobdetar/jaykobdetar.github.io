@@ -1,81 +1,60 @@
-Topic: [Trending Topic Title]
-Hashtag: [#RelatedHashtag]
-Category: [Related category slug: business, entertainment, tech, fashion, etc.]
-Trend_Score: [Number 1-10000, higher = more trending]
-Related_Articles: [Comma-separated article IDs if any]
-Status: [active, rising, steady, declining]
-Icon: [Emoji icon - usually 🔥 for hot trends]
-Growth_Rate: [Percentage growth rate, can be negative]
-Heat_Score: [Number 0-100, trending intensity]
-Youtube_Mentions: [Number of mentions on YouTube]
-TikTok_Mentions: [Number of mentions on TikTok]
-Instagram_Mentions: [Number of mentions on Instagram]
-Twitter_Mentions: [Number of mentions on Twitter]
-Twitch_Mentions: [Number of mentions on Twitch]
+Title: {{trending.title}}
+Slug: {{trending.slug}}
+Category_ID: {{trending.category_id}}
+Icon: {{trending.icon}}
+Heat_Score: {{trending.heat_score}}
+Related_Articles: {{trending.related_articles}}
+Is_Active: {{trending.is_active}}
+Peak_Date: {{trending.peak_date}}
+Momentum: {{trending.momentum}}
+
+<!-- DEPRECATED FIELDS (for reference only, not used by current model):
+- Hashtag: Use for content reference but not stored in database
+- Status: Use Is_Active field instead
+- Growth_Rate: Use Momentum field instead
+- Platform mentions (Youtube_Mentions, etc.): Not supported in current model
+-->
 
 ---
 
-[Detailed analysis of why this topic is trending goes here. This should include:
+{{trending.analysis}}
 
+<!-- CONTENT GUIDELINES:
+
+Include in trend analysis:
 - Background context on the trend
 - Key factors driving the trend
 - Platform breakdown and analysis
 - Impact on the creator community
-- Future predictions
+- Future predictions and implications
 - Related developments
 
-The content should be analytical and informative, helping readers understand not just WHAT is trending but WHY it matters.]
+The content should be analytical and informative, helping readers understand not just WHAT is trending but WHY it matters.
+-->
 
-EXAMPLE:
-================
+<!-- TEMPLATE USAGE:
 
-Topic: Virtual Creator Collaborations
-Hashtag: #VirtualCollabs
-Category: technology
-Trend_Score: 7500
-Related_Articles: 
-Status: rising
-Icon: 🤝
-Growth_Rate: 85.3
-Heat_Score: 78
-Youtube_Mentions: 25000
-TikTok_Mentions: 18000
-Instagram_Mentions: 12000
-Twitter_Mentions: 8500
-Twitch_Mentions: 4200
+1. Replace all {{variable}} placeholders with actual trending data
+2. Fill in dynamic fields from your trending topics system
+3. Use analysis field for detailed trend breakdown
+4. Ensure heat_score reflects current trending intensity
 
----
+Dynamic Fields Available:
+- {{trending.title}} - Trending topic title
+- {{trending.slug}} - URL-friendly identifier
+- {{trending.category_id}} - Related category ID
+- {{trending.icon}} - Emoji icon (usually 🔥 for hot trends)
+- {{trending.heat_score}} - Trending intensity (0-10000)
+- {{trending.related_articles}} - Comma-separated article IDs
+- {{trending.is_active}} - Current active status
+- {{trending.peak_date}} - Date when topic peaked
+- {{trending.momentum}} - Rate of change (can be negative)
+- {{trending.analysis}} - Detailed trend analysis content
 
-Virtual creator collaborations have emerged as one of the fastest-growing trends in the influencer space, driven by advances in virtual production technology and the global shift toward remote content creation. This trend encompasses everything from virtual reality meetups to AI-assisted collaborative content creation.
+Heat Score Ranges:
+- 9000-10000: 🔥🔥🔥 Extremely Hot
+- 7000-8999: 🔥🔥 Very Hot
+- 5000-6999: 🔥 Hot
+- 0-4999: 📈 Rising
 
-## Why It's Trending
-
-The surge in virtual collaborations stems from several key factors:
-
-**Technology Advancement**: Improved virtual production tools, better internet infrastructure, and more accessible VR/AR technology have made remote collaboration not just possible, but often preferable to in-person shoots.
-
-**Global Reach**: Creators can now collaborate across continents without travel costs, opening up partnerships that were previously impossible due to geographic or budget constraints.
-
-**COVID-19 Impact**: The pandemic accelerated adoption of remote collaboration tools, and many creators have continued using these methods even as travel restrictions lifted.
-
-**Cost Efficiency**: Virtual collaborations eliminate travel, accommodation, and location costs, making collaborations accessible to smaller creators who couldn't afford traditional collaborative content.
-
-## Platform Breakdown
-
-**YouTube** leads in mentions due to the platform's focus on long-form collaborative content. Many creators are producing "virtual collab" series where they create content together from different locations.
-
-**TikTok** shows strong engagement with quick virtual collaboration challenges and duets that span multiple creators and time zones.
-
-**Instagram** adoption focuses on virtual photo shoots and collaborative Stories content, with creators using similar virtual backgrounds and themes.
-
-**Twitch** and **Twitter** show growing discussion around the technical and business aspects of virtual collaboration tools.
-
-## Industry Impact
-
-This trend is reshaping how brands approach influencer partnerships, with many now specifically requesting virtual collaboration capabilities in their creator briefs. It's also driving innovation in collaboration software and virtual production tools.
-
-The long-term implications suggest a permanent shift toward hybrid collaboration models, where virtual and in-person elements are combined for maximum creative and economic efficiency.
-
-## Future Outlook
-
-Experts predict that virtual collaborations will continue evolving, with AI-assisted content creation and improved haptic feedback technology making remote partnerships even more seamless and creative.
+-->

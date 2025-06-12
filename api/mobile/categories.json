@@ -4,7 +4,7 @@
     {
       "slug": "business",
       "name": "Business",
-      "description": "Business strategies and entrepreneurship",
+      "description": "Creator economy, monetization, and business strategies",
       "mobile_optimized": true
     },
     {
@@ -16,32 +16,32 @@
     {
       "slug": "creator-economy",
       "name": "Creator Economy",
-      "description": "Insights into the creator economy",
+      "description": "Business of content creation and monetization strategies",
       "mobile_optimized": true
     },
     {
       "slug": "entertainment",
       "name": "Entertainment",
-      "description": "Movies, music, and pop culture",
+      "description": "Celebrity news, drama, and exclusive interviews from the influencer world",
       "mobile_optimized": true
     },
     {
       "slug": "fashion",
-      "name": "Fashion",
-      "description": "Style trends and fashion industry news",
+      "name": "Fashion & Beauty",
+      "description": "Fashion trends, beauty collaborations, and style content",
       "mobile_optimized": true
     },
     {
       "slug": "technology",
       "name": "Technology",
-      "description": "Latest in tech, AI, and digital innovation",
+      "description": "Platform updates, AI tools, and tech innovations for creators",
       "mobile_optimized": true
     }
   ],
   "error": null,
   "meta": {
     "total": 6,
-    "generated_at": "2025-06-11T07:18:44.826826",
+    "generated_at": "2025-06-11T16:24:46.460828",
     "cache_duration": 300
   },
   "mobile_optimized": true

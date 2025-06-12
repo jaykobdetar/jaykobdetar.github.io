@@ -7,8 +7,12 @@ Handles trending topics integration with database
 
 from pathlib import Path
 from typing import Dict, List, Any
-from .base_integrator import BaseIntegrator
-from ..models.trending import TrendingTopic
+try:
+    from .base_integrator import BaseIntegrator
+    from ..models.trending import TrendingTopic
+except ImportError:
+    from src.integrators.base_integrator import BaseIntegrator
+    from src.models.trending import TrendingTopic
 
 
 class TrendingIntegrator(BaseIntegrator):
@@ -45,22 +49,28 @@ class TrendingIntegrator(BaseIntegrator):
     def create_trending_page(self, topic):
         """Create individual trending topic page"""
         try:
+            # Get path manager for this location
+            path_manager = self.get_path_manager(f"integrated/trending/trend_{topic.slug}.html")
+            base_path = path_manager.get_base_path()
+            
             # Read template
-            template_content = self.get_trending_template()
+            template_content = self.get_trending_template(base_path)
+            
+            # Get dynamic data from topic
+            heat_score = getattr(topic, 'heat_score', getattr(topic, 'trend_score', 0))
+            description = getattr(topic, 'description', getattr(topic, 'analysis', f'Explore the latest on {topic.title}')[:200] + '...' if getattr(topic, 'analysis', '') else f'Explore the latest on {topic.title}')
             
             # Replace placeholders
             replacements = {
                 '{{TOPIC_TITLE}}': topic.title,
-                '{{TOPIC_DESCRIPTION}}': getattr(topic, 'description', f'Explore the latest on {topic.title}'),
-                '{{HEAT_SCORE}}': str(getattr(topic, 'heat_score', 0)),
-                '{{TREND_CONTENT}}': self.generate_trend_content(topic)
+                '{{TOPIC_DESCRIPTION}}': description,
+                '{{HEAT_SCORE}}': str(heat_score),
+                '{{TREND_CONTENT}}': self.generate_trend_content(topic, base_path)
             }
             
             content = template_content
             for placeholder, value in replacements.items():
                 content = content.replace(placeholder, value)
-                
-            # No navigation path fixes needed since file is in main integrated dir
             
             # Save file
             filename = self.integrated_dir / f"trend_{topic.slug}.html"
@@ -75,17 +85,19 @@ class TrendingIntegrator(BaseIntegrator):
     def create_trending_listing(self, topics):
         """Create trending topics listing page"""
         try:
+            # Get path manager for this location
+            path_manager = self.get_path_manager("integrated/trending.html")
+            base_path = path_manager.get_base_path()
+            
             # Read template
-            template_content = self.get_trending_listing_template()
+            template_content = self.get_trending_listing_template(base_path)
             
             # Generate trending cards
-            topics_html = self.generate_trending_cards(topics)
+            topics_html = self.generate_trending_cards(topics, base_path)
             
             # Replace placeholders
             content = template_content.replace('{{TRENDING_CONTENT}}', topics_html)
             content = content.replace('{{TOPIC_COUNT}}', str(len(topics)))
-            
-            # No navigation path fixes needed since file is in main integrated dir
             
             # Save file (listing goes in main integrated dir, not subfolder)
             from pathlib import Path
@@ -98,31 +110,35 @@ class TrendingIntegrator(BaseIntegrator):
         except Exception as e:
             self.update_progress(f"Error creating trending listing: {e}")
             
-    def generate_trending_cards(self, topics):
+    def generate_trending_cards(self, topics, base_path=""):
         """Generate HTML for trending topic cards"""
         cards_html = ""
         
-        # Sort by heat score (descending)
-        sorted_topics = sorted(topics, key=lambda t: getattr(t, 'heat_score', 0), reverse=True)
+        # Sort by heat score (descending) - use trend_score as fallback
+        sorted_topics = sorted(topics, key=lambda t: getattr(t, 'heat_score', getattr(t, 'trend_score', 0)), reverse=True)
         
         for i, topic in enumerate(sorted_topics):
-            heat_score = getattr(topic, 'heat_score', 0)
+            # Use heat_score or trend_score as fallback
+            heat_score = getattr(topic, 'heat_score', getattr(topic, 'trend_score', 0))
             
-            # Get heat indicator
-            if heat_score >= 90:
-                heat_indicator = "🔥🔥🔥"
+            # Get custom icon if available, otherwise use heat-based indicator
+            topic_icon = getattr(topic, 'icon', None)
+            
+            # Get heat indicator based on score ranges
+            if heat_score >= 8000:
+                heat_indicator = topic_icon or "🔥🔥🔥"
                 heat_class = "text-red-600"
                 heat_bg = "bg-red-100"
-            elif heat_score >= 70:
-                heat_indicator = "🔥🔥"
+            elif heat_score >= 6000:
+                heat_indicator = topic_icon or "🔥🔥"
                 heat_class = "text-orange-600"
                 heat_bg = "bg-orange-100"
-            elif heat_score >= 50:
-                heat_indicator = "🔥"
+            elif heat_score >= 3000:
+                heat_indicator = topic_icon or "🔥"
                 heat_class = "text-yellow-600"
                 heat_bg = "bg-yellow-100"
             else:
-                heat_indicator = "📈"
+                heat_indicator = topic_icon or "📈"
                 heat_class = "text-blue-600"
                 heat_bg = "bg-blue-100"
                 
@@ -132,11 +148,22 @@ class TrendingIntegrator(BaseIntegrator):
                 rank_colors = ["bg-yellow-500", "bg-gray-400", "bg-orange-600"]
                 rank_badge = f'<div class="absolute top-4 left-4 w-8 h-8 {rank_colors[i]} text-white rounded-full flex items-center justify-center font-bold text-sm">#{i+1}</div>'
             
+            # Get description from analysis field if available, otherwise use description
+            description_text = getattr(topic, 'description', '')
+            if not description_text and hasattr(topic, 'analysis'):
+                analysis_text = getattr(topic, 'analysis', '')
+                description_text = analysis_text[:150] + '...' if len(analysis_text) > 150 else analysis_text
+            elif not description_text:
+                description_text = f'Discover more about {topic.title}'
+                
+            # Get image path - use proper assets folder structure
+            image_url = getattr(topic, 'image_url', None) or f'{base_path}assets/placeholders/trending_placeholder.svg'
+            
             cards_html += f'''
             <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow relative">
                 {rank_badge}
                 <div class="relative">
-                    <img src="{getattr(topic, 'image_url', '/assets/placeholders/trending_placeholder.svg')}" 
+                    <img src="{image_url}" 
                          alt="{self.escape_html(topic.title)}" 
                          class="w-full h-48 object-cover">
                     <div class="absolute top-4 right-4">
@@ -150,10 +177,10 @@ class TrendingIntegrator(BaseIntegrator):
                         <a href="trending/trend_{topic.slug}.html">{self.escape_html(topic.title)}</a>
                     </h3>
                     <p class="text-gray-700 mb-4 text-sm">
-                        {self.escape_html(getattr(topic, 'description', topic.title)[:150])}...
+                        {self.escape_html(description_text)}
                     </p>
                     <div class="flex items-center justify-between text-sm">
-                        <span class="text-gray-500">🔥 Heat Score: {heat_score}</span>
+                        <span class="text-gray-500">{heat_indicator} Heat Score: {heat_score}</span>
                         <a href="trending/trend_{topic.slug}.html" 
                            class="text-indigo-600 font-medium">Explore →</a>
                     </div>
@@ -163,29 +190,82 @@ class TrendingIntegrator(BaseIntegrator):
             
         return cards_html
         
-    def generate_trend_content(self, topic):
-        """Generate content for trending topic page"""
+    def generate_trend_content(self, topic, base_path=""):
+        """Generate content for trending topic page using dynamic data"""
+        # Use analysis field if available, otherwise fall back to content or generate default
+        analysis_content = getattr(topic, 'analysis', '')
         content = getattr(topic, 'content', '')
         
-        if not content:
+        # Get dynamic metrics
+        heat_score = getattr(topic, 'heat_score', getattr(topic, 'trend_score', 0))
+        growth_rate = getattr(topic, 'growth_rate', 0)
+        platform_data = getattr(topic, 'platform_data', {})
+        
+        # Calculate total mentions from platform data
+        total_mentions = 0
+        if isinstance(platform_data, dict):
+            total_mentions = sum(platform_data.values())
+        
+        # Get engagement level based on heat score
+        if heat_score >= 8000:
+            engagement_level = "Viral"
+        elif heat_score >= 5000:
+            engagement_level = "Very High"
+        elif heat_score >= 2000:
+            engagement_level = "High"
+        else:
+            engagement_level = "Moderate"
+        
+        # Generate content using analysis if available
+        if analysis_content:
+            # Format the analysis content with proper HTML structure
+            formatted_analysis = self.format_analysis_content(analysis_content)
+            
+            content = f'''
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                <h2 class="text-3xl font-bold mb-6 hero-title">About This Trend</h2>
+                <div class="text-gray-700 text-lg mb-6">
+                    {formatted_analysis}
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-3xl font-bold text-indigo-600">{heat_score:,}</div>
+                        <div class="text-sm text-gray-600">Heat Score</div>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-3xl font-bold text-green-600">{total_mentions:,}</div>
+                        <div class="text-sm text-gray-600">Total Mentions</div>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-3xl font-bold text-purple-600">{engagement_level}</div>
+                        <div class="text-sm text-gray-600">Engagement</div>
+                    </div>
+                </div>
+            </div>
+            
+            {self.generate_platform_breakdown(platform_data) if platform_data else ''}
+            {self.generate_growth_metrics(growth_rate, heat_score)}
+            '''
+        else:
             # Generate default content based on topic
+            description = getattr(topic, 'description', f'{topic.title} is currently trending in the influencer space.')
             content = f'''
             <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
                 <h2 class="text-3xl font-bold mb-6 hero-title">About This Trend</h2>
                 <p class="text-gray-700 text-lg mb-6">
-                    {self.escape_html(getattr(topic, 'description', f'{topic.title} is currently trending in the influencer space.'))}
+                    {self.escape_html(description)}
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div class="text-center p-4 bg-gray-50 rounded-lg">
-                        <div class="text-3xl font-bold text-indigo-600">{getattr(topic, 'heat_score', 0)}</div>
+                        <div class="text-3xl font-bold text-indigo-600">{heat_score:,}</div>
                         <div class="text-sm text-gray-600">Heat Score</div>
                     </div>
                     <div class="text-center p-4 bg-gray-50 rounded-lg">
-                        <div class="text-3xl font-bold text-green-600">{getattr(topic, 'mentions', 'N/A')}</div>
-                        <div class="text-sm text-gray-600">Mentions</div>
+                        <div class="text-3xl font-bold text-green-600">{total_mentions:,}</div>
+                        <div class="text-sm text-gray-600">Total Mentions</div>
                     </div>
                     <div class="text-center p-4 bg-gray-50 rounded-lg">
-                        <div class="text-3xl font-bold text-purple-600">{getattr(topic, 'engagement', 'High')}</div>
+                        <div class="text-3xl font-bold text-purple-600">{engagement_level}</div>
                         <div class="text-sm text-gray-600">Engagement</div>
                     </div>
                 </div>
@@ -222,15 +302,101 @@ class TrendingIntegrator(BaseIntegrator):
         
         return content
         
-    def get_trending_template(self):
+    def format_analysis_content(self, analysis):
+        """Format analysis content with proper HTML structure"""
+        if not analysis:
+            return ""
+            
+        # Split analysis into paragraphs and format
+        paragraphs = analysis.split('\n\n')
+        formatted = ""
+        
+        for paragraph in paragraphs:
+            if paragraph.strip():
+                # Check if it's a header (contains colons or is short)
+                if ':' in paragraph and len(paragraph) < 100:
+                    formatted += f'<h4 class="font-bold text-lg mb-3 mt-6">{self.escape_html(paragraph.strip())}</h4>\n'
+                else:
+                    formatted += f'<p class="mb-4">{self.escape_html(paragraph.strip())}</p>\n'
+                    
+        return formatted
+        
+    def generate_platform_breakdown(self, platform_data):
+        """Generate platform breakdown visualization"""
+        if not platform_data or not isinstance(platform_data, dict):
+            return ""
+            
+        platform_cards = ""
+        platforms = {
+            'youtube': {'name': 'YouTube', 'color': 'red', 'icon': '🎥'},
+            'tiktok': {'name': 'TikTok', 'color': 'pink', 'icon': '🎵'},
+            'instagram': {'name': 'Instagram', 'color': 'purple', 'icon': '📸'},
+            'twitter': {'name': 'Twitter', 'color': 'blue', 'icon': '🐦'},
+            'twitch': {'name': 'Twitch', 'color': 'indigo', 'icon': '🎮'}
+        }
+        
+        for platform, count in platform_data.items():
+            if count > 0 and platform in platforms:
+                info = platforms[platform]
+                platform_cards += f'''
+                <div class="bg-white p-4 rounded-lg shadow-sm border">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-semibold text-{info['color']}-600">{info['icon']} {info['name']}</span>
+                        <span class="text-2xl font-bold text-{info['color']}-700">{count:,}</span>
+                    </div>
+                    <div class="text-sm text-gray-600">mentions</div>
+                </div>
+                '''
+                
+        if platform_cards:
+            return f'''
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 mb-8">
+                <h3 class="text-2xl font-bold mb-6">Platform Breakdown</h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    {platform_cards}
+                </div>
+            </div>
+            '''
+        return ""
+        
+    def generate_growth_metrics(self, growth_rate, heat_score):
+        """Generate growth metrics section"""
+        growth_indicator = "📈" if growth_rate > 0 else "📉" if growth_rate < 0 else "➡️"
+        growth_color = "text-green-600" if growth_rate > 0 else "text-red-600" if growth_rate < 0 else "text-gray-600"
+        
+        return f'''
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <h3 class="text-2xl font-bold mb-6">Trend Metrics</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gradient-to-br from-indigo-50 to-blue-50 p-6 rounded-xl">
+                    <div class="flex items-center mb-2">
+                        <span class="text-2xl mr-2">{growth_indicator}</span>
+                        <h4 class="font-bold text-lg">Growth Rate</h4>
+                    </div>
+                    <div class="text-3xl font-bold {growth_color} mb-2">{growth_rate:.1f}%</div>
+                    <p class="text-sm text-gray-600">Current trend momentum</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-xl">
+                    <div class="flex items-center mb-2">
+                        <span class="text-2xl mr-2">🔥</span>
+                        <h4 class="font-bold text-lg">Heat Level</h4>
+                    </div>
+                    <div class="text-3xl font-bold text-purple-600 mb-2">{heat_score:,}</div>
+                    <p class="text-sm text-gray-600">Current trending score</p>
+                </div>
+            </div>
+        </div>
+        '''
+        
+    def get_trending_template(self, base_path=""):
         """Get trending topic page template"""
-        return '''<!DOCTYPE html>
+        return ('''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{TOPIC_TITLE}} - Trending | Influencer News</title>
-    <link rel="stylesheet" href="../assets/css/styles.min.css">
+    <link rel="stylesheet" href="{base_path}assets/css/styles.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
@@ -351,11 +517,11 @@ class TrendingIntegrator(BaseIntegrator):
         </div>
         <nav class="p-6">
             <ul class="space-y-4">
-                <li><a href="../../index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Home</a></li>
-                <li><a href="../../search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Search</a></li>
-                <li><a href="../../authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Authors</a></li>
-                <li><a href="../categories.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Categories</a></li>
-                <li><a href="../trending.html" class="mobile-nav-item block text-indigo-200 text-lg py-2 border-b border-indigo-600/30">Trending</a></li>
+                <li><a href="{base_path}index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Home</a></li>
+                <li><a href="{base_path}search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Search</a></li>
+                <li><a href="{base_path}authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Authors</a></li>
+                <li><a href="{base_path}integrated/categories.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Categories</a></li>
+                <li><a href="{base_path}integrated/trending.html" class="mobile-nav-item block text-indigo-200 text-lg py-2 border-b border-indigo-600/30">Trending</a></li>
             </ul>
         </nav>
     </div>
@@ -392,11 +558,11 @@ class TrendingIntegrator(BaseIntegrator):
             </div>
             <nav class="hidden md:block">
                 <ul class="flex space-x-8">
-                    <li><a href="../../index.html" class="hover:text-indigo-200 transition font-medium">Home</a></li>
-                    <li><a href="../../search.html" class="hover:text-indigo-200 transition font-medium">Search</a></li>
-                    <li><a href="../../authors.html" class="hover:text-indigo-200 transition font-medium">Authors</a></li>
-                    <li><a href="../categories.html" class="hover:text-indigo-200 transition font-medium">Categories</a></li>
-                    <li><a href="../trending.html" class="hover:text-indigo-200 transition font-medium text-indigo-200">Trending</a></li>
+                    <li><a href="{base_path}index.html" class="hover:text-indigo-200 transition font-medium">Home</a></li>
+                    <li><a href="{base_path}search.html" class="hover:text-indigo-200 transition font-medium">Search</a></li>
+                    <li><a href="{base_path}authors.html" class="hover:text-indigo-200 transition font-medium">Authors</a></li>
+                    <li><a href="{base_path}integrated/categories.html" class="hover:text-indigo-200 transition font-medium">Categories</a></li>
+                    <li><a href="{base_path}integrated/trending.html" class="hover:text-indigo-200 transition font-medium text-indigo-200">Trending</a></li>
                 </ul>
                         <!-- Mobile Menu Button -->
             <button class="md:hidden hamburger" id="mobileMenuToggle" aria-label="Toggle mobile menu">
@@ -559,13 +725,13 @@ class TrendingIntegrator(BaseIntegrator):
             if (query.trim()) {
                 // Close mobile search and redirect to search page
                 closeMobileSearchFunc();
-                window.location.href = `../../search.html?q=${encodeURIComponent(query)}`;
+                window.location.href = `{base_path}search.html?q=${encodeURIComponent(query)}`;
             }
         }
 
     </script>
 </body>
-</html>'''
+</html>''').replace('{base_path}', base_path)
 
     # Required abstract methods
     def parse_content_file(self, file_path: Path) -> Dict[str, Any]:
@@ -614,31 +780,38 @@ class TrendingIntegrator(BaseIntegrator):
         """Process trending topic content and add to database"""
         try:
             # Generate slug from filename or title
-            slug = content_data.get('slug') or content_data.get('title', '').lower().replace(' ', '-')
+            title = content_data.get('topic', content_data.get('title', ''))
+            slug = content_data.get('slug') or title.lower().replace(' ', '-')
             if not slug and 'filename' in content_data:
                 slug = content_data['filename'].replace('.txt', '')
                 
             # Check if trending topic already exists
             existing = TrendingTopic.find_by_slug(slug)
             if existing:
-                self.update_progress(f"Trending topic '{content_data.get('title', slug)}' already exists, skipping")
+                self.update_progress(f"Trending topic '{title}' already exists, skipping")
                 return False
             
-            # Create trending topic
+            # Get heat score from trend_score or heat_score
+            heat_score = int(content_data.get('trend_score', content_data.get('heat_score', 50)))
+            
+            # Create trending topic with rich data
             topic = TrendingTopic(
-                title=content_data.get('title', slug.title()),
+                title=title,
                 slug=slug,
                 description=content_data.get('description', ''),
                 content=content_data.get('content', ''),
-                heat_score=int(content_data.get('heat_score', 50)),
+                heat_score=heat_score,
                 growth_rate=float(content_data.get('growth_rate', 0.0)),
                 hashtag=content_data.get('hashtag', ''),
                 status=content_data.get('status', 'active'),
-                mentions_youtube=int(content_data.get('mentions_youtube', 0)),
-                mentions_tiktok=int(content_data.get('mentions_tiktok', 0)),
-                mentions_instagram=int(content_data.get('mentions_instagram', 0)),
-                mentions_twitter=int(content_data.get('mentions_twitter', 0)),
-                mentions_twitch=int(content_data.get('mentions_twitch', 0))
+                icon=content_data.get('icon', ''),
+                analysis=content_data.get('analysis', ''),
+                platform_data=content_data.get('platform_data', {}),
+                mentions_youtube=int(content_data.get('mentions_youtube', content_data.get('platform_data', {}).get('youtube', 0))),
+                mentions_tiktok=int(content_data.get('mentions_tiktok', content_data.get('platform_data', {}).get('tiktok', 0))),
+                mentions_instagram=int(content_data.get('mentions_instagram', content_data.get('platform_data', {}).get('instagram', 0))),
+                mentions_twitter=int(content_data.get('mentions_twitter', content_data.get('platform_data', {}).get('twitter', 0))),
+                mentions_twitch=int(content_data.get('mentions_twitch', content_data.get('platform_data', {}).get('twitch', 0)))
             )
             
             # Save to database
@@ -660,15 +833,15 @@ class TrendingIntegrator(BaseIntegrator):
             self.update_progress(f"Error processing trending topic: {str(e)}")
             return False
 
-    def get_trending_listing_template(self):
+    def get_trending_listing_template(self, base_path=""):
         """Get trending topics listing template"""
-        return '''<!DOCTYPE html>
+        return ('''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trending Topics - Influencer News</title>
-    <link rel="stylesheet" href="../assets/css/styles.min.css">
+    <link rel="stylesheet" href="{base_path}assets/css/styles.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
@@ -789,11 +962,11 @@ class TrendingIntegrator(BaseIntegrator):
         </div>
         <nav class="p-6">
             <ul class="space-y-4">
-                <li><a href="../../index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Home</a></li>
-                <li><a href="../../search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Search</a></li>
-                <li><a href="../../authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Authors</a></li>
-                <li><a href="../categories.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Categories</a></li>
-                <li><a href="../trending.html" class="mobile-nav-item block text-indigo-200 text-lg py-2 border-b border-indigo-600/30">Trending</a></li>
+                <li><a href="{base_path}index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Home</a></li>
+                <li><a href="{base_path}search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Search</a></li>
+                <li><a href="{base_path}authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Authors</a></li>
+                <li><a href="{base_path}integrated/categories.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Categories</a></li>
+                <li><a href="{base_path}integrated/trending.html" class="mobile-nav-item block text-indigo-200 text-lg py-2 border-b border-indigo-600/30">Trending</a></li>
             </ul>
         </nav>
     </div>
@@ -830,11 +1003,11 @@ class TrendingIntegrator(BaseIntegrator):
             </div>
             <nav class="hidden md:block">
                 <ul class="flex space-x-8">
-                    <li><a href="../../index.html" class="hover:text-indigo-200 transition font-medium">Home</a></li>
-                    <li><a href="../../search.html" class="hover:text-indigo-200 transition font-medium">Search</a></li>
-                    <li><a href="../../authors.html" class="hover:text-indigo-200 transition font-medium">Authors</a></li>
-                    <li><a href="../categories.html" class="hover:text-indigo-200 transition font-medium">Categories</a></li>
-                    <li><a href="../trending.html" class="hover:text-indigo-200 transition font-medium text-indigo-200">Trending</a></li>
+                    <li><a href="{base_path}index.html" class="hover:text-indigo-200 transition font-medium">Home</a></li>
+                    <li><a href="{base_path}search.html" class="hover:text-indigo-200 transition font-medium">Search</a></li>
+                    <li><a href="{base_path}authors.html" class="hover:text-indigo-200 transition font-medium">Authors</a></li>
+                    <li><a href="{base_path}integrated/categories.html" class="hover:text-indigo-200 transition font-medium">Categories</a></li>
+                    <li><a href="{base_path}integrated/trending.html" class="hover:text-indigo-200 transition font-medium text-indigo-200">Trending</a></li>
                 </ul>
                         <!-- Mobile Menu Button -->
             <button class="md:hidden hamburger" id="mobileMenuToggle" aria-label="Toggle mobile menu">
@@ -993,13 +1166,14 @@ class TrendingIntegrator(BaseIntegrator):
             if (query.trim()) {
                 // Close mobile search and redirect to search page
                 closeMobileSearchFunc();
-                window.location.href = `../../search.html?q=${encodeURIComponent(query)}`;
+                window.location.href = `{base_path}search.html?q=${encodeURIComponent(query)}`;
             }
         }
 
     </script>
 </body>
-</html>'''
+</html>''').replace('{base_path}', base_path)
+    
     def update_all_listing_pages(self):
         """Update all listing pages with current trending topics from database"""
         self.update_progress("Updating trending listing pages...")

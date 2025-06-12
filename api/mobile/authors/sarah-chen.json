@@ -3,7 +3,7 @@
   "data": {
     "slug": "sarah-chen",
     "name": "Sarah Chen",
-    "title": "",
+    "title": null,
     "bio": "Creator economy expert with 8 years experience covering the business of content creation and influencer marketing",
     "expertise": [],
     "mobile_optimized": true,
@@ -17,7 +17,7 @@
   },
   "error": null,
   "meta": {
-    "generated_at": "2025-06-11T07:18:44.818143",
+    "generated_at": "2025-06-11T16:24:46.453609",
     "cache_duration": 300
   },
   "mobile_optimized": true

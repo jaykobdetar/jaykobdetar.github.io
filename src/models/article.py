@@ -3,11 +3,19 @@
 import json
 from typing import List, Optional, Dict, Any
 from datetime import datetime
-from .base import BaseModel
-from .author import Author
-from .category import Category
-from ..utils.sanitizer import model_validator
-from ..utils.logger import get_logger, ValidationException
+try:
+    from .base import BaseModel
+    from .author import Author
+    from .category import Category
+    from ..utils.sanitizer import model_validator
+    from ..utils.logger import get_logger, ValidationException
+except ImportError:
+    # Fallback for when run as script
+    from src.models.base import BaseModel
+    from src.models.author import Author
+    from src.models.category import Category
+    from src.utils.sanitizer import model_validator
+    from src.utils.logger import get_logger, ValidationException
 
 logger = get_logger(__name__)
 
@@ -19,17 +27,38 @@ class Article(BaseModel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         
-        # Article specific fields
+        # Article specific fields (aligned with new schema)
         self.title: str = kwargs.get('title', '')
         self.slug: str = kwargs.get('slug', '')
-        self.subtitle: Optional[str] = kwargs.get('subtitle')
+        self.excerpt: Optional[str] = kwargs.get('excerpt')  # Brief summary
+        self.content: str = kwargs.get('content', '')  # Full article content
         self.author_id: int = kwargs.get('author_id', 0)
         self.category_id: int = kwargs.get('category_id', 0)
-        self.publication_date: str = kwargs.get('publication_date', '')
-        self.read_time: int = kwargs.get('read_time', 5)
-        self.meta_description: Optional[str] = kwargs.get('meta_description')
-        self.content: str = kwargs.get('content', '')
-        self.view_count: int = kwargs.get('view_count', 0)
+        self.status: str = kwargs.get('status', 'draft')  # draft, published, archived
+        self.featured: bool = kwargs.get('featured', False)
+        self.trending: bool = kwargs.get('trending', False)
+        self.publish_date: Optional[str] = kwargs.get('publish_date')  # When article was published
+        self.image_url: Optional[str] = kwargs.get('image_url')  # Featured image
+        self.hero_image_url: Optional[str] = kwargs.get('hero_image_url')  # Large hero image
+        self.thumbnail_url: Optional[str] = kwargs.get('thumbnail_url')  # Small thumbnail
+        self.views: int = kwargs.get('views', 0)  # Updated field name
+        self.likes: int = kwargs.get('likes', 0)
+        self.comments: int = kwargs.get('comments', 0)
+        self.read_time_minutes: int = kwargs.get('read_time_minutes', 0)  # Updated field name
+        self.seo_title: Optional[str] = kwargs.get('seo_title')
+        self.seo_description: Optional[str] = kwargs.get('seo_description')
+        
+        # Handle backward compatibility
+        if not self.excerpt and kwargs.get('subtitle'):
+            self.excerpt = kwargs.get('subtitle')
+        if not self.publish_date and kwargs.get('publication_date'):
+            self.publish_date = kwargs.get('publication_date')
+        if not self.views and kwargs.get('view_count'):
+            self.views = kwargs.get('view_count')
+        if not self.read_time_minutes and kwargs.get('read_time'):
+            self.read_time_minutes = kwargs.get('read_time')
+        if not self.seo_description and kwargs.get('meta_description'):
+            self.seo_description = kwargs.get('meta_description')
         
         # Mobile-specific fields
         self.mobile_title: Optional[str] = kwargs.get('mobile_title')
@@ -89,14 +118,16 @@ class Article(BaseModel):
         article_data = {
             'title': self.title,
             'slug': self.slug,
-            'subtitle': self.subtitle,
+            'excerpt': self.excerpt,
             'content': self.content,
             'author_id': self.author_id,
             'category_id': self.category_id,
-            'publication_date': self.publication_date,
-            'read_time': self.read_time,
+            'status': self.status,
+            'publish_date': self.publish_date,
+            'read_time_minutes': self.read_time_minutes,
             'tags': self.tags,
-            'meta_description': self.meta_description
+            'seo_title': self.seo_title,
+            'seo_description': self.seo_description
         }
         
         validation_result = model_validator.validate_article(article_data)
@@ -112,11 +143,12 @@ class Article(BaseModel):
         cleaned_data = validation_result.cleaned_content
         self.title = cleaned_data.get('title', self.title)
         self.slug = cleaned_data.get('slug', self.slug)
-        self.subtitle = cleaned_data.get('subtitle', self.subtitle)
+        self.excerpt = cleaned_data.get('excerpt', self.excerpt)
         self.content = cleaned_data.get('content', self.content)
-        self.read_time = cleaned_data.get('read_time', self.read_time)
+        self.read_time_minutes = cleaned_data.get('read_time_minutes', self.read_time_minutes)
         self.tags = cleaned_data.get('tags', self.tags)
-        self.meta_description = cleaned_data.get('meta_description', self.meta_description)
+        self.seo_title = cleaned_data.get('seo_title', self.seo_title)
+        self.seo_description = cleaned_data.get('seo_description', self.seo_description)
         
         if validation_result.warnings:
             logger.info(f"Article validation warnings: {'; '.join(validation_result.warnings)}")
@@ -125,33 +157,42 @@ class Article(BaseModel):
         
         if self.id:
             # Update existing article
-            db.update_article(
-                article_id=self.id,
-                title=self.title,
-                slug=self.slug,
-                author_id=self.author_id,
-                category_id=self.category_id,
-                publication_date=self.publication_date,
-                content=self.content,
-                subtitle=self.subtitle,
-                read_time=self.read_time,
-                tags=self.tags,
-                meta_description=self.meta_description
-            )
+            query = """
+            UPDATE articles 
+            SET title = ?, slug = ?, excerpt = ?, content = ?, author_id = ?, category_id = ?,
+                status = ?, featured = ?, trending = ?, publish_date = ?, image_url = ?,
+                hero_image_url = ?, thumbnail_url = ?, tags = ?, views = ?, likes = ?,
+                comments = ?, read_time_minutes = ?, seo_title = ?, seo_description = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            """
+            tags_json = json.dumps(self.tags) if self.tags else None
+            params = (self.title, self.slug, self.excerpt, self.content, self.author_id,
+                     self.category_id, self.status, self.featured, self.trending,
+                     self.publish_date, self.image_url, self.hero_image_url,
+                     self.thumbnail_url, tags_json, self.views, self.likes,
+                     self.comments, self.read_time_minutes, self.seo_title,
+                     self.seo_description, self.id)
+            db.execute_write(query, params)
         else:
             # Create new article
-            self.id = db.create_article(
-                title=self.title,
-                slug=self.slug,
-                author_id=self.author_id,
-                category_id=self.category_id,
-                publication_date=self.publication_date,
-                content=self.content,
-                subtitle=self.subtitle,
-                read_time=self.read_time,
-                tags=self.tags,
-                meta_description=self.meta_description
-            )
+            query = """
+            INSERT INTO articles (title, slug, excerpt, content, author_id, category_id,
+                                status, featured, trending, publish_date, image_url,
+                                hero_image_url, thumbnail_url, tags, views, likes,
+                                comments, read_time_minutes, seo_title, seo_description,
+                                created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            """
+            tags_json = json.dumps(self.tags) if self.tags else None
+            params = (self.title, self.slug, self.excerpt, self.content, self.author_id,
+                     self.category_id, self.status, self.featured, self.trending,
+                     self.publish_date, self.image_url, self.hero_image_url,
+                     self.thumbnail_url, tags_json, self.views, self.likes,
+                     self.comments, self.read_time_minutes, self.seo_title,
+                     self.seo_description)
+            self.id = db.execute_write(query, params)
         
         logger.info(f"Article saved successfully: {self.title} (ID: {self.id})")
         return self.id
@@ -207,9 +248,9 @@ class Article(BaseModel):
     def increment_view_count(self, device_type: str = 'desktop') -> None:
         """Increment the view count and track mobile metrics"""
         db = self.get_db()
-        query = "UPDATE articles SET view_count = view_count + 1 WHERE id = ?"
+        query = "UPDATE articles SET views = views + 1 WHERE id = ?"
         db.execute_write(query, (self.id,))
-        self.view_count += 1
+        self.views += 1
         
         # Track mobile-specific metrics
         self.track_mobile_view(device_type)
@@ -331,8 +372,8 @@ class Article(BaseModel):
         """Find articles optimized for mobile using mobile view"""
         db = cls.get_db()
         query = """
-        SELECT * FROM article_mobile_view 
-        ORDER BY publication_date DESC 
+        SELECT * FROM article_full_view 
+        ORDER BY publish_date DESC 
         LIMIT ? OFFSET ?
         """
         results = db.execute_query(query, (limit, offset))
@@ -361,5 +402,191 @@ class Article(BaseModel):
             'responsive_images': self.get_responsive_images()
         }
     
+    def publish(self) -> None:
+        """Publish the article"""
+        if self.status != 'published':
+            self.status = 'published'
+            if not self.publish_date:
+                from datetime import datetime
+                self.publish_date = datetime.now().isoformat()
+            self.save()
+    
+    def unpublish(self) -> None:
+        """Unpublish the article (set to draft)"""
+        self.status = 'draft'
+        self.save()
+    
+    def archive(self) -> None:
+        """Archive the article"""
+        self.status = 'archived'
+        self.save()
+    
+    def feature(self) -> None:
+        """Mark article as featured"""
+        self.featured = True
+        self.save()
+    
+    def unfeature(self) -> None:
+        """Remove featured status"""
+        self.featured = False
+        self.save()
+    
+    def mark_trending(self) -> None:
+        """Mark article as trending"""
+        self.trending = True
+        self.save()
+    
+    def unmark_trending(self) -> None:
+        """Remove trending status"""
+        self.trending = False
+        self.save()
+    
+    def increment_likes(self) -> None:
+        """Increment like count"""
+        db = self.get_db()
+        query = "UPDATE articles SET likes = likes + 1 WHERE id = ?"
+        db.execute_write(query, (self.id,))
+        self.likes += 1
+    
+    def increment_comments(self) -> None:
+        """Increment comment count"""
+        db = self.get_db()
+        query = "UPDATE articles SET comments = comments + 1 WHERE id = ?"
+        db.execute_write(query, (self.id,))
+        self.comments += 1
+    
+    @classmethod
+    def find_published(cls, category_id: Optional[int] = None, author_id: Optional[int] = None,
+                      limit: int = 20, offset: int = 0) -> List['Article']:
+        """Find published articles"""
+        db = cls.get_db()
+        
+        where_clauses = ["status = 'published'"]
+        params = []
+        
+        if category_id:
+            where_clauses.append("category_id = ?")
+            params.append(category_id)
+        
+        if author_id:
+            where_clauses.append("author_id = ?")
+            params.append(author_id)
+        
+        where_sql = " AND ".join(where_clauses)
+        params.extend([limit, offset])
+        
+        query = f"""
+        SELECT * FROM article_full_view 
+        WHERE {where_sql}
+        ORDER BY publish_date DESC 
+        LIMIT ? OFFSET ?
+        """
+        
+        results = db.execute_query(query, tuple(params))
+        return [cls.from_dict(data) for data in results]
+    
+    @classmethod
+    def find_featured(cls, limit: int = 5) -> List['Article']:
+        """Find featured articles"""
+        db = cls.get_db()
+        query = """
+        SELECT * FROM article_full_view 
+        WHERE featured = 1 AND status = 'published'
+        ORDER BY publish_date DESC 
+        LIMIT ?
+        """
+        results = db.execute_query(query, (limit,))
+        return [cls.from_dict(data) for data in results]
+    
+    @classmethod
+    def find_trending(cls, limit: int = 5) -> List['Article']:
+        """Find trending articles"""
+        db = cls.get_db()
+        query = """
+        SELECT * FROM article_full_view 
+        WHERE trending = 1 AND status = 'published'
+        ORDER BY views DESC, publish_date DESC 
+        LIMIT ?
+        """
+        results = db.execute_query(query, (limit,))
+        return [cls.from_dict(data) for data in results]
+    
+    @classmethod
+    def search_fts(cls, search_term: str, limit: int = 20) -> List['Article']:
+        """Search articles using full-text search"""
+        db = cls.get_db()
+        query = """
+        SELECT a.* FROM articles a
+        JOIN articles_fts fts ON a.id = fts.rowid
+        WHERE articles_fts MATCH ? AND a.status = 'published'
+        ORDER BY rank
+        LIMIT ?
+        """
+        results = db.execute_query(query, (search_term, limit))
+        return [cls.from_dict(data) for data in results]
+    
+    def get_word_count(self) -> int:
+        """Get estimated word count of content"""
+        if self.content:
+            import re
+            # Remove HTML tags and count words
+            clean_content = re.sub(r'<[^>]+>', '', self.content)
+            words = clean_content.split()
+            return len(words)
+        return 0
+    
+    def estimate_reading_time(self) -> int:
+        """Estimate reading time based on word count (200 words per minute)"""
+        word_count = self.get_word_count()
+        return max(1, round(word_count / 200))
+    
+    def update_reading_time(self) -> None:
+        """Update reading time based on content"""
+        self.read_time_minutes = self.estimate_reading_time()
+        self.save()
+    
+    def to_dict_with_relations(self) -> Dict[str, Any]:
+        """Convert to dictionary with related data included"""
+        base_dict = self.to_dict()
+        
+        # Add author info
+        if hasattr(self, 'author_name'):
+            base_dict['author'] = {
+                'id': self.author_id,
+                'name': self.author_name,
+                'slug': self.author_slug
+            }
+        
+        # Add category info
+        if hasattr(self, 'category_name'):
+            base_dict['category'] = {
+                'id': self.category_id,
+                'name': self.category_name,
+                'slug': self.category_slug,
+                'icon': self.category_icon
+            }
+        
+        return base_dict
+    
+    @property
+    def publication_date(self) -> Optional[str]:
+        """Backward compatibility property for publication_date"""
+        return self.publish_date
+    
+    @property
+    def read_time(self) -> int:
+        """Backward compatibility property for read_time"""
+        return self.read_time_minutes
+    
+    @property
+    def view_count(self) -> int:
+        """Backward compatibility property for view_count"""
+        return self.views
+    
+    @property
+    def subtitle(self) -> Optional[str]:
+        """Backward compatibility property for subtitle"""
+        return self.excerpt
+
     def __repr__(self) -> str:
-        return f"<Article id={self.id} slug='{self.slug}' title='{self.title}'>"
+        return f"<Article id={self.id} slug='{self.slug}' status='{self.status}' title='{self.title}'>"

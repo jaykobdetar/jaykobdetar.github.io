@@ -4,8 +4,8 @@
     {
       "slug": "alex-rivera",
       "name": "Alex Rivera",
-      "title": "",
-      "bio": "Platform algorithm specialist and former software engineer",
+      "title": null,
+      "bio": "Platform algorithm specialist and former software engineer with extensive experience in their field",
       "expertise": [],
       "mobile_optimized": true,
       "image": {
@@ -17,7 +17,7 @@
     {
       "slug": "jessica-kim",
       "name": "Jessica Kim",
-      "title": "",
+      "title": null,
       "bio": "Former Vogue digital editor covering beauty influencer partnerships",
       "expertise": [],
       "mobile_optimized": true,
@@ -30,7 +30,7 @@
     {
       "slug": "maria-lopez",
       "name": "Maria Lopez",
-      "title": "",
+      "title": null,
       "bio": "Wellness and lifestyle expert covering creator mental health and work-life balance",
       "expertise": [],
       "mobile_optimized": true,
@@ -43,7 +43,7 @@
     {
       "slug": "michael-torres",
       "name": "Michael Torres",
-      "title": "",
+      "title": null,
       "bio": "Celebrity culture and entertainment industry veteran with over 10 years covering influencer drama and collaborations",
       "expertise": [],
       "mobile_optimized": true,
@@ -56,7 +56,7 @@
     {
       "slug": "sarah-chen",
       "name": "Sarah Chen",
-      "title": "",
+      "title": null,
       "bio": "Creator economy expert with 8 years experience covering the business of content creation and influencer marketing",
       "expertise": [],
       "mobile_optimized": true,
@@ -70,7 +70,7 @@
   "error": null,
   "meta": {
     "total": 5,
-    "generated_at": "2025-06-11T07:18:44.770506",
+    "generated_at": "2025-06-11T16:24:46.414332",
     "cache_duration": 300
   },
   "mobile_optimized": true

@@ -9,8 +9,22 @@ import sys
 import argparse
 from pathlib import Path
 
-# Import our modules
+# Add parent directory to path to import src modules
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
+# Import our modules with proper module execution
 try:
+    import os
+    
+    # Ensure we're working from project root
+    os.chdir(project_root)
+    
+    # Add project root to Python path if not already there
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+    
+    # Now try importing - this should work since we're running as a script from project root
     from src.database.db_manager import DatabaseManager
     from src.models.article import Article
     from src.models.author import Author
@@ -20,9 +34,16 @@ try:
     from src.integrators.category_integrator import CategoryIntegrator
     from src.integrators.trending_integrator import TrendingIntegrator
     from src.integrators.article_integrator import ArticleIntegrator
+    
 except ImportError as e:
-    print(f"Error importing modules: {e}")
-    print("Please ensure you're running from the project root directory")
+    print(f"❌ Import Error: {e}")
+    print("\n🔧 Troubleshooting:")
+    print("1. Ensure you're running from the project root directory")
+    print("2. Check that all src/ modules are present")
+    print("3. Try running: python -c 'import sys; print(sys.path)'")
+    print(f"\nCurrent directory: {os.getcwd()}")
+    print(f"Project root: {project_root}")
+    print(f"Python path includes project root: {str(project_root) in sys.path}")
     sys.exit(1)
 
 

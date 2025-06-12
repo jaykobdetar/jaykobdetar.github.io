@@ -9,8 +9,12 @@ import urllib.parse
 from typing import List, Dict, Any, Optional, Union
 from dataclasses import dataclass
 
-from .config import config
-from .logger import get_logger, CMSException
+try:
+    from .config import config
+    from .logger import get_logger, CMSException
+except ImportError:
+    from src.utils.config import config
+    from src.utils.logger import get_logger, CMSException
 
 logger = get_logger(__name__)
 

@@ -1,7 +1,7 @@
 Topic: MrBeast Creator Fund
 Hashtag: #MrBeastFund
 Category: business
-Trend_Score: 8750
+Trend_Score: 5
 Related_Articles: 1,2,3
 Status: active
 Icon: 🔥

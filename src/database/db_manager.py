@@ -172,22 +172,22 @@ class DatabaseManager:
             query += " AND author_id = ?"
             params.append(author_id)
         
-        query += " ORDER BY publication_date DESC LIMIT ? OFFSET ?"
+        query += " ORDER BY publish_date DESC LIMIT ? OFFSET ?"
         params.extend([limit, offset])
         
         return self.execute_query(query, tuple(params))
     
     def create_article(self, title: str, slug: str, author_id: int, category_id: int,
-                      publication_date: str, content: str, **kwargs) -> int:
+                      publish_date: str, content: str, **kwargs) -> int:
         """Create new article"""
         query = """
         INSERT INTO articles (title, slug, subtitle, author_id, category_id, 
-                            publication_date, read_time, tags, meta_description, content)
+                            publish_date, read_time, tags, meta_description, content)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
         params = (
             title, slug, kwargs.get('subtitle'), author_id, category_id,
-            publication_date, kwargs.get('read_time', 5),
+            publish_date, kwargs.get('read_time', 5),
             json.dumps(kwargs.get('tags', [])) if kwargs.get('tags') else None,
             kwargs.get('meta_description'), content
         )
@@ -335,7 +335,7 @@ class DatabaseManager:
         query = """
         SELECT * FROM article_full_view
         WHERE title LIKE ? OR subtitle LIKE ? OR content LIKE ?
-        ORDER BY publication_date DESC
+        ORDER BY publish_date DESC
         LIMIT ?
         """
         search_pattern = f"%{search_term}%"

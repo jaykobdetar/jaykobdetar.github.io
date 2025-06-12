@@ -1,9 +1,16 @@
 Title: New Platform Update Changes Everything for Creators
+Slug: platform-update-changes-creators
 Author: Alex Rivera  
 Category: technology
+Status: published
+Featured: true
+Trending: false
 Image: https://images.unsplash.com/photo-1607827448387-a67db1383b59?w=600&h=300&fit=crop
 Tags: platform update, algorithm, creators, monetization, social media
 Excerpt: Major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025.
+SEO_Title: Platform Algorithm Changes Impact Creator Economy 2025
+Read_Time: 3
+Publish_Date: 2024-12-15
 
 ---
 

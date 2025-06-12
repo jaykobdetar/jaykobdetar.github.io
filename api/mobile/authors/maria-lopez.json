@@ -3,7 +3,7 @@
   "data": {
     "slug": "maria-lopez",
     "name": "Maria Lopez",
-    "title": "",
+    "title": null,
     "bio": "Wellness and lifestyle expert covering creator mental health and work-life balance",
     "expertise": [],
     "mobile_optimized": true,
@@ -17,7 +17,7 @@
   },
   "error": null,
   "meta": {
-    "generated_at": "2025-06-11T07:18:44.800809",
+    "generated_at": "2025-06-11T16:24:46.439125",
     "cache_duration": 300
   },
   "mobile_optimized": true

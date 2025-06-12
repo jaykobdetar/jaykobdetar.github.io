@@ -129,7 +129,7 @@ class MobileAPIGenerator:
                     FROM articles a
                     LEFT JOIN authors auth ON a.author_id = auth.id
                     LEFT JOIN categories cat ON a.category_id = cat.id
-                    ORDER BY a.publication_date DESC
+                    ORDER BY a.publish_date DESC
                     LIMIT 1000
                 """)
                 
@@ -387,12 +387,12 @@ class MobileAPIGenerator:
                 
                 # Articles
                 cursor = conn.execute("""
-                    SELECT a.id, a.title, a.subtitle, a.slug, a.publication_date,
+                    SELECT a.id, a.title, a.excerpt, a.slug, a.publish_date,
                            auth.name as author_name, cat.name as category_name
                     FROM articles a
                     LEFT JOIN authors auth ON a.author_id = auth.id
                     LEFT JOIN categories cat ON a.category_id = cat.id
-                    ORDER BY a.publication_date DESC
+                    ORDER BY a.publish_date DESC
                     LIMIT 1000
                 """)
                 
@@ -401,12 +401,12 @@ class MobileAPIGenerator:
                     search_index['articles'].append({
                         'id': row_dict['id'],
                         'title': self.truncate_text(row_dict['title'] or '', self.mobile_config['max_title_length']),
-                        'excerpt': self.truncate_text(row_dict['subtitle'] or '', self.mobile_config['max_excerpt_length']),
+                        'excerpt': self.truncate_text(row_dict['excerpt'] or '', self.mobile_config['max_excerpt_length']),
                         'author': row_dict['author_name'] or '',
                         'category': row_dict['category_name'] or '',
-                        'date': row_dict['publication_date'],
+                        'date': row_dict['publish_date'],
                         'slug': row_dict['slug'],
-                        'search_text': f"{row_dict['title']} {row_dict['subtitle'] or ''} {row_dict['author_name'] or ''} {row_dict['category_name'] or ''}".lower()
+                        'search_text': f"{row_dict['title']} {row_dict['excerpt'] or ''} {row_dict['author_name'] or ''} {row_dict['category_name'] or ''}".lower()
                     })
                 
                 # Authors
@@ -520,7 +520,7 @@ class MobileAPIGenerator:
         """Optimize article data for mobile consumption"""
         try:
             mobile_title = article_data.get('mobile_title') or article_data.get('title', '')
-            mobile_excerpt = article_data.get('mobile_excerpt') or article_data.get('subtitle', '')
+            mobile_excerpt = article_data.get('mobile_excerpt') or article_data.get('excerpt', '')
             
             mobile_article = {
                 'id': article_data['id'],
@@ -535,7 +535,7 @@ class MobileAPIGenerator:
                     'name': article_data.get('category_name') or 'Uncategorized',
                     'slug': article_data.get('category_slug') or ''
                 },
-                'publication_date': article_data.get('publication_date'),
+                'publication_date': article_data.get('publish_date'),
                 'read_time': article_data.get('read_time') or 5,
                 'views': article_data.get('view_count') or 0,
                 'mobile_optimized': True
@@ -562,7 +562,7 @@ class MobileAPIGenerator:
             if include_full_content:
                 mobile_article['content'] = article_data.get('content', '')
                 mobile_article['full_title'] = article_data.get('title', '')
-                mobile_article['full_excerpt'] = article_data.get('subtitle', '')
+                mobile_article['full_excerpt'] = article_data.get('excerpt', '')
             
             return mobile_article
             
@@ -600,7 +600,7 @@ class MobileAPIGenerator:
                             LEFT JOIN authors auth ON a.author_id = auth.id
                             LEFT JOIN categories cat ON a.category_id = cat.id
                             WHERE auth.slug = ?
-                            ORDER BY a.publication_date DESC
+                            ORDER BY a.publish_date DESC
                             LIMIT 10
                         """, (author_data['slug'],))
                         
@@ -641,7 +641,7 @@ class MobileAPIGenerator:
                             LEFT JOIN authors auth ON a.author_id = auth.id
                             LEFT JOIN categories cat ON a.category_id = cat.id
                             WHERE cat.slug = ?
-                            ORDER BY a.publication_date DESC
+                            ORDER BY a.publish_date DESC
                             LIMIT 10
                         """, (category_data['slug'],))
                         

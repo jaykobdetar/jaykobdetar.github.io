@@ -3,7 +3,7 @@
   "data": {
     "slug": "jessica-kim",
     "name": "Jessica Kim",
-    "title": "",
+    "title": null,
     "bio": "Former Vogue digital editor covering beauty influencer partnerships",
     "expertise": [],
     "mobile_optimized": true,
@@ -17,7 +17,7 @@
   },
   "error": null,
   "meta": {
-    "generated_at": "2025-06-11T07:18:44.791292",
+    "generated_at": "2025-06-11T16:24:46.432096",
     "cache_duration": 300
   },
   "mobile_optimized": true

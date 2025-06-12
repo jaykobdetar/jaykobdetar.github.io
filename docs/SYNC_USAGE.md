@@ -4,22 +4,22 @@
 
 ### Most Common Usage
 ```bash
-python3 sync_content.py
+python3 scripts/sync_content.py
 ```
 Syncs all content types (articles, authors, categories, trending). This is what you'll use 99% of the time.
 
 ### Sync Specific Content Types
 ```bash
-python3 sync_content.py articles     # Sync only articles
-python3 sync_content.py authors      # Sync only authors  
-python3 sync_content.py categories   # Sync only categories
-python3 sync_content.py trending     # Sync only trending topics
+python3 scripts/sync_content.py articles     # Sync only articles
+python3 scripts/sync_content.py authors      # Sync only authors  
+python3 scripts/sync_content.py categories   # Sync only categories
+python3 scripts/sync_content.py trending     # Sync only trending topics
 ```
 
 ### Check Status & Statistics
 ```bash
-python3 sync_content.py stats        # Show content counts
-python3 sync_content.py status       # Check database connection
+python3 scripts/sync_content.py stats        # Show content counts
+python3 scripts/sync_content.py status       # Check database connection
 ```
 
 ## What the Sync Does

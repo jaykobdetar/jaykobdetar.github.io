@@ -14,12 +14,16 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional, Callable
 from abc import ABC, abstractmethod
 
-# Add parent directory to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-
-from database import DatabaseManager
-from models import Article, Author, Category, TrendingTopic, Image
-from utils import ImageManager, PathManager
+try:
+    from ..database import DatabaseManager
+except ImportError:
+    from src.database import DatabaseManager
+try:
+    from ..models import Article, Author, Category, TrendingTopic, Image
+    from ..utils import ImageManager, PathManager
+except ImportError:
+    from src.models import Article, Author, Category, TrendingTopic, Image
+    from src.utils import ImageManager, PathManager
 
 
 class BaseIntegrator(ABC):
@@ -135,7 +139,9 @@ class BaseIntegrator(ABC):
     
     def escape_html(self, text: str) -> str:
         """Escape HTML characters"""
-        return html.escape(text)
+        if text is None:
+            return ""
+        return html.escape(str(text))
     
     def escape_js_string(self, text: str) -> str:
         """Escape string for JavaScript"""
