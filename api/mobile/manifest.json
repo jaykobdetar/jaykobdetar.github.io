@@ -1,0 +1,52 @@
+{
+  "version": "1.0",
+  "generated_at": "2025-06-11T16:24:46.540079",
+  "mobile_optimized": true,
+  "cache_duration": 300,
+  "endpoints": {
+    "articles": {
+      "list": "/api/mobile/articles.json",
+      "detail": "/api/mobile/articles/{id}.json",
+      "count": 1
+    },
+    "authors": {
+      "list": "/api/mobile/authors.json",
+      "detail": "/api/mobile/authors/{slug}.json",
+      "count": 5
+    },
+    "categories": {
+      "list": "/api/mobile/categories.json",
+      "detail": "/api/mobile/categories/{slug}.json",
+      "count": 6
+    },
+    "trending": {
+      "list": "/api/mobile/trending.json",
+      "detail": "/api/mobile/trending/{slug}.json",
+      "count": 3
+    },
+    "search": {
+      "index": "/api/mobile/search.json",
+      "count": 1
+    }
+  },
+  "mobile_config": {
+    "max_excerpt_length": 120,
+    "max_title_length": 60,
+    "image_sizes": {
+      "mobile": {
+        "width": 320,
+        "height": 180
+      },
+      "tablet": {
+        "width": 768,
+        "height": 432
+      },
+      "desktop": {
+        "width": 1200,
+        "height": 675
+      }
+    },
+    "cache_duration": 300,
+    "pagination_limit": 20
+  }
+}

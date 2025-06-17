@@ -1,0 +1,36 @@
+{
+  "success": true,
+  "data": {
+    "id": 10,
+    "title": "New Platform Update Changes Everything for Creators",
+    "slug": "new-platform-update-changes-everything-for-creators",
+    "excerpt": "Major social media platform announces algorithm changes that could reshape how creators build audiences and earn reve...",
+    "author": {
+      "name": "Alex Rivera",
+      "slug": "alex-rivera"
+    },
+    "category": {
+      "name": "Technology",
+      "slug": "technology"
+    },
+    "publication_date": "2025-06-10T15:08:29.873127",
+    "read_time": "1 min",
+    "views": 0,
+    "mobile_optimized": true,
+    "image": {
+      "mobile": "/assets/placeholders/article_placeholder.svg",
+      "tablet": "/assets/placeholders/article_placeholder.svg",
+      "desktop": "/assets/placeholders/article_placeholder.svg",
+      "fallback": "/assets/placeholders/article_placeholder.svg"
+    },
+    "content": "<p class=\"text-gray-700 mb-6\">In a surprise announcement today, one of the world&#x27;s largest social media platforms revealed significant changes to its recommendation algorithm that could fundamentally alter the creator landscape.</p>\n<h2 class=\"text-2xl font-bold text-gray-900 mt-8 mb-4\">What&#x27;s Changing</h2>\n<p class=\"text-gray-700 mb-6\">The new algorithm will prioritize several key factors that represent a shift toward quality over viral content:</p>\n<ul class=\"list-disc pl-6 text-gray-700 mb-6 space-y-2\">\n    <li>Longer engagement times over quick views</li>\n    <li>Community interaction and meaningful responses</li>\n    <li>Original content over reposts and remixes</li>\n    <li>Consistent posting schedules and reliability</li>\n</ul>\n<div class=\"bg-indigo-50 border-l-4 border-indigo-400 p-6 my-8\">\n                    <div class=\"flex\">\n                        <div class=\"flex-shrink-0\">\n                            <svg class=\"h-5 w-5 text-indigo-400\" fill=\"currentColor\" viewBox=\"0 0 20 20\">\n                                <path fill-rule=\"evenodd\" d=\"M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z\" clip-rule=\"evenodd\"></path>\n                            </svg>\n                        </div>\n                        <div class=\"ml-3\">\n                            <p class=\"text-sm text-indigo-700\">These changes go into effect starting next month, giving creators time to adapt their content strategies and engagement approaches.</p>\n                        </div>\n                    </div>\n                </div>\n<h2 class=\"text-2xl font-bold text-gray-900 mt-8 mb-4\">Impact on Creators</h2>\n<p class=\"text-gray-700 mb-6\">Early testing shows creators who focus on community building are seeing significant growth, while those relying purely on viral trends are experiencing decreased reach.</p>\n<blockquote class=\"border-l-4 border-gray-300 pl-6 italic text-gray-700 my-8 text-lg\">\n                        This could be the biggest shift we&#x27;ve seen since the platform launched. Creators need to think long-term now instead of chasing quick viral moments.\n                        <footer class=\"text-sm text-gray-500 mt-2\">— Industry Expert Sarah Martinez</footer>\n                    </blockquote>\n<p class=\"text-gray-700 mb-6\">The platform&#x27;s data shows that creators with higher engagement rates and community interaction are being rewarded with increased visibility and better monetization opportunities.</p>\n<h2 class=\"text-2xl font-bold text-gray-900 mt-8 mb-4\">Looking Forward</h2>\n<p class=\"text-gray-700 mb-6\">The platform&#x27;s commitment to rewarding quality content over viral moments represents a maturation of the creator economy that could benefit serious content creators in the long run.</p>\n<p class=\"text-gray-700 mb-6\">This shift aligns with broader industry trends toward sustainable creator businesses rather than flash-in-the-pan viral success.</p>\n",
+    "full_title": "New Platform Update Changes Everything for Creators",
+    "full_excerpt": "Major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025."
+  },
+  "error": null,
+  "meta": {
+    "generated_at": "2025-06-11T07:18:44.761858",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "data": {
+    "slug": "business",
+    "name": "Business",
+    "description": "Creator economy, monetization, and business strategies",
+    "mobile_optimized": true,
+    "recent_articles": [],
+    "article_count": 0
+  },
+  "error": null,
+  "meta": {
+    "generated_at": "2025-06-11T16:24:46.469860",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

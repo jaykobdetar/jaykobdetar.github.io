@@ -1,0 +1,60 @@
+Title: {{trending.title}}
+Slug: {{trending.slug}}
+Category_ID: {{trending.category_id}}
+Icon: {{trending.icon}}
+Heat_Score: {{trending.heat_score}}
+Related_Articles: {{trending.related_articles}}
+Is_Active: {{trending.is_active}}
+Peak_Date: {{trending.peak_date}}
+Momentum: {{trending.momentum}}
+
+<!-- DEPRECATED FIELDS (for reference only, not used by current model):
+- Hashtag: Use for content reference but not stored in database
+- Status: Use Is_Active field instead
+- Growth_Rate: Use Momentum field instead
+- Platform mentions (Youtube_Mentions, etc.): Not supported in current model
+-->
+
+---
+
+{{trending.analysis}}
+
+<!-- CONTENT GUIDELINES:
+
+Include in trend analysis:
+- Background context on the trend
+- Key factors driving the trend
+- Platform breakdown and analysis
+- Impact on the creator community
+- Future predictions and implications
+- Related developments
+
+The content should be analytical and informative, helping readers understand not just WHAT is trending but WHY it matters.
+-->
+
+<!-- TEMPLATE USAGE:
+
+1. Replace all {{variable}} placeholders with actual trending data
+2. Fill in dynamic fields from your trending topics system
+3. Use analysis field for detailed trend breakdown
+4. Ensure heat_score reflects current trending intensity
+
+Dynamic Fields Available:
+- {{trending.title}} - Trending topic title
+- {{trending.slug}} - URL-friendly identifier
+- {{trending.category_id}} - Related category ID
+- {{trending.icon}} - Emoji icon (usually 🔥 for hot trends)
+- {{trending.heat_score}} - Trending intensity (0-10000)
+- {{trending.related_articles}} - Comma-separated article IDs
+- {{trending.is_active}} - Current active status
+- {{trending.peak_date}} - Date when topic peaked
+- {{trending.momentum}} - Rate of change (can be negative)
+- {{trending.analysis}} - Detailed trend analysis content
+
+Heat Score Ranges:
+- 9000-10000: 🔥🔥🔥 Extremely Hot
+- 7000-8999: 🔥🔥 Very Hot
+- 5000-6999: 🔥 Hot
+- 0-4999: 📈 Rising
+
+-->

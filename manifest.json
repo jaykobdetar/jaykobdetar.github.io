@@ -1,0 +1,100 @@
+{
+  "name": "Influencer News",
+  "short_name": "InfNews",
+  "description": "Breaking stories and real insights from the influencer and creator economy",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#312e81",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["news", "lifestyle", "entertainment"],
+  "icons": [
+    {
+      "src": "assets/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Latest News",
+      "short_name": "Latest",
+      "description": "View the latest influencer news",
+      "url": "/index.html",
+      "icons": [{ "src": "assets/icons/shortcut-latest.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Search",
+      "short_name": "Search",
+      "description": "Search articles and authors",
+      "url": "/search.html",
+      "icons": [{ "src": "assets/icons/shortcut-search.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Categories",
+      "short_name": "Categories",
+      "description": "Browse by category",
+      "url": "/integrated/categories.html",
+      "icons": [{ "src": "assets/icons/shortcut-categories.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/mobile-home.png",
+      "sizes": "640x1136",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "assets/screenshots/tablet-home.png",
+      "sizes": "1024x768",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}

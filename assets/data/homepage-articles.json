@@ -1,0 +1,24 @@
+{
+  "articles": [
+    {
+      "id": 5,
+      "title": "New Platform Update Changes Everything for Creators",
+      "excerpt": "Major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025.",
+      "slug": "new-platform-update-changes-everything-for-creators",
+      "author_name": "Alex Rivera",
+      "author_slug": "alex-rivera",
+      "category_name": "Technology",
+      "category_slug": "technology",
+      "category_color": "#3B82F6",
+      "category_icon": "\ud83d\ude80",
+      "publish_date": "2025-06-11T17:52:45.199348",
+      "views": 0,
+      "likes": 0,
+      "read_time_minutes": "1 min",
+      "image_url": "assets/images/default-article.jpg",
+      "url": "integrated/articles/article_5.html"
+    }
+  ],
+  "generated_at": "2025-06-17T07:08:42.329005",
+  "total_articles": 1
+}

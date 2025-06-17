@@ -1,0 +1,161 @@
+content_type,content_id,original_url,local_filename,alt_text,image_type,dimensions
+# AUTHORS - Profile Images
+author,alex-rivera,https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face,author_alex-rivera_profile.jpg,Alex Rivera - Platform algorithm specialist,profile,400x400
+author,jessica-kim,https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face,author_jessica-kim_profile.jpg,Jessica Kim - Beauty & Fashion Editor,profile,400x400
+author,maria-lopez,https://images.unsplash.com/photo-1494790108755-2616c395d75b?w=400&h=400&fit=crop&crop=face,author_maria-lopez_profile.jpg,Maria Lopez - Social Impact Writer,profile,400x400
+author,michael-torres,https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face,author_michael-torres_profile.jpg,Michael Torres - Entertainment Editor,profile,400x400
+author,sarah-chen,https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face,author_sarah-chen_profile.jpg,Sarah Chen - Tech Correspondent,profile,400x400
+
+# AUTHORS - Banner/Cover Images
+author,alex-rivera,https://images.unsplash.com/photo-1555421689-491a97ff2040?w=1200&h=400&fit=crop,author_alex-rivera_banner.jpg,Alex Rivera profile banner,banner,1200x400
+author,jessica-kim,https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1200&h=400&fit=crop,author_jessica-kim_banner.jpg,Jessica Kim profile banner,banner,1200x400
+author,maria-lopez,https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=1200&h=400&fit=crop,author_maria-lopez_banner.jpg,Maria Lopez profile banner,banner,1200x400
+author,michael-torres,https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=1200&h=400&fit=crop,author_michael-torres_banner.jpg,Michael Torres profile banner,banner,1200x400
+author,sarah-chen,https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=1200&h=400&fit=crop,author_sarah-chen_banner.jpg,Sarah Chen profile banner,banner,1200x400
+
+# CATEGORIES - Featured Images
+category,business,https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&fit=crop,category_business_featured.jpg,Business category featured image,featured,800x400
+category,charity,https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=400&fit=crop,category_charity_featured.jpg,Charity & Social Impact category featured image,featured,800x400
+category,creator-economy,https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop,category_creator-economy_featured.jpg,Creator Economy category featured image,featured,800x400
+category,entertainment,https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=800&h=400&fit=crop,category_entertainment_featured.jpg,Entertainment category featured image,featured,800x400
+category,fashion,https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&h=400&fit=crop,category_fashion_featured.jpg,Fashion & Beauty category featured image,featured,800x400
+category,technology,https://images.unsplash.com/photo-1555421689-491a97ff2040?w=800&h=400&fit=crop,category_technology_featured.jpg,Technology category featured image,featured,800x400
+
+# CATEGORIES - Thumbnail Images
+category,business,https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=300&fit=crop,category_business_thumbnail.jpg,Business category thumbnail,thumbnail,400x300
+category,charity,https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=400&h=300&fit=crop,category_charity_thumbnail.jpg,Charity & Social Impact category thumbnail,thumbnail,400x300
+category,creator-economy,https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=300&fit=crop,category_creator-economy_thumbnail.jpg,Creator Economy category thumbnail,thumbnail,400x300
+category,entertainment,https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=300&fit=crop,category_entertainment_thumbnail.jpg,Entertainment category thumbnail,thumbnail,400x300
+category,fashion,https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=300&fit=crop,category_fashion_thumbnail.jpg,Fashion & Beauty category thumbnail,thumbnail,400x300
+category,technology,https://images.unsplash.com/photo-1555421689-491a97ff2040?w=400&h=300&fit=crop,category_technology_thumbnail.jpg,Technology category thumbnail,thumbnail,400x300
+
+# TRENDING TOPICS - Featured Images
+trending,ai-content-creation-revolution,https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop,trending_ai-content-creation-revolution_featured.jpg,AI Content Creation Revolution trending topic,featured,800x400
+trending,creator-burnout-crisis,https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop,trending_creator-burnout-crisis_featured.jpg,Creator Burnout Crisis trending topic,featured,800x400
+trending,mrbeast-creator-fund,https://images.unsplash.com/photo-1633158829585-23ba8f7c8caf?w=800&h=400&fit=crop,trending_mrbeast-creator-fund_featured.jpg,MrBeast Creator Fund trending topic,featured,800x400
+
+# TRENDING TOPICS - Thumbnail Images
+trending,ai-content-creation-revolution,https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=300&fit=crop,trending_ai-content-creation-revolution_thumbnail.jpg,AI Content Creation Revolution thumbnail,thumbnail,400x300
+trending,creator-burnout-crisis,https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop,trending_creator-burnout-crisis_thumbnail.jpg,Creator Burnout Crisis thumbnail,thumbnail,400x300
+trending,mrbeast-creator-fund,https://images.unsplash.com/photo-1633158829585-23ba8f7c8caf?w=400&h=300&fit=crop,trending_mrbeast-creator-fund_thumbnail.jpg,MrBeast Creator Fund thumbnail,thumbnail,400x300
+
+# ARTICLES - Hero Images (Current Article)
+article,1,https://images.unsplash.com/photo-1555421689-491a97ff2040?w=1200&h=600&fit=crop,article_1_hero.jpg,New Platform Update Changes Everything for Creators,hero,1200x600
+
+# ARTICLES - Thumbnail Images (Current Article)
+article,1,https://images.unsplash.com/photo-1555421689-491a97ff2040?w=400&h=300&fit=crop,article_1_thumbnail.jpg,New Platform Update Changes Everything for Creators thumbnail,thumbnail,400x300
+
+# PLACEHOLDER ARTICLES - Hero Images (Generated Content Examples)
+article,2,https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=1200&h=600&fit=crop,article_2_hero.jpg,Sample Creator Economy Article,hero,1200x600
+article,3,https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=1200&h=600&fit=crop,article_3_hero.jpg,Sample Entertainment Industry Article,hero,1200x600
+article,4,https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1200&h=600&fit=crop,article_4_hero.jpg,Sample Beauty & Fashion Article,hero,1200x600
+article,5,https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1200&h=600&fit=crop,article_5_hero.jpg,Sample Charity & Social Impact Article,hero,1200x600
+article,6,https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=600&fit=crop,article_6_hero.jpg,Sample Business Strategy Article,hero,1200x600
+
+# PLACEHOLDER ARTICLES - Thumbnail Images (Generated Content Examples)
+article,2,https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=300&fit=crop,article_2_thumbnail.jpg,Sample Creator Economy Article thumbnail,thumbnail,400x300
+article,3,https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=300&fit=crop,article_3_thumbnail.jpg,Sample Entertainment Industry Article thumbnail,thumbnail,400x300
+article,4,https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=300&fit=crop,article_4_thumbnail.jpg,Sample Beauty & Fashion Article thumbnail,thumbnail,400x300
+article,5,https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=400&h=300&fit=crop,article_5_thumbnail.jpg,Sample Charity & Social Impact Article thumbnail,thumbnail,400x300
+article,6,https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=300&fit=crop,article_6_thumbnail.jpg,Sample Business Strategy Article thumbnail,thumbnail,400x300
+
+# SITE-WIDE IMAGES
+site,hero,https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=1920&h=800&fit=crop,site_hero_banner.jpg,Influencer News main hero banner,hero,1920x800
+site,logo,https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=200&fit=crop,site_logo.jpg,Influencer News logo,logo,200x200
+site,newsletter,https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=600&h=400&fit=crop,site_newsletter_banner.jpg,Newsletter subscription banner,banner,600x400
+site,footer,https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=1200&h=300&fit=crop,site_footer_banner.jpg,Footer background banner,banner,1200x300
+site,default_article,https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&h=400&fit=crop,assets/images/default-article.jpg,Default fallback image for articles,fallback,800x400
+site,no_image,https://via.placeholder.com/400x300/e5e7eb/6b7280?text=No%20Image,assets/images/no-image.jpg,No image available placeholder,placeholder,400x300
+site,loading_placeholder,https://via.placeholder.com/800x400/f3f4f6/9ca3af?text=Loading...,assets/images/loading-placeholder.jpg,Loading state placeholder,placeholder,800x400
+site,error_image,https://via.placeholder.com/400x300/fee2e2/dc2626?text=Error,assets/images/error-image.jpg,Error state image,error,400x300
+
+# RESPONSIVE IMAGES - Mobile Variants (Additional responsive sizes)
+author,alex-rivera,https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face,author_alex-rivera_profile_mobile.jpg,Alex Rivera mobile profile,profile_mobile,200x200
+author,jessica-kim,https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face,author_jessica-kim_profile_mobile.jpg,Jessica Kim mobile profile,profile_mobile,200x200
+author,maria-lopez,https://images.unsplash.com/photo-1494790108755-2616c395d75b?w=200&h=200&fit=crop&crop=face,author_maria-lopez_profile_mobile.jpg,Maria Lopez mobile profile,profile_mobile,200x200
+author,michael-torres,https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face,author_michael-torres_profile_mobile.jpg,Michael Torres mobile profile,profile_mobile,200x200
+author,sarah-chen,https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face,author_sarah-chen_profile_mobile.jpg,Sarah Chen mobile profile,profile_mobile,200x200
+
+# FEATURED CONTENT IMAGES (For Homepage/Featured Sections)
+featured,breaking_news,https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&h=600&fit=crop,featured_breaking_news.jpg,Breaking news featured image,featured,1200x600
+featured,trending_now,https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=500&fit=crop,featured_trending_now.jpg,Trending now section image,featured,800x500
+featured,latest_updates,https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&h=500&fit=crop,featured_latest_updates.jpg,Latest updates section image,featured,800x500
+
+# SOCIAL MEDIA PLATFORM ICONS (For trending topics and mentions)
+platform,youtube,https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop,platform_youtube_icon.jpg,YouTube platform icon,icon,100x100
+platform,tiktok,https://images.unsplash.com/photo-1611162617263-4ec3f43aacfd?w=100&h=100&fit=crop,platform_tiktok_icon.jpg,TikTok platform icon,icon,100x100
+platform,instagram,https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=100&h=100&fit=crop,platform_instagram_icon.jpg,Instagram platform icon,icon,100x100
+platform,twitter,https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop,platform_twitter_icon.jpg,Twitter platform icon,icon,100x100
+platform,twitch,https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100&h=100&fit=crop,platform_twitch_icon.jpg,Twitch platform icon,icon,100x100
+
+# PWA ICONS (Required for Progressive Web App functionality)
+pwa,icon_72,https://via.placeholder.com/72x72/4f46e5/ffffff?text=IN,assets/icons/icon-72x72.png,Influencer News PWA icon 72x72,icon,72x72
+pwa,icon_96,https://via.placeholder.com/96x96/4f46e5/ffffff?text=IN,assets/icons/icon-96x96.png,Influencer News PWA icon 96x96,icon,96x96
+pwa,icon_128,https://via.placeholder.com/128x128/4f46e5/ffffff?text=IN,assets/icons/icon-128x128.png,Influencer News PWA icon 128x128,icon,128x128
+pwa,icon_144,https://via.placeholder.com/144x144/4f46e5/ffffff?text=IN,assets/icons/icon-144x144.png,Influencer News PWA icon 144x144,icon,144x144
+pwa,icon_152,https://via.placeholder.com/152x152/4f46e5/ffffff?text=IN,assets/icons/icon-152x152.png,Influencer News PWA icon 152x152,icon,152x152
+pwa,icon_192,https://via.placeholder.com/192x192/4f46e5/ffffff?text=IN,assets/icons/icon-192x192.png,Influencer News PWA icon 192x192,icon,192x192
+pwa,icon_384,https://via.placeholder.com/384x384/4f46e5/ffffff?text=IN,assets/icons/icon-384x384.png,Influencer News PWA icon 384x384,icon,384x384
+pwa,icon_512,https://via.placeholder.com/512x512/4f46e5/ffffff?text=IN,assets/icons/icon-512x512.png,Influencer News PWA icon 512x512,icon,512x512
+
+# PWA SHORTCUT ICONS
+pwa,shortcut_latest,https://via.placeholder.com/96x96/10b981/ffffff?text=📰,assets/icons/shortcut-latest.png,Latest news shortcut icon,shortcut,96x96
+pwa,shortcut_search,https://via.placeholder.com/96x96/f59e0b/ffffff?text=🔍,assets/icons/shortcut-search.png,Search shortcut icon,shortcut,96x96
+pwa,shortcut_categories,https://via.placeholder.com/96x96/8b5cf6/ffffff?text=📁,assets/icons/shortcut-categories.png,Categories shortcut icon,shortcut,96x96
+
+# PWA SCREENSHOTS (For app store listings)
+pwa,screenshot_mobile,https://via.placeholder.com/640x1136/f3f4f6/374151?text=Mobile%20Homepage,assets/screenshots/mobile-home.png,Mobile homepage screenshot,screenshot,640x1136
+pwa,screenshot_tablet,https://via.placeholder.com/1024x768/f3f4f6/374151?text=Tablet%20Homepage,assets/screenshots/tablet-home.png,Tablet homepage screenshot,screenshot,1024x768
+
+# EXISTING SCREENSHOTS (Already present - may need updating)
+# Note: These exist but may need to be updated to match current design
+existing,screenshot_home,UPDATE_EXISTING,assets/images/screenshots/home.png,Homepage screenshot - needs review,screenshot,CURRENT_SIZE
+existing,screenshot_search,UPDATE_EXISTING,assets/images/screenshots/search.png,Search page screenshot - needs review,screenshot,CURRENT_SIZE
+existing,screenshot_article,UPDATE_EXISTING,assets/images/screenshots/article.png,Article page screenshot - needs review,screenshot,CURRENT_SIZE
+existing,screenshot_authors,UPDATE_EXISTING,assets/images/screenshots/authors.png,Authors page screenshot - needs review,screenshot,CURRENT_SIZE
+
+# APP STORE ASSETS (Additional PWA assets)
+pwa,favicon_16,https://via.placeholder.com/16x16/4f46e5/ffffff?text=I,favicon-16x16.png,Favicon 16x16,favicon,16x16
+pwa,favicon_32,https://via.placeholder.com/32x32/4f46e5/ffffff?text=I,favicon-32x32.png,Favicon 32x32,favicon,32x32
+pwa,apple_touch_icon,https://via.placeholder.com/180x180/4f46e5/ffffff?text=IN,apple-touch-icon.png,Apple touch icon,apple_icon,180x180
+
+# BACKGROUND PATTERNS AND TEXTURES
+background,gradient_1,https://images.unsplash.com/photo-1557683304-673a23048d34?w=1920&h=1080&fit=crop,background_gradient_1.jpg,Background gradient pattern 1,background,1920x1080
+background,gradient_2,https://images.unsplash.com/photo-1557683311-eac922347aa1?w=1920&h=1080&fit=crop,background_gradient_2.jpg,Background gradient pattern 2,background,1920x1080
+background,texture_1,https://images.unsplash.com/photo-1557683316-973673baf926?w=1920&h=1080&fit=crop,background_texture_1.jpg,Background texture pattern 1,background,1920x1080
+
+# ================================
+# IMAGE PROCUREMENT SUMMARY
+# ================================
+# 
+# CRITICAL PRIORITY (Required for basic functionality):
+# - PWA Icons: All icon-*.png files in assets/icons/ (72x72 to 512x512)
+# - Default fallback: assets/images/default-article.jpg
+# - Apple touch icon and favicons for PWA compliance
+# 
+# HIGH PRIORITY (Important for user experience):
+# - Author profile images for all 5 authors
+# - Article hero images for existing articles
+# - PWA shortcut icons and screenshots
+# 
+# MEDIUM PRIORITY (Enhanced experience):
+# - Category featured and thumbnail images
+# - Trending topic images
+# - Site-wide images (logo, newsletter, etc.)
+# 
+# LOW PRIORITY (Nice to have):
+# - Background patterns and textures
+# - Platform icons for social media
+# - Responsive mobile variants
+# 
+# DIRECTORY STRUCTURE NEEDED:
+# /assets/icons/ (create directory)
+# /assets/images/ (exists)
+# /assets/screenshots/ (exists, may need updates)
+# 
+# PROCUREMENT NOTES:
+# - Use placeholder.com URLs for temporary testing
+# - Use Unsplash URLs for high-quality stock photos
+# - Ensure all icons use consistent branding (theme color: #4f46e5)
+# - Screenshots should be actual captures of the live site
+# - All images should be optimized for web (under 200KB recommended)

@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "data": {
+    "slug": "fashion",
+    "name": "Fashion & Beauty",
+    "description": "Fashion trends, beauty collaborations, and style content",
+    "mobile_optimized": true,
+    "recent_articles": [],
+    "article_count": 0
+  },
+  "error": null,
+  "meta": {
+    "generated_at": "2025-06-11T16:24:46.498847",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - Influencer News</title>
+    <link rel="stylesheet" href="assets/css/styles.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-crypto-secure-random-nonce' https://cdn.jsdelivr.net; style-src 'self' 'nonce-crypto-secure-random-nonce' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; media-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
+    <style nonce="crypto-secure-random-nonce">
+        body { 
+            font-family: 'Inter', sans-serif; 
+            line-height: 1.6; 
+        }
+        .hero-title { 
+            font-family: 'Playfair Display', serif; 
+        }
+        .result-card { 
+            transition: all 0.3s ease; 
+        }
+        .result-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); 
+        }
+        .nav-link { 
+            position: relative; 
+            transition: all 0.3s ease;
+        }
+        .nav-link::after { 
+            content: ''; 
+            position: absolute; 
+            bottom: -2px; 
+            left: 0; 
+            width: 0; 
+            height: 2px; 
+            background: linear-gradient(90deg, #ffffff, #e0e7ff); 
+            transition: width 0.3s ease; 
+        }
+        .nav-link:hover::after { 
+            width: 100%; 
+        }
+        .search-highlight {
+            background: linear-gradient(120deg, #fbbf24 0%, #f59e0b 100%);
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .filter-pill {
+            transition: all 0.2s ease;
+        }
+        .filter-pill:hover {
+            transform: scale(1.05);
+        }
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: #312e81;
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+        
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            z-index: 999;
+        }
+        
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .hamburger {
+            width: 30px;
+            height: 24px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+        
+        .mobile-nav-item {
+            display: block;
+            padding: 1rem 2rem;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s ease;
+        }
+        
+        .mobile-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="p-6 border-b border-indigo-700">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-lg font-bold text-white">IN</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Menu</h2>
+                    </div>
+                </div>
+                <button class="text-white text-2xl" id="closeMobileMenu">&times;</button>
+            </div>
+        </div>
+        <nav class="py-4">
+            <a href="index.html" class="mobile-nav-item">Home</a>
+            <a href="search.html" class="mobile-nav-item">Search</a>
+            <a href="authors.html" class="mobile-nav-item">Authors</a>
+            <a href="integrated/categories.html" class="mobile-nav-item">Categories</a>
+            <a href="integrated/trending.html" class="mobile-nav-item">Trending</a>
+            <a href="#contact" class="mobile-nav-item">Contact</a>
+        </nav>
+        <div class="p-6 mt-auto">
+            <div class="bg-indigo-700 rounded-lg p-4">
+                <h3 class="text-white font-bold mb-2">Newsletter</h3>
+                <p class="text-indigo-200 text-sm mb-3">Get the latest influencer news</p>
+                <button class="bg-white text-indigo-700 px-4 py-2 rounded-md text-sm font-semibold w-full">Subscribe</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-4">
+                    <span class="text-2xl font-bold text-white">IN</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
+                    <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
+                </div>
+            </div>
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden hamburger" id="mobileMenuToggle" aria-label="Toggle mobile menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <nav class="hidden md:block">
+                <ul class="flex space-x-8">
+                    <li><a href="index.html" class="nav-link hover:text-indigo-200 transition font-medium">Home</a></li>
+                    <li><a href="search.html" class="nav-link hover:text-indigo-200 transition font-medium text-indigo-200">Search</a></li>
+                    <li><a href="authors.html" class="nav-link hover:text-indigo-200 transition font-medium">Authors</a></li>
+                    <li><a href="integrated/categories.html" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
+                    <li><a href="integrated/trending.html" class="nav-link hover:text-indigo-200 transition font-medium">Trending</a></li>
+                </ul>
+            </nav>
+            <div class="relative hidden md:block">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search articles, authors..." 
+                    class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                    onkeyup="handleSearch(event)"
+                >
+                <button onclick="performSearch()" class="absolute right-3 top-3 text-gray-600 hover:text-indigo-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+                <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg mt-1 hidden max-h-60 overflow-y-auto z-50">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Mobile Search Button -->
+            <button class="md:hidden text-white p-2" id="mobileSearchToggle" aria-label="Toggle mobile search">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Search Results Main -->
+    <main class="container mx-auto px-4 py-10">
+        <!-- Search Header -->
+        <div class="mb-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-900 mb-2">Search Results</h1>
+                    <p id="searchQuery" class="text-lg text-gray-600"></p>
+                </div>
+                <div class="mt-4 md:mt-0 md:text-right">
+                    <p id="searchStats" class="text-sm text-gray-500"></p>
+                    <div class="flex items-center space-x-2 mt-2">
+                        <span class="text-sm text-gray-500">Type:</span>
+                        <select id="typeFilter" onchange="filterResults()" class="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                            <option value="all">All Types</option>
+                            <option value="article">Articles</option>
+                            <option value="author">Authors</option>
+                            <option value="category">Categories</option>
+                            <option value="trending">Trending</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Search -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <div class="flex flex-col md:flex-row items-stretch md:items-center space-y-4 md:space-y-0 md:space-x-4">
+                    <input 
+                        type="text" 
+                        id="mainSearchInput" 
+                        placeholder="Search for articles, authors, topics..." 
+                        class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        onkeyup="handleMainSearch(event)"
+                    >
+                    <button onclick="performMainSearch()" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Skeleton -->
+        <div id="loadingSkeleton" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="loading-skeleton h-80 rounded-xl"></div>
+            <div class="loading-skeleton h-80 rounded-xl"></div>
+            <div class="loading-skeleton h-80 rounded-xl"></div>
+        </div>
+
+        <!-- Search Results Grid -->
+        <div id="searchResults" class="space-y-8">
+            <!-- Results will be populated by JavaScript -->
+        </div>
+
+        <!-- No Results State -->
+        <div id="noResults" class="hidden text-center py-16">
+            <div class="text-6xl mb-4">🔍</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">No Results Found</h2>
+            <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                We couldn't find any content matching your search. Try different keywords or browse our categories.
+            </p>
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="integrated/categories.html" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">Browse Categories</a>
+                <a href="integrated/trending.html" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition">View Trending</a>
+            </div>
+        </div>
+
+        <!-- Initial State -->
+        <div id="initialState" class="text-center py-16">
+            <div class="text-6xl mb-4">🔎</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Start Your Search</h2>
+            <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                Enter a search term above to find articles, authors, and trending topics in the influencer space.
+            </p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-lg font-bold">IN</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Influencer News</h3>
+                            <p class="text-sm text-gray-400">Breaking • Insights • Culture</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        The world's leading source for influencer industry news and exclusive insights.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">Latest News</a></li>
+                        <li><a href="search.html" class="text-gray-300 hover:text-white transition">Search</a></li>
+                        <li><a href="authors.html" class="text-gray-300 hover:text-white transition">Authors</a></li>
+                        <li><a href="integrated/categories.html" class="text-gray-300 hover:text-white transition">Categories</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Categories</h3>
+                    <ul class="space-y-2">
+                        <li><a href="search.html?category=business" class="text-gray-300 hover:text-white transition">💼 Business</a></li>
+                        <li><a href="search.html?category=entertainment" class="text-gray-300 hover:text-white transition">🎥 Entertainment</a></li>
+                        <li><a href="search.html?category=fashion" class="text-gray-300 hover:text-white transition">💄 Beauty & Fashion</a></li>
+                        <li><a href="search.html?category=technology" class="text-gray-300 hover:text-white transition">⚡ Technology</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact Info</h3>
+                    <div class="space-y-3 text-gray-300">
+                        <p>📧 news@influencernews.com</p>
+                        <p>📞 (555) 123-NEWS</p>
+                        <p>📍 123 Creator Avenue<br>Los Angeles, CA 90210</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center">
+                <p class="text-gray-400 text-sm">© 2025 Influencer News. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script nonce="crypto-secure-random-nonce">
+        // Search functionality
+        let currentResults = { query: '', articles: [], authors: [], categories: [], trending: [] };
+        let filteredResults = { total_results: 0 };
+
+        // Mobile Menu Functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuToggle.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenuFunc() {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', openMobileMenu);
+        }
+        
+        if (closeMobileMenu) {
+            closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+        }
+        
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', closeMobileMenuFunc);
+        }
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-nav-item').forEach(item => {
+            item.addEventListener('click', closeMobileMenuFunc);
+        });
+
+        // Search functionality
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        }
+
+        function handleMainSearch(event) {
+            if (event.key === 'Enter') {
+                performMainSearch();
+            }
+        }
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (query.trim()) {
+                document.getElementById('mainSearchInput').value = query;
+                performMainSearch();
+            }
+        }
+
+        function performMainSearch() {
+            const query = document.getElementById('mainSearchInput').value;
+            if (query.trim()) {
+                searchDatabase(query);
+            }
+        }
+
+        async function searchDatabase(query) {
+            // Clear previous results and reset state
+            clearPreviousResults();
+            showLoading();
+            hideInitialState();
+            hideNoResults();
+
+            try {
+                // Use the search API integration
+                const results = await searchAPI.search(query, {
+                    limit: 20,
+                    offset: 0,
+                    content_type: 'all'
+                });
+
+                hideLoading();
+                currentResults = results;
+                filteredResults = results;
+                
+                if (results.total_results > 0) {
+                    displayResults(results);
+                    updateSearchStats();
+                } else {
+                    showNoResults();
+                }
+            } catch (error) {
+                console.error('Search failed:', error);
+                hideLoading();
+                showSearchError(error.message);
+            }
+        }
+
+        function displayResults(results) {
+            const container = document.getElementById('searchResults');
+            let html = '';
+
+            if (results.articles && results.articles.length > 0) {
+                html += '<div class="mb-8"><h2 class="text-2xl font-bold mb-4">Articles</h2><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">';
+                results.articles.forEach(article => {
+                    const publishDate = new Date(article.publication_date);
+                    const timeAgo = getTimeAgo(publishDate);
+                    
+                    html += `
+                        <div class="result-card bg-white rounded-xl shadow-lg overflow-hidden">
+                            <div class="p-6">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span class="category-${article.category_name} bg-gray-100 px-2 py-1 rounded text-xs font-bold uppercase">${article.category_name}</span>
+                                    <span class="text-xs text-gray-500">${article.category_icon}</span>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2 hover:text-indigo-600 transition cursor-pointer">
+                                    <a href="${article.url}">${escapeHtml(article.title)}</a>
+                                </h3>
+                                <p class="text-gray-600 mb-4">${escapeHtml(article.excerpt)}</p>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-gray-500">${escapeHtml(article.author_name)} • ${timeAgo}</span>
+                                    <span class="text-gray-500">👁 ${article.views ? article.views.toLocaleString() : 0} views</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div></div>';
+            }
+
+            // Add other content types if available
+            if (results.authors && results.authors.length > 0) {
+                html += '<div class="mb-8"><h2 class="text-2xl font-bold mb-4">Authors</h2><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">';
+                results.authors.forEach(author => {
+                    html += `
+                        <div class="result-card bg-white rounded-xl shadow-lg overflow-hidden">
+                            <div class="p-6 text-center">
+                                <h3 class="text-lg font-bold mb-2">${escapeHtml(author.name)}</h3>
+                                <p class="text-gray-600 text-sm mb-3">${escapeHtml(author.bio || '')}</p>
+                                <div class="text-sm text-gray-500">${author.article_count || 0} articles</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div></div>';
+            }
+
+            if (results.categories && results.categories.length > 0) {
+                html += '<div class="mb-8"><h2 class="text-2xl font-bold mb-4">Categories</h2><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">';
+                results.categories.forEach(category => {
+                    html += `
+                        <div class="result-card bg-white rounded-xl shadow-lg overflow-hidden">
+                            <div class="p-6 text-center">
+                                <div class="text-2xl mb-2">${category.icon || '📁'}</div>
+                                <h3 class="text-lg font-bold mb-2">${escapeHtml(category.name)}</h3>
+                                <p class="text-gray-600 text-sm">${category.article_count || 0} articles</p>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div></div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            // Use trusted sanitizer if available, otherwise fallback
+            if (typeof trustedSanitizer !== 'undefined') {
+                return trustedSanitizer.sanitizeText(text);
+            } else {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        }
+
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) return '1 day ago';
+            if (diffDays < 7) return `${diffDays} days ago`;
+            if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+            return `${Math.floor(diffDays / 30)} months ago`;
+        }
+
+        function filterResults() {
+            const type = document.getElementById('typeFilter').value;
+            // Implement filtering logic
+            displayResults(currentResults);
+        }
+
+        function updateSearchStats() {
+            document.getElementById('searchQuery').textContent = `Results for "${currentResults.query}"`;
+            document.getElementById('searchStats').textContent = `${filteredResults.total_results} results found`;
+        }
+
+        function showLoading() {
+            document.getElementById('loadingSkeleton').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSkeleton').classList.add('hidden');
+        }
+
+        function showNoResults() {
+            document.getElementById('noResults').classList.remove('hidden');
+        }
+
+        function hideNoResults() {
+            document.getElementById('noResults').classList.add('hidden');
+        }
+
+        function showInitialState() {
+            document.getElementById('initialState').classList.remove('hidden');
+        }
+
+        function hideInitialState() {
+            document.getElementById('initialState').classList.add('hidden');
+        }
+
+        function clearPreviousResults() {
+            // Clear search results container
+            const container = document.getElementById('searchResults');
+            container.innerHTML = '';
+            
+            // Reset search stats
+            document.getElementById('searchQuery').textContent = '';
+            document.getElementById('searchStats').textContent = '';
+            
+            // Reset current results
+            currentResults = { query: '', articles: [], authors: [], categories: [], trending: [] };
+            filteredResults = { total_results: 0 };
+            
+            // Hide all result states
+            hideNoResults();
+            hideInitialState();
+        }
+
+        function showSearchError(message) {
+            const container = document.getElementById('searchResults');
+            container.innerHTML = `
+                <div class="text-center py-12">
+                    <div class="text-red-500 text-6xl mb-4">⚠️</div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Search Error</h3>
+                    <p class="text-gray-600 mb-4">${message}</p>
+                    <button onclick="location.reload()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+                        Try Again
+                    </button>
+                </div>
+            `;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for search query in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+            if (query) {
+                document.getElementById('mainSearchInput').value = query;
+                performMainSearch();
+            }
+        });
+    </script>
+    
+    <!-- Security: DOMPurify for HTML sanitization -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js" integrity="sha384-LW1Q2+3pcx1jz7WDNJ6X4LWq7l5D7Lrf7K8V9Vq0T6kl5o9S1R7B8tLqGZhcQ2E" crossorigin="anonymous"></script>
+    
+    <!-- Trusted Sanitization -->
+    <script src="assets/js/trusted-sanitizer.js" nonce="crypto-secure-random-nonce"></script>
+    
+    <!-- Search Integration -->
+    <script src="assets/js/search-integration.js" nonce="crypto-secure-random-nonce"></script>
+    
+    <!-- Mobile Touch Enhancements -->
+    <script src="assets/js/mobile-touch.js" nonce="crypto-secure-random-nonce"></script>
+</body>
+</html>

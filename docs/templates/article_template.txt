@@ -1,0 +1,76 @@
+Title: {{article.title}}
+Slug: {{article.slug}}
+Author: {{article.author.name}}
+Category: {{article.category.slug}}
+Status: {{article.status}}
+Featured: {{article.featured}}
+Trending: {{article.trending}}
+Image: {{article.image_url}}
+Hero_Image: {{article.hero_image_url}}
+Thumbnail: {{article.thumbnail_url}}
+Tags: {{article.tags}}
+Excerpt: {{article.excerpt}}
+SEO_Title: {{article.seo_title}}
+SEO_Description: {{article.seo_description}}
+Read_Time: {{article.read_time}}
+Publish_Date: {{article.publish_date}}
+Mobile_Title: {{article.mobile_title}}
+Mobile_Excerpt: {{article.mobile_excerpt}}
+
+---
+
+{{article.content}}
+
+<!-- FORMATTING GUIDE:
+
+## Section Headings
+Use ## for main section headings. These will be styled prominently.
+
+### Subsection Headings
+Use ### for subsections within main sections.
+
+## Special Formatting
+**Bold text** for emphasis.
+*Italic text* for quotes or emphasis.
+
+Bullet lists:
+- First item
+- Second item
+- Third item
+
+Numbered lists:
+1. First step
+2. Second step
+3. Third step
+
+## Information Boxes
+[INFO] Use this format to create highlighted information boxes.
+
+## Quotes
+> This is a blockquote format for quotes. - Quote Author
+
+-->
+
+<!-- TEMPLATE USAGE:
+
+1. Replace all {{variable}} placeholders with actual content
+2. Fill in dynamic fields from your content management system
+3. Use the formatting guide above for content structure
+4. Ensure all required fields are populated before publishing
+
+Dynamic Fields Available:
+- {{article.title}} - Article headline
+- {{article.slug}} - URL-friendly identifier
+- {{article.author.name}} - Author's full name
+- {{article.category.slug}} - Category identifier
+- {{article.status}} - Publication status
+- {{article.featured}} - Homepage feature flag
+- {{article.trending}} - Trending section flag
+- {{article.image_url}} - Featured image URL
+- {{article.content}} - Main article content
+- {{article.tags}} - Comma-separated tags
+- {{article.excerpt}} - Brief summary
+- {{article.publish_date}} - Publication date
+- {{article.read_time}} - Estimated reading time
+
+-->

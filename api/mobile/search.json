@@ -1,0 +1,122 @@
+{
+  "success": true,
+  "data": {
+    "articles": [
+      {
+        "id": 1,
+        "title": "New Platform Update Changes Everything for Creators",
+        "excerpt": "Major social media platform announces algorithm changes that could reshape how creators build audiences and earn reve...",
+        "author": "Alex Rivera",
+        "category": "Technology",
+        "date": "2025-06-11T16:14:44.739810",
+        "slug": "new-platform-update-changes-everything-for-creators",
+        "search_text": "new platform update changes everything for creators major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025. alex rivera technology"
+      }
+    ],
+    "authors": [
+      {
+        "slug": "alex-rivera",
+        "name": "Alex Rivera",
+        "title": null,
+        "bio": "Platform algorithm specialist and former software engineer with extensive experience in their field",
+        "search_text": "alex rivera none platform algorithm specialist and former software engineer with extensive experience in their field"
+      },
+      {
+        "slug": "jessica-kim",
+        "name": "Jessica Kim",
+        "title": null,
+        "bio": "Former Vogue digital editor covering beauty influencer partnerships",
+        "search_text": "jessica kim none former vogue digital editor covering beauty influencer partnerships"
+      },
+      {
+        "slug": "maria-lopez",
+        "name": "Maria Lopez",
+        "title": null,
+        "bio": "Wellness and lifestyle expert covering creator mental health and work-life balance",
+        "search_text": "maria lopez none wellness and lifestyle expert covering creator mental health and work-life balance"
+      },
+      {
+        "slug": "michael-torres",
+        "name": "Michael Torres",
+        "title": null,
+        "bio": "Celebrity culture and entertainment industry veteran with over 10 years covering influencer drama and collaborations",
+        "search_text": "michael torres none celebrity culture and entertainment industry veteran with over 10 years covering influencer drama and collaborations"
+      },
+      {
+        "slug": "sarah-chen",
+        "name": "Sarah Chen",
+        "title": null,
+        "bio": "Creator economy expert with 8 years experience covering the business of content creation and influencer marketing",
+        "search_text": "sarah chen none creator economy expert with 8 years experience covering the business of content creation and influencer marketing"
+      }
+    ],
+    "categories": [
+      {
+        "slug": "business",
+        "name": "Business",
+        "description": "Creator economy, monetization, and business strategies",
+        "search_text": "business creator economy, monetization, and business strategies"
+      },
+      {
+        "slug": "charity",
+        "name": "Charity & Social Impact",
+        "description": "Creator charity work and social impact initiatives",
+        "search_text": "charity & social impact creator charity work and social impact initiatives"
+      },
+      {
+        "slug": "creator-economy",
+        "name": "Creator Economy",
+        "description": "Business of content creation and monetization strategies",
+        "search_text": "creator economy business of content creation and monetization strategies"
+      },
+      {
+        "slug": "entertainment",
+        "name": "Entertainment",
+        "description": "Celebrity news, drama, and exclusive interviews from the influencer world",
+        "search_text": "entertainment celebrity news, drama, and exclusive interviews from the influencer world"
+      },
+      {
+        "slug": "fashion",
+        "name": "Fashion & Beauty",
+        "description": "Fashion trends, beauty collaborations, and style content",
+        "search_text": "fashion & beauty fashion trends, beauty collaborations, and style content"
+      },
+      {
+        "slug": "technology",
+        "name": "Technology",
+        "description": "Platform updates, AI tools, and tech innovations for creators",
+        "search_text": "technology platform updates, ai tools, and tech innovations for creators"
+      }
+    ],
+    "trending": [
+      {
+        "slug": "ai-content-creation-revolution",
+        "topic": "AI Content Creation Revolution",
+        "description": "The AI content creation revolution is transforming how creators produce and distribute content. With tools like ChatG...",
+        "search_text": "ai content creation revolution the ai content creation revolution is transforming how creators produce and distribute content. with tools like chatgpt, midjourney, and elevenlabs becoming mainstream, creators are reimagining their workflows and pushing creative boundaries."
+      },
+      {
+        "slug": "creator-burnout-crisis",
+        "topic": "Creator Burnout Crisis",
+        "description": "Creator burnout has become a critical issue in 2024, with high-profile creators taking breaks and speaking openly abo...",
+        "search_text": "creator burnout crisis creator burnout has become a critical issue in 2024, with high-profile creators taking breaks and speaking openly about mental health challenges. the constant pressure to produce content, maintain engagement, and adapt to algorithm changes is taking its toll."
+      },
+      {
+        "slug": "mrbeast-creator-fund",
+        "topic": "MrBeast Creator Fund",
+        "description": "The MrBeast Creator Fund announcement has taken the influencer world by storm, with creators across all platforms dis...",
+        "search_text": "mrbeast creator fund the mrbeast creator fund announcement has taken the influencer world by storm, with creators across all platforms discussing the implications of this $100m initiative. the fund represents one of the largest direct creator support programs ever announced by an individual creator."
+      }
+    ]
+  },
+  "error": null,
+  "meta": {
+    "total_articles": 1,
+    "total_authors": 5,
+    "total_categories": 6,
+    "total_trending": 3,
+    "generated_at": "2025-06-11T16:24:46.537871",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

@@ -1,0 +1,55 @@
+Name: {{author.name}}
+Slug: {{author.slug}}
+Title: {{author.title}}
+Bio: {{author.bio}}
+Image: {{author.image_url}}
+Location: {{author.location}}
+Expertise: {{author.expertise}}
+Email: {{author.email}}
+Twitter: {{author.twitter}}
+LinkedIn: {{author.linkedin}}
+Rating: {{author.rating}}
+Is_Active: {{author.is_active}}
+Joined_Date: {{author.joined_date}}
+
+---
+
+{{author.extended_bio}}
+
+<!-- CONTENT GUIDELINES:
+
+Include in extended biography:
+- Career highlights and experience
+- Educational background
+- Notable work or publications
+- Personal interests
+- Professional philosophy
+- Industry expertise
+
+This content appears in the "About" section of the author's profile page.
+-->
+
+<!-- TEMPLATE USAGE:
+
+1. Replace all {{variable}} placeholders with actual author data
+2. Fill in dynamic fields from your author management system
+3. Use extended_bio for detailed background information
+4. Ensure all social media links are properly formatted
+
+Dynamic Fields Available:
+- {{author.name}} - Author's full name
+- {{author.slug}} - URL-friendly identifier
+- {{author.title}} - Job title or position
+- {{author.bio}} - Brief description
+- {{author.image_url}} - Profile image URL
+- {{author.location}} - Geographic location
+- {{author.expertise}} - Comma-separated skills
+- {{author.email}} - Contact email
+- {{author.twitter}} - Twitter handle or URL
+- {{author.linkedin}} - LinkedIn profile URL
+- {{author.rating}} - Author rating (0.0-5.0)
+- {{author.is_active}} - Active status
+- {{author.joined_date}} - Date joined
+- {{author.extended_bio}} - Detailed biography content
+
+-->

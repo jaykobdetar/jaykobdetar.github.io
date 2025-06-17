@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Editorial Team - Influencer News</title>
+    <link rel="stylesheet" href="assets/css/styles.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            line-height: 1.6; 
+        }
+        .hero-title { 
+            font-family: 'Playfair Display', serif; 
+        }
+        .author-card { 
+            transition: all 0.3s ease; 
+            backdrop-filter: blur(10px);
+        }
+        .author-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); 
+        }
+        .nav-link { 
+            position: relative; 
+            transition: all 0.3s ease;
+        }
+        .nav-link::after { 
+            content: ''; 
+            position: absolute; 
+            bottom: -2px; 
+            left: 0; 
+            width: 0; 
+            height: 2px; 
+            background: linear-gradient(90deg, #ffffff, #e0e7ff); 
+            transition: width 0.3s ease; 
+        }
+        .nav-link:hover::after { 
+            width: 100%; 
+        }
+        .live-ticker { 
+            animation: smoothTicker 25s linear infinite; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+        }
+        @keyframes smoothTicker { 
+            0% { transform: translateX(100%); } 
+            100% { transform: translateX(-100%); } 
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        .expertise-badge {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        .social-icon {
+            transition: all 0.2s ease;
+        }
+        .social-icon:hover {
+            transform: scale(1.2);
+        }
+        .stats-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: #312e81;
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+        
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            z-index: 999;
+        }
+        
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .hamburger {
+            width: 30px;
+            height: 24px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+        
+        .mobile-nav-item {
+            display: block;
+            padding: 1rem 2rem;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s ease;
+        }
+        
+        .mobile-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Mobile Search Overlay */
+        .mobile-search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        
+        .mobile-search-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="p-6 border-b border-indigo-700">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-lg font-bold text-white">IN</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Menu</h2>
+                    </div>
+                </div>
+                <button class="text-white text-2xl" id="closeMobileMenu">&times;</button>
+            </div>
+        </div>
+        <nav class="py-4">
+            <a href="index.html" class="mobile-nav-item">🏠 Home</a>
+            <a href="search.html" class="mobile-nav-item">🔍 Search</a>
+            <a href="authors.html" class="mobile-nav-item">👥 Authors</a>
+            <a href="integrated/categories.html" class="mobile-nav-item">📂 Categories</a>
+            <a href="integrated/trending.html" class="mobile-nav-item">🔥 Trending</a>
+            <a href="#contact" class="mobile-nav-item">📧 Contact</a>
+        </nav>
+        <div class="p-6 mt-auto">
+            <div class="bg-indigo-700 rounded-lg p-4">
+                <h3 class="text-white font-bold mb-2">Newsletter</h3>
+                <p class="text-indigo-200 text-sm mb-3">Get the latest influencer news</p>
+                <button class="bg-white text-indigo-700 px-4 py-2 rounded-md text-sm font-semibold w-full">Subscribe</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Search Overlay -->
+    <div class="mobile-search-overlay" id="mobileSearchOverlay">
+        <div class="p-4 bg-indigo-900">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-white font-bold text-lg">Search</h3>
+                <button class="text-white text-2xl" id="closeMobileSearch">&times;</button>
+            </div>
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="mobileSearchInput" 
+                    placeholder="Search articles, authors..." 
+                    class="w-full p-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    onkeyup="handleMobileSearch(event)"
+                >
+                <button onclick="performMobileSearch()" class="absolute right-4 top-4 text-gray-600 hover:text-indigo-600 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+            </div>
+            <!-- Mobile Search Suggestions -->
+            <div id="mobileSearchSuggestions" class="mt-4 bg-white rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    <!-- Header -->
+    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-4">
+                    <span class="text-2xl font-bold text-white">IN</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
+                    <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
+                </div>
+            </div>
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden hamburger" id="mobileMenuToggle" aria-label="Toggle mobile menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <nav class="hidden md:block">
+                <ul class="flex space-x-8">
+                    <li><a href="index.html" class="nav-link hover:text-indigo-200 transition font-medium">Home</a></li>
+                    <li><a href="search.html" class="nav-link hover:text-indigo-200 transition font-medium">Search</a></li>
+                    <li><a href="authors.html" class="nav-link hover:text-indigo-200 transition font-medium text-indigo-200">Authors</a></li>
+                    <li><a href="integrated/categories.html" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
+                    <li><a href="integrated/trending.html" class="nav-link hover:text-indigo-200 transition font-medium">Trending</a></li>
+                    <li><a href="#contact" class="nav-link hover:text-indigo-200 transition font-medium">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Enhanced Search Bar - Desktop Only -->
+            <div class="relative hidden md:block">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search breaking news..." 
+                    class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                    onkeyup="handleSearch(event)"
+                >
+                <button onclick="performSearch()" class="absolute right-3 top-3 text-gray-600 hover:text-indigo-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+                <!-- Search Suggestions -->
+                <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg mt-1 hidden max-h-60 overflow-y-auto z-50">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Mobile Search Button -->
+            <button class="md:hidden text-white p-2" id="mobileSearchToggle" aria-label="Toggle mobile search">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="bg-gradient-to-r from-red-600 to-red-700 text-white py-3 overflow-hidden relative">
+            <div class="live-ticker flex items-center space-x-8">
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 bg-red-400 rounded-full animate-ping"></div>
+                    <span class="font-bold text-sm">LIVE</span>
+                </div>
+                <span class="text-sm font-medium">
+                    MrBeast announces $100M creator fund • Emma Chamberlain Netflix deal confirmed • TikTok algorithm update live • 
+                    <span id="current-time" class="font-bold"></span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section py-20 text-center text-white">
+        <div class="hero-content container mx-auto px-4">
+            <h2 class="hero-title text-5xl font-bold mb-6">Meet Our Editorial Team</h2>
+            <p class="text-xl mb-8 max-w-3xl mx-auto opacity-90">
+                Award-winning journalists and industry experts bringing you the most accurate, 
+                timely, and insightful coverage of the creator economy.
+            </p>
+            
+            <!-- Team Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                <div class="stats-card rounded-2xl p-6">
+                    <div class="text-3xl font-bold mb-2">12</div>
+                    <div class="text-sm opacity-75">Expert Writers</div>
+                </div>
+                <div class="stats-card rounded-2xl p-6">
+                    <div class="text-3xl font-bold mb-2">127</div>
+                    <div class="text-sm opacity-75">Industry Awards</div>
+                </div>
+                <div class="stats-card rounded-2xl p-6">
+                    <div class="text-3xl font-bold mb-2">50+</div>
+                    <div class="text-sm opacity-75">Years Combined</div>
+                </div>
+                <div class="stats-card rounded-2xl p-6">
+                    <div class="text-3xl font-bold mb-2">2.1M</div>
+                    <div class="text-sm opacity-75">Monthly Readers</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Authors Grid -->
+    <main class="container mx-auto px-4 py-16">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Our Newsroom</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                From former tech reporters to social media strategists, our diverse team brings decades of experience 
+                covering digital culture, business innovation, and creator economy trends.
+            </p>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+            <button onclick="filterAuthors('all')" class="filter-btn bg-indigo-600 text-white px-6 py-3 rounded-full font-medium hover:bg-indigo-700 transition">
+                All Team Members
+            </button>
+            <button onclick="filterAuthors('senior')" class="filter-btn bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-full font-medium hover:bg-gray-50 transition">
+                Senior Staff
+            </button>
+            <button onclick="filterAuthors('correspondent')" class="filter-btn bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-full font-medium hover:bg-gray-50 transition">
+                Correspondents
+            </button>
+            <button onclick="filterAuthors('contributor')" class="filter-btn bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-full font-medium hover:bg-gray-50 transition">
+                Contributors
+            </button>
+        </div>
+
+        <!-- Authors Grid -->
+        <div id="authorsGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition">
+                <div class="flex items-center space-x-4 mb-4">
+                    <img src="assets/images/authors/author_alex-rivera_profile.jpg" alt="Tech Correspondent" onerror="this.src='assets/placeholders/author_placeholder.jpg'" loading="lazy" class="w-24 h-24 rounded-full object-cover">
+                    <div>
+                        <h3 class="text-xl font-semibold">
+                            <a href="integrated/authors/author_alex-rivera.html" class="hover:text-indigo-600">
+                                Alex Rivera
+                            </a>
+                        </h3>
+                        <p class="text-gray-600">Tech Correspondent</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-4 line-clamp-3">Platform algorithm specialist and former software engineer with extensive experience in their field</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-500">1 articles</span>
+                    <a href="integrated/authors/author_alex-rivera.html" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        View Profile →
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition">
+                <div class="flex items-center space-x-4 mb-4">
+                    <img src="assets/images/authors/author_jessica-kim_profile.jpg" alt="Beauty & Fashion Editor" onerror="this.src='assets/placeholders/author_placeholder.jpg'" loading="lazy" class="w-24 h-24 rounded-full object-cover">
+                    <div>
+                        <h3 class="text-xl font-semibold">
+                            <a href="integrated/authors/author_jessica-kim.html" class="hover:text-indigo-600">
+                                Jessica Kim
+                            </a>
+                        </h3>
+                        <p class="text-gray-600">Beauty &amp; Fashion Editor</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-4 line-clamp-3">Former Vogue digital editor covering beauty influencer partnerships</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-500">0 articles</span>
+                    <a href="integrated/authors/author_jessica-kim.html" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        View Profile →
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition">
+                <div class="flex items-center space-x-4 mb-4">
+                    <img src="assets/images/authors/author_maria-lopez_profile.jpg" alt="Lifestyle Contributor" onerror="this.src='assets/placeholders/author_placeholder.jpg'" loading="lazy" class="w-24 h-24 rounded-full object-cover">
+                    <div>
+                        <h3 class="text-xl font-semibold">
+                            <a href="integrated/authors/author_maria-lopez.html" class="hover:text-indigo-600">
+                                Maria Lopez
+                            </a>
+                        </h3>
+                        <p class="text-gray-600">Lifestyle Contributor</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-4 line-clamp-3">Wellness and lifestyle expert covering creator mental health and work-life balance</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-500">0 articles</span>
+                    <a href="integrated/authors/author_maria-lopez.html" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        View Profile →
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition">
+                <div class="flex items-center space-x-4 mb-4">
+                    <img src="assets/images/authors/author_michael-torres_profile.jpg" alt="Entertainment Editor" onerror="this.src='assets/placeholders/author_placeholder.jpg'" loading="lazy" class="w-24 h-24 rounded-full object-cover">
+                    <div>
+                        <h3 class="text-xl font-semibold">
+                            <a href="integrated/authors/author_michael-torres.html" class="hover:text-indigo-600">
+                                Michael Torres
+                            </a>
+                        </h3>
+                        <p class="text-gray-600">Entertainment Editor</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-4 line-clamp-3">Celebrity culture and entertainment industry veteran with over 10 years covering influencer drama and collaborations</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-500">0 articles</span>
+                    <a href="integrated/authors/author_michael-torres.html" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        View Profile →
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition">
+                <div class="flex items-center space-x-4 mb-4">
+                    <img src="assets/images/authors/author_sarah-chen_profile.jpg" alt="Senior Business Reporter" onerror="this.src='assets/placeholders/author_placeholder.jpg'" loading="lazy" class="w-24 h-24 rounded-full object-cover">
+                    <div>
+                        <h3 class="text-xl font-semibold">
+                            <a href="integrated/authors/author_sarah-chen.html" class="hover:text-indigo-600">
+                                Sarah Chen
+                            </a>
+                        </h3>
+                        <p class="text-gray-600">Senior Business Reporter</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-4 line-clamp-3">Creator economy expert with 8 years experience covering the business of content creation and influencer marketing</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-500">0 articles</span>
+                    <a href="integrated/authors/author_sarah-chen.html" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        View Profile →
+                    </a>
+                </div>
+            </div>
+            
+</div><!-- Join Our Team Section -->
+        <div class="mt-20 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-12 text-center text-white">
+            <h2 class="text-3xl font-bold mb-6">Join Our Award-Winning Team</h2>
+            <p class="text-xl mb-8 max-w-3xl mx-auto opacity-90">
+                We're always looking for talented journalists, analysts, and industry experts 
+                to join our mission of delivering the best creator economy coverage.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div class="stats-card rounded-2xl p-6">
+                    <div class="text-2xl mb-2">💰</div>
+                    <div class="font-bold mb-1">Competitive Pay</div>
+                    <div class="text-sm opacity-75">Industry-leading compensation</div>
+                </div>
+                <div class="stats-card rounded-2xl p-6">
+                    <div class="text-2xl mb-2">🌍</div>
+                    <div class="font-bold mb-1">Remote First</div>
+                    <div class="text-sm opacity-75">Work from anywhere in the world</div>
+                </div>
+                <div class="stats-card rounded-2xl p-6">
+                    <div class="text-2xl mb-2">📈</div>
+                    <div class="font-bold mb-1">Growth Focus</div>
+                    <div class="text-sm opacity-75">Professional development support</div>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-white text-indigo-600 px-8 py-4 rounded-full hover:bg-gray-100 transition font-bold text-lg">
+                    View Open Positions
+                </button>
+                <button class="bg-white/20 text-white px-8 py-4 rounded-full hover:bg-white/30 transition font-bold text-lg">
+                    Submit Portfolio
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-gray-900 text-white py-16 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-lg font-bold">IN</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Influencer News</h3>
+                            <p class="text-sm text-gray-400">Breaking • Insights • Culture</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        The world's leading source for influencer industry news and exclusive insights.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">Latest News</a></li>
+                        <li><a href="search.html" class="text-gray-300 hover:text-white transition">Search</a></li>
+                        <li><a href="authors.html" class="text-gray-300 hover:text-white transition">Authors</a></li>
+                        <li><a href="integrated/categories.html" class="text-gray-300 hover:text-white transition">Categories</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Editorial Standards</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition">Code of Ethics</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition">Fact-Checking Process</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition">Corrections Policy</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition">Press Releases</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact Info</h3>
+                    <div class="space-y-3 text-gray-300">
+                        <p>📧 editorial@influencernews.com</p>
+                        <p>📞 (555) 123-NEWS</p>
+                        <p>📍 123 Creator Avenue<br>Los Angeles, CA 90210</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center">
+                <p class="text-gray-400 text-sm">© 2025 Influencer News. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Filter functionality
+        function filterAuthors(category) {
+            const cards = document.querySelectorAll('.author-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            // Update button styles
+            buttons.forEach(btn => {
+                btn.className = 'filter-btn bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-full font-medium hover:bg-gray-50 transition';
+            });
+            event.target.className = 'filter-btn bg-indigo-600 text-white px-6 py-3 rounded-full font-medium hover:bg-indigo-700 transition';
+            
+            // Filter cards
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeIn 0.5s ease';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        }
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (query.trim()) {
+                window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+            }
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: true, 
+                timeZoneName: 'short' 
+            };
+            const timeElement = document.getElementById('current-time');
+            if (timeElement) {
+                timeElement.textContent = now.toLocaleString('en-US', options);
+            }
+        }
+        
+        // Mobile Menu Functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuToggle.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenuFunc() {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', openMobileMenu);
+        }
+        
+        if (closeMobileMenu) {
+            closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+        }
+        
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', closeMobileMenuFunc);
+        }
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-nav-item').forEach(item => {
+            item.addEventListener('click', closeMobileMenuFunc);
+        });
+        
+        // Mobile Search Functionality
+        const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+        const closeMobileSearchBtn = document.getElementById('closeMobileSearch');
+        const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
+        const mobileSearchInput = document.getElementById('mobileSearchInput');
+        const mobileSearchSuggestions = document.getElementById('mobileSearchSuggestions');
+        
+        const searchData = [
+            'Sarah Chen', 'Jessica Kim', 'Alex Rivera', 'Michael Torres', 'Maria Lopez',
+            'Creator Economy', 'Business Reporter', 'Tech Correspondent', 'Entertainment Editor'
+        ];
+        
+        function openMobileSearch() {
+            mobileSearchOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                mobileSearchInput.focus();
+            }, 300);
+        }
+        
+        function closeMobileSearchFunc() {
+            mobileSearchOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            mobileSearchSuggestions.classList.add('hidden');
+            mobileSearchInput.value = '';
+        }
+        
+        if (mobileSearchToggle) {
+            mobileSearchToggle.addEventListener('click', openMobileSearch);
+        }
+        
+        if (closeMobileSearchBtn) {
+            closeMobileSearchBtn.addEventListener('click', closeMobileSearchFunc);
+        }
+        
+        if (mobileSearchOverlay) {
+            mobileSearchOverlay.addEventListener('click', function(e) {
+                if (e.target === mobileSearchOverlay) {
+                    closeMobileSearchFunc();
+                }
+            });
+        }
+        
+        function handleMobileSearch(event) {
+            const query = event.target.value.toLowerCase();
+            
+            if (query.length > 1) {
+                const matches = searchData.filter(item => 
+                    item.toLowerCase().includes(query)
+                ).slice(0, 5);
+                
+                if (matches.length > 0) {
+                    mobileSearchSuggestions.innerHTML = matches.map(match => 
+                        `<div class="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0" onclick="selectMobileSuggestion('${match}')">${match}</div>`
+                    ).join('');
+                    mobileSearchSuggestions.classList.remove('hidden');
+                } else {
+                    mobileSearchSuggestions.classList.add('hidden');
+                }
+            } else {
+                mobileSearchSuggestions.classList.add('hidden');
+            }
+            
+            if (event.key === 'Enter') {
+                performMobileSearch();
+            }
+        }
+        
+        function selectMobileSuggestion(suggestion) {
+            mobileSearchInput.value = suggestion;
+            mobileSearchSuggestions.classList.add('hidden');
+            performMobileSearch();
+        }
+        
+        function performMobileSearch() {
+            const query = mobileSearchInput.value;
+            if (query.trim()) {
+                closeMobileSearchFunc();
+                window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            
+            // Add smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        });
+
+        // Add some CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "data": [
+    {
+      "slug": "ai-content-creation-revolution",
+      "topic": "AI Content Creation Revolution",
+      "description": "The AI content creation revolution is transforming how creators produce and distribute content. With tools like ChatG...",
+      "engagement_score": 0,
+      "mobile_optimized": true
+    },
+    {
+      "slug": "creator-burnout-crisis",
+      "topic": "Creator Burnout Crisis",
+      "description": "Creator burnout has become a critical issue in 2024, with high-profile creators taking breaks and speaking openly abo...",
+      "engagement_score": 0,
+      "mobile_optimized": true
+    },
+    {
+      "slug": "mrbeast-creator-fund",
+      "topic": "MrBeast Creator Fund",
+      "description": "The MrBeast Creator Fund announcement has taken the influencer world by storm, with creators across all platforms dis...",
+      "engagement_score": 0,
+      "mobile_optimized": true
+    }
+  ],
+  "error": null,
+  "meta": {
+    "total": 3,
+    "generated_at": "2025-06-11T16:24:46.514108",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}
