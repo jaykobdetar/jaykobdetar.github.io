@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "data": {
+    "slug": "mrbeast-creator-fund",
+    "topic": "MrBeast Creator Fund",
+    "description": "The MrBeast Creator Fund announcement has taken the influencer world by storm, with creators across all platforms dis...",
+    "engagement_score": 0,
+    "mobile_optimized": true,
+    "full_description": "The MrBeast Creator Fund announcement has taken the influencer world by storm, with creators across all platforms discussing the implications of this $100M initiative. The fund represents one of the largest direct creator support programs ever announced by an individual creator.",
+    "keywords": [],
+    "related_articles": []
+  },
+  "error": null,
+  "meta": {
+    "generated_at": "2025-06-11T16:24:46.522353",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

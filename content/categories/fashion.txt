@@ -1,0 +1,14 @@
+Name: Fashion & Beauty
+Slug: fashion
+Icon: 💄
+Color: pink
+Description: Fashion trends, beauty collaborations, and style content
+Featured: true
+Sort_Order: 3
+Keywords: fashion, content creation
+
+---
+
+Fashion trends, beauty collaborations, and style content
+
+This category covers all aspects of fashion & beauty in the influencer and creator space, providing comprehensive coverage of trends, news, and insights.

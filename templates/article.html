@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{meta.title}}</title>
+    <link rel="stylesheet" href="{{base_path}}assets/css/styles.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Article styles -->
+    <style>
+        body { font-family: 'Inter', sans-serif; line-height: 1.7; }
+        .hero-title { font-family: 'Playfair Display', serif; }
+        .article-content { transition: opacity 0.3s ease; }
+        .nav-link { position: relative; transition: all 0.3s ease; }
+        .nav-link::after { 
+            content: ''; position: absolute; bottom: -2px; left: 0; 
+            width: 0; height: 2px; 
+            background: linear-gradient(90deg, #ffffff, #e0e7ff); 
+            transition: width 0.3s ease; 
+        }
+        .nav-link:hover::after { width: 100%; }
+        .share-button { transition: all 0.2s ease; }
+        .share-button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); }
+        .reading-progress {
+            position: fixed; top: 0; left: 0; width: 0%; height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            z-index: 100; transition: width 0.1s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Reading Progress Bar -->
+    <div class="reading-progress" id="readingProgress"></div>
+
+    <!-- Header -->
+    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-4">
+                    <span class="text-2xl font-bold text-white">IN</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
+                    <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
+                </div>
+            </div>
+            <nav class="hidden md:block">
+                <ul class="flex space-x-8">
+                    <li><a href="{{links.home}}" class="nav-link hover:text-indigo-200 transition font-medium">Home</a></li>
+                    <li><a href="{{links.search}}" class="nav-link hover:text-indigo-200 transition font-medium">Search</a></li>
+                    <li><a href="{{links.authors}}" class="nav-link hover:text-indigo-200 transition font-medium">Authors</a></li>
+                    <li><a href="{{links.categories}}" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
+                    <li><a href="{{links.trending}}" class="nav-link hover:text-indigo-200 transition font-medium">Trending</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Article Container -->
+    <main class="container mx-auto px-4 py-10">
+        <!-- Breadcrumbs -->
+        <nav class="text-sm mb-8">
+            <div class="flex items-center space-x-2 text-gray-500">
+                <a href="{{links.home}}" class="hover:text-indigo-600">Home</a>
+                <span>/</span>
+                <a href="{{links.category}}" class="hover:text-indigo-600">{{article.category_name}}</a>
+                <span>/</span>
+                <span class="text-gray-900">{{article.title}}</span>
+            </div>
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+            <!-- Main Article -->
+            <article class="lg:col-span-3 article-content bg-white rounded-2xl shadow-lg overflow-hidden">
+                <!-- Article Header -->
+                <div class="relative">
+                    <img src="{{article.image_url}}" alt="{{article.title}}" class="w-full h-96 object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 right-6">
+                        <div class="flex items-center space-x-3 mb-4">
+                            {{#if article.is_breaking}}
+                            <span class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">🔥 BREAKING</span>
+                            {{/if}}
+                            <span class="bg-{{article.category_color}}-500 text-white px-4 py-2 rounded-full text-sm font-bold">
+                                {{article.category_icon}} {{article.category_name}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article Content -->
+                <div class="p-8">
+                    <!-- Article Meta -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center space-x-4">
+                            <img src="{{article.author_image}}" alt="{{article.author_name}}" class="w-12 h-12 rounded-full object-cover">
+                            <div>
+                                <p class="font-semibold text-gray-900">
+                                    <a href="{{links.author}}" class="hover:text-indigo-600 transition">{{article.author_name}}</a>
+                                </p>
+                                <p class="text-sm text-gray-500">{{article.author_title}}</p>
+                            </div>
+                        </div>
+                        <div class="text-right text-sm text-gray-500">
+                            <p>Published {{article.publish_date_relative}}</p>
+                            <p>{{article.read_time}} read</p>
+                        </div>
+                    </div>
+
+                    <!-- Article Title -->
+                    <h1 class="hero-title text-4xl font-bold text-gray-900 mb-6 leading-tight">
+                        {{article.title}}
+                    </h1>
+
+                    <!-- Social Stats Bar -->
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-4 mb-8 text-white">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-6">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="font-semibold">{{stats.views}}</span>
+                                    <span class="text-sm opacity-75">views</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="font-semibold">{{stats.likes}}</span>
+                                    <span class="text-sm opacity-75">likes</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="font-semibold">{{stats.comments}}</span>
+                                    <span class="text-sm opacity-75">comments</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Article Body -->
+                    <div class="prose prose-lg max-w-none" id="articleContent">
+                        {{!article.content}}
+                    </div>
+
+                    <!-- Article Tags -->
+                    {{#if article.tags}}
+                    <div class="border-t pt-6 mt-8">
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            {{#each article.tags}}
+                            <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">{{this}}</span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
+
+                    <!-- Share Buttons -->
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-semibold mb-4">Share this article</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="shareArticle('twitter')" class="share-button bg-blue-400 text-white px-6 py-3 rounded-full hover:bg-blue-500 transition flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                                </svg>
+                                <span>Twitter</span>
+                            </button>
+                            <button onclick="shareArticle('facebook')" class="share-button bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
+                                <span>Facebook</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Sidebar -->
+            <aside class="lg:col-span-1">
+                <!-- Author Bio -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                    <div class="text-center mb-6">
+                        <img src="{{article.author_image}}" alt="{{article.author_name}}" class="w-20 h-20 rounded-full object-cover mx-auto mb-4">
+                        <h3 class="text-xl font-bold text-gray-900">
+                            <a href="{{links.author}}" class="hover:text-indigo-600 transition">{{article.author_name}}</a>
+                        </h3>
+                        <p class="text-gray-600">{{article.author_title}}</p>
+                        <div class="flex items-center justify-center space-x-4 mt-3 text-sm text-gray-500">
+                            <span>📍 {{article.author_location}}</span>
+                            <span>✍️ {{article.author_article_count}} articles</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm mb-4 text-center">
+                        {{article.author_bio}}
+                    </p>
+                    <button class="w-full bg-indigo-600 text-white p-3 rounded-full hover:bg-indigo-700 transition font-semibold">
+                        Follow {{article.author_name}}
+                    </button>
+                </div>
+
+                <!-- Related Articles -->
+                {{#if article.related_articles}}
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">Related Articles</h3>
+                    <div class="space-y-4">
+                        {{#each article.related_articles}}
+                        <div class="border-b pb-4 last:border-b-0 last:pb-0">
+                            <h4 class="font-semibold text-sm text-gray-900 mb-1 hover:text-indigo-600 transition">
+                                <a href="{{this.url}}">{{this.title}}</a>
+                            </h4>
+                            <p class="text-xs text-gray-500">{{this.publish_date}} • {{this.author_name}}</p>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                {{/if}}
+            </aside>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16 mt-16">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-400 text-sm">© 2025 Influencer News. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Share functionality
+        function shareArticle(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent("{{article.title}}");
+            
+            let shareUrl;
+            switch(platform) {
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+                    break;
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                    break;
+            }
+            
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'width=600,height=400');
+            }
+        }
+
+        // Reading progress
+        function updateReadingProgress() {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.offsetHeight;
+            const winHeight = window.innerHeight;
+            const scrollPercent = scrollTop / (docHeight - winHeight);
+            const scrollPercentRounded = Math.round(scrollPercent * 100);
+            
+            document.getElementById('readingProgress').style.width = scrollPercentRounded + '%';
+        }
+
+        window.addEventListener('scroll', updateReadingProgress);
+    </script>
+</body>
+</html>

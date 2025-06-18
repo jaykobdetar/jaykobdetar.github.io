@@ -1,0 +1,80 @@
+# Influencer News CMS Configuration
+# =================================
+
+# Database Configuration
+database:
+  path: "data/infnews.db"
+  backup_dir: "data/backups"
+  max_backups: 10
+  auto_backup: true
+  
+# Paths Configuration
+paths:
+  content_dir: "content"
+  integrated_dir: "integrated"
+  assets_dir: "assets"
+  images_dir: "assets/images"
+  placeholders_dir: "assets/placeholders"
+  docs_dir: "docs"
+  
+# Content Limits (for scalability)
+limits:
+  articles_per_page: 6
+  search_results_per_page: 20
+  max_articles_sync: 50
+  max_authors_sync: 100
+  max_categories_sync: 100
+  max_trending_sync: 100
+  
+# Image Management
+images:
+  procurement_file: "data/image_procurement_list.csv"
+  max_file_size_mb: 10
+  allowed_extensions: [".jpg", ".jpeg", ".png", ".gif", ".webp"]
+  generate_thumbnails: true
+  thumbnail_size: [300, 200]
+  
+# Security Settings
+security:
+  sanitize_html: true
+  max_content_length: 50000
+  max_title_length: 200
+  allowed_html_tags: ["p", "br", "strong", "em", "u", "a", "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6"]
+  
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file: "logs/cms.log"
+  max_file_size_mb: 10
+  backup_count: 5
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+# Server Configuration (for future API)
+server:
+  host: "localhost"
+  port: 8000
+  debug: false
+  
+# Site Configuration
+site:
+  name: "Influencer News"
+  description: "Your Source for Influencer Culture"
+  base_url: "https://influencernews.com"
+  contact_email: "news@influencernews.com"
+  social_links:
+    twitter: "https://twitter.com/influencernews"
+    linkedin: "https://linkedin.com/company/influencernews"
+    instagram: "https://instagram.com/influencernews"
+    
+# Development Settings
+development:
+  auto_reload: true
+  show_debug_info: false
+  enable_hot_reload: false
+  
+# Performance Settings
+performance:
+  enable_caching: true
+  cache_duration_hours: 24
+  compress_responses: true
+  enable_gzip: true

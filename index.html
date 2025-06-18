@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer News - Your Source for Influencer Culture</title>
+    <link rel="stylesheet" href="assets/css/styles.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Influencer News">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+    <meta name="msapplication-TileImage" content="assets/icons/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#4f46e5">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8080; media-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            line-height: 1.6; 
+        }
+        .hero-title { 
+            font-family: 'Playfair Display', serif; 
+        }
+        .article-card { 
+            transition: all 0.3s ease; 
+            backdrop-filter: blur(10px);
+        }
+        .article-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); 
+        }
+        .hero-section { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+        .hero-content { 
+            position: relative; 
+            z-index: 2; 
+        }
+        .nav-link { 
+            position: relative; 
+            transition: all 0.3s ease;
+        }
+        .nav-link::after { 
+            content: ''; 
+            position: absolute; 
+            bottom: -2px; 
+            left: 0; 
+            width: 0; 
+            height: 2px; 
+            background: linear-gradient(90deg, #ffffff, #e0e7ff); 
+            transition: width 0.3s ease; 
+        }
+        .nav-link:hover::after { 
+            width: 100%; 
+        }
+        .live-ticker { 
+            animation: smoothTicker 25s linear infinite; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+        }
+        @keyframes smoothTicker { 
+            0% { transform: translateX(100%); } 
+            100% { transform: translateX(-100%); } 
+        }
+        .alert-banner { 
+            animation: fadeInDown 1s ease-out; 
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+        @keyframes fadeInDown { 
+            from { opacity: 0; transform: translateY(-100%); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .trending-badge {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .category-tech { color: #3b82f6; }
+        .category-fashion { color: #ec4899; }
+        .category-business { color: #10b981; }
+        .category-entertainment { color: #f59e0b; }
+        .category-charity { color: #8b5cf6; }
+        .social-stat {
+            transition: transform 0.2s ease;
+        }
+        .social-stat:hover {
+            transform: scale(1.05);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <style>
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: #312e81;
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+        
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            z-index: 999;
+        }
+        
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .hamburger {
+            width: 30px;
+            height: 24px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+        
+        .mobile-nav-item {
+            display: block;
+            padding: 1rem 2rem;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s ease;
+        }
+        
+        .mobile-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="p-6 border-b border-indigo-700">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-lg font-bold text-white">IN</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Menu</h2>
+                    </div>
+                </div>
+                <button class="text-white text-2xl" id="closeMobileMenu">&times;</button>
+            </div>
+        </div>
+        <nav class="py-4">
+            <a href="index.html" class="mobile-nav-item">🏠 Home</a>
+            <a href="search.html" class="mobile-nav-item">🔍 Search</a>
+            <a href="authors.html" class="mobile-nav-item">👥 Authors</a>
+            <a href="integrated/categories.html" class="mobile-nav-item">📂 Categories</a>
+            <a href="integrated/trending.html" class="mobile-nav-item">🔥 Trending</a>
+            <a href="#contact" class="mobile-nav-item">📧 Contact</a>
+        </nav>
+        <div class="p-6 mt-auto">
+            <div class="bg-indigo-700 rounded-lg p-4">
+                <h3 class="text-white font-bold mb-2">Newsletter</h3>
+                <p class="text-indigo-200 text-sm mb-3">Get the latest influencer news</p>
+                <button class="bg-white text-indigo-700 px-4 py-2 rounded-md text-sm font-semibold w-full">Subscribe</button>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <!-- Header with Enhanced Navigation -->
+    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-4">
+                    <span class="text-2xl font-bold text-white">IN</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
+                    <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
+                </div>
+            </div>
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden hamburger" id="mobileMenuToggle" aria-label="Toggle mobile menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <nav class="hidden md:block">
+                <ul class="flex space-x-8">
+                    <li><a href="index.html" class="nav-link hover:text-indigo-200 transition font-medium text-indigo-200">Home</a></li>
+                    <li><a href="search.html" class="nav-link hover:text-indigo-200 transition font-medium">Search</a></li>
+                    <li><a href="authors.html" class="nav-link hover:text-indigo-200 transition font-medium">Authors</a></li>
+                    <li><a href="integrated/categories.html" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
+                    <li><a href="integrated/trending.html" class="nav-link hover:text-indigo-200 transition font-medium">Trending</a></li>
+                    <li><a href="#contact" class="nav-link hover:text-indigo-200 transition font-medium">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Desktop Search Bar -->
+            <div class="relative hidden md:block">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search articles, authors..." 
+                    class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                >
+                <button id="searchButton" class="absolute right-3 top-3 text-gray-600 hover:text-indigo-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+                <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg mt-1 hidden max-h-60 overflow-y-auto z-50">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+            
+        </div>
+        
+    </header>
+
+    <!-- Hero Section with Real Content -->
+    <section id="home" class="hero-section py-32 text-center text-white relative">
+        <!-- Animated background elements -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-80 h-80 bg-white/5 rounded-full animate-pulse"></div>
+            <div class="absolute top-1/2 -left-20 w-64 h-64 bg-white/5 rounded-full animate-pulse delay-1000"></div>
+        </div>
+        
+        <div class="hero-content container mx-auto px-4">
+            <h2 class="hero-title text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                The Future of 
+                <span class="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                    Influence
+                </span>
+                <br>Starts Here
+            </h2>
+            <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto leading-relaxed opacity-90">
+                Breaking stories, exclusive interviews, and deep insights from the world's most influential creators. 
+                Stay ahead of the trends that shape digital culture.
+            </p>
+            
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                <a href="#articles" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full hover:from-indigo-700 hover:to-purple-700 transition text-base md:text-lg font-semibold shadow-lg hover:shadow-xl">
+                    🔥 Latest Breaking News
+                </a>
+                <a href="#newsletter" class="glassmorphism text-white px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-white/20 transition text-base md:text-lg font-semibold">
+                    📧 Join 50K+ Subscribers
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Trending Section -->
+    <section class="py-16 bg-gradient-to-r from-indigo-50 to-purple-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-center mb-12">
+                <div class="trending-badge text-white px-4 py-2 rounded-full text-sm font-bold mr-4">
+                    🔥 TRENDING NOW
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900">What's Hot Right Now</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                    <div class="text-3xl mb-2">🤖</div>
+                    <h3 class="font-bold mb-2">AI Content Creation Revolution</h3>
+                    <p class="text-sm text-gray-600">Transforming creator workflows</p>
+                    <a href="integrated/trending/trend_ai-content-creation-revolution.html" class="text-indigo-600 text-sm font-medium">Learn more →</a>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                    <div class="text-3xl mb-2">😰</div>
+                    <h3 class="font-bold mb-2">Creator Burnout Crisis</h3>
+                    <p class="text-sm text-gray-600">Mental health challenges rising</p>
+                    <a href="integrated/trending/trend_creator-burnout-crisis.html" class="text-indigo-600 text-sm font-medium">Learn more →</a>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                    <div class="text-3xl mb-2">🔥</div>
+                    <h3 class="font-bold mb-2">MrBeast Creator Fund</h3>
+                    <p class="text-sm text-gray-600">$100M initiative announced</p>
+                    <a href="integrated/trending/trend_mrbeast-creator-fund.html" class="text-indigo-600 text-sm font-medium">Learn more →</a>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <a href="integrated/trending.html" class="bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 transition font-semibold">
+                    View All Trending Topics
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Articles Section with Real Content -->
+    <section id="articles" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">Latest Breaking News</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">From exclusive interviews to industry analysis, we bring you the stories that matter in the creator economy.</p>
+            </div>
+            
+            <!-- Loading skeleton (hidden by default) -->
+            <div id="loadingSkeleton" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+                <div class="loading-skeleton h-96 rounded-xl"></div>
+                <div class="loading-skeleton h-96 rounded-xl"></div>
+                <div class="loading-skeleton h-96 rounded-xl"></div>
+            </div>
+
+            <div id="articlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <div class="article-card bg-white rounded-xl shadow-lg overflow-hidden md:col-span-2 lg:col-span-1">
+                    <div class="relative">
+                        <img src="assets/images/articles/article_13_hero.jpg" alt="New Platform Update Changes Everything for Creators" class="w-full h-48 object-cover">
+                        <div class="absolute top-4 right-4">
+                            <span class="category-Technology bg-white/90 px-2 py-1 rounded text-xs font-bold uppercase">Technology</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="text-gray-500 text-sm">Alex Rivera • 2 minutes ago</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-3 hover:text-indigo-600 transition cursor-pointer">
+                            New Platform Update Changes Everything for Creators
+                        </h3>
+                        <p class="text-gray-700 mb-4 text-sm">
+                            Major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025.
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">👁 20,133 views</span>
+                            <a href="integrated/articles/article_new-platform-update-changes-everything-for-creators.html" class="text-indigo-600 font-medium cursor-pointer">Read →</a>
+                        </div>
+                    </div>
+                </div>
+            
+            </div></div>
+
+            <!-- Load More Button -->
+            <div class="text-center mt-12">
+                <button id="loadMoreBtn" onclick="loadMoreArticles()" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-full hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-lg">
+                    Load More Stories
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section id="newsletter" class="py-20 bg-gradient-to-r from-indigo-900 to-purple-900 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-6">Join the Insider Circle</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+                Get exclusive interviews, breaking news, and insider analysis delivered to your inbox every morning. 
+                Join 50,000+ industry professionals who trust our insights.
+            </p>
+            <div class="max-w-md mx-auto">
+                <div class="flex gap-4">
+                    <input 
+                        type="email" 
+                        id="newsletterEmail" 
+                        placeholder="Enter your email address" 
+                        class="flex-1 p-4 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    >
+                    <button 
+                        onclick="subscribeNewsletter()" 
+                        class="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-4 rounded-full hover:from-yellow-500 hover:to-orange-600 transition font-bold shadow-lg"
+                    >
+                        Subscribe
+                    </button>
+                </div>
+                <p class="text-sm opacity-75 mt-4">
+                    ✅ Daily breaking news • ✅ Exclusive interviews • ✅ Industry insights • ✅ No spam, ever
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-lg font-bold">IN</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Influencer News</h3>
+                            <p class="text-sm text-gray-400">Breaking • Insights • Culture</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        The world's leading source for influencer industry news, delivering breaking stories and exclusive insights to millions of readers worldwide.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="index.html" class="text-gray-400 hover:text-white transition">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                        </a>
+                        <a href="index.html" class="text-gray-400 hover:text-white transition">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.748-1.378 0 0-.599 2.282-.744 2.84-.282 1.084-1.064 2.456-1.549 3.235C9.584 23.815 10.77 24.001 12.017 24.001c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z"/></svg>
+                        </a>
+                        <a href="index.html" class="text-gray-400 hover:text-white transition">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">Latest News</a></li>
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">Trending Stories</a></li>
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">Creator Interviews</a></li>
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">Industry Reports</a></li>
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">Editorial Team</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Categories</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">💼 Business</a></li>
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">🎥 Entertainment</a></li>
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">💄 Beauty & Fashion</a></li>
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">⚡ Technology</a></li>
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition">💰 Creator Economy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact Info</h3>
+                    <div class="space-y-3 text-gray-300">
+                        <p class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                            </svg>
+                            <a href="mailto:news@influencernews.com" class="hover:text-white">news@influencernews.com</a>
+                        </p>
+                        <p class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
+                            </svg>
+                            (555) 123-NEWS
+                        </p>
+                        <p class="flex items-start">
+                            <svg class="w-5 h-5 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>123 Creator Avenue<br>Los Angeles, CA 90210</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                    © 2025 Influencer News. All rights reserved. | 
+                    <a href="index.html" class="hover:text-white">Privacy Policy</a> | 
+                    <a href="index.html" class="hover:text-white">Terms of Service</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced functionality
+
+
+
+
+        // Desktop Search functionality
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        }
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (query.trim()) {
+                // Always redirect to search page for reliable functionality
+                window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+            }
+        }
+
+        async function showSearchResults(query) {
+            try {
+                const results = await window.searchAPI.search(query, {
+                    limit: 5,
+                    offset: 0,
+                    content_type: 'all'
+                });
+                
+                // Show results in suggestions dropdown
+                const suggestions = document.getElementById('searchSuggestions');
+                if (results.total_results > 0) {
+                    let html = '';
+                    
+                    // Add articles
+                    if (results.articles && results.articles.length > 0) {
+                        html += results.articles.slice(0, 3).map(article => 
+                            `<div class="p-3 hover:bg-gray-100 cursor-pointer border-b" onclick="window.location.href='${article.url}'">
+                                <div class="font-medium text-gray-900">${article.title}</div>
+                                <div class="text-sm text-gray-600">${article.author_name} • ${article.category_name}</div>
+                            </div>`
+                        ).join('');
+                    }
+                    
+                    // Add "See all results" link
+                    html += `<div class="p-3 bg-gray-50 text-center">
+                        <a href="search.html?q=${encodeURIComponent(query)}" class="text-indigo-600 font-medium">See all results for "${query}"</a>
+                    </div>`;
+                    
+                    suggestions.innerHTML = html;
+                    suggestions.classList.remove('hidden');
+                } else {
+                    suggestions.innerHTML = `<div class="p-3 text-gray-500 text-center">No results found for "${query}"</div>`;
+                    suggestions.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Search failed:', error);
+                // Fallback to search page redirect
+                window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+            }
+        }
+
+        // Article loading functionality now handled by homepage-dynamic.js
+
+
+        function subscribeNewsletter() {
+            const email = document.getElementById('newsletterEmail').value;
+            if (email && email.includes('@')) {
+                alert(`Newsletter subscription is currently disabled for privacy protection.\n\nThis site does not collect or store any personal information, including email addresses.\n\nThank you for understanding our commitment to your privacy!`);
+                document.getElementById('newsletterEmail').value = '';
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: true, 
+                timeZoneName: 'short' 
+            };
+            const timeElement = document.getElementById('current-time');
+            if (timeElement) {
+                timeElement.textContent = now.toLocaleString('en-US', options);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            
+            // Set up search event listeners
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            
+            if (searchInput) {
+                searchInput.addEventListener('keyup', handleSearch);
+            }
+            
+            if (searchButton) {
+                searchButton.addEventListener('click', performSearch);
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Mobile Menu Functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuToggle.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenuFunc() {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', openMobileMenu);
+        }
+        
+        if (closeMobileMenu) {
+            closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+        }
+        
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', closeMobileMenuFunc);
+        }
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-nav-item').forEach(item => {
+            item.addEventListener('click', closeMobileMenuFunc);
+        });
+        
+        
+        
+        
+        // Service Worker Registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('✓ Service Worker registered successfully');
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // Show update notification
+                                    showUpdateNotification();
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.log('❌ Service Worker registration failed:', error);
+                    });
+            });
+        }
+        
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallPromotion();
+        });
+        
+        function showInstallPromotion() {
+            const installBanner = document.createElement('div');
+            installBanner.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #4f46e5, #7c3aed);
+                color: white;
+                padding: 16px;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                animation: slideUp 0.3s ease;
+            `;
+            
+            installBanner.innerHTML = `
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">📱 Install Influencer News</div>
+                    <div style="font-size: 14px; opacity: 0.9;">Get faster access and offline reading</div>
+                </div>
+                <div>
+                    <button id="installButton" style="background: white; color: #4f46e5; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; margin-right: 8px; cursor: pointer;">Install</button>
+                    <button id="dismissInstall" style="background: transparent; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 12px; border-radius: 8px; cursor: pointer;">×</button>
+                </div>
+            `;
+            
+            document.body.appendChild(installBanner);
+            
+            // Install button handler
+            document.getElementById('installButton').addEventListener('click', () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('✓ PWA installation accepted');
+                        }
+                        deferredPrompt = null;
+                        installBanner.remove();
+                    });
+                }
+            });
+            
+            // Dismiss button handler
+            document.getElementById('dismissInstall').addEventListener('click', () => {
+                installBanner.remove();
+            });
+            
+            // Auto dismiss after 10 seconds
+            setTimeout(() => {
+                if (installBanner.parentNode) {
+                    installBanner.remove();
+                }
+            }, 10000);
+        }
+        
+        function showUpdateNotification() {
+            const updateBanner = document.createElement('div');
+            updateBanner.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 16px;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            `;
+            
+            updateBanner.innerHTML = `
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">🔄 Update Available</div>
+                    <div style="font-size: 14px; opacity: 0.9;">Refresh to get the latest features</div>
+                </div>
+                <button id="refreshButton" style="background: white; color: #10b981; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer;">Refresh</button>
+            `;
+            
+            document.body.appendChild(updateBanner);
+            
+            document.getElementById('refreshButton').addEventListener('click', () => {
+                window.location.reload();
+            });
+        }
+    </script>
+    
+    <!-- Security: DOMPurify for HTML sanitization -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js" integrity="sha384-LW1Q2+3pcx1jz7WDNJ6X4LWq7l5D7Lrf7K8V9Vq0T6kl5o9S1R7B8tLqGZhcQ2E" crossorigin="anonymous"></script>
+    
+    <!-- Trusted Sanitization -->
+    <script src="assets/js/trusted-sanitizer.js"></script>
+    
+    <!-- IndexedDB Initialization -->
+    <script src="assets/js/indexeddb-init.js"></script>
+    
+    <!-- Search Integration -->
+    <script src="assets/js/search-integration.js"></script>
+    
+    <!-- Dynamic Homepage Content -->
+    <script src="assets/js/homepage-dynamic.js"></script>
+    
+    <!-- Mobile Touch Enhancements -->
+    <script src="assets/js/mobile-touch.js"></script>
+</body>
+</html>

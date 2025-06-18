@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Influencer News</title>
+    <link rel="stylesheet" href="assets/css/styles.min.css">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex items-center justify-center px-4">
+        <div class="max-w-md w-full text-center">
+            <div class="mb-8">
+                <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2v2m0 16v2m-9-9h2m16 0h2"></path>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900 mb-4">You're Offline</h1>
+            <p class="text-gray-600 mb-8">
+                It looks like you're not connected to the internet. Check your connection and try again, or browse the cached content below.
+            </p>
+            
+            <div class="space-y-4">
+                <a href="/" class="block w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition">
+                    Return to Homepage
+                </a>
+                <button onclick="window.location.reload()" class="block w-full bg-gray-200 text-gray-800 py-3 px-4 rounded-lg hover:bg-gray-300 transition">
+                    Try Again
+                </button>
+            </div>
+            
+            <div class="mt-12 p-4 bg-blue-50 rounded-lg">
+                <h3 class="font-medium text-blue-900 mb-2">Offline Features:</h3>
+                <ul class="text-sm text-blue-800 space-y-1">
+                    <li>• Read cached articles</li>
+                    <li>• Browse saved content</li>
+                    <li>• Search through cached data</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Check for connection and auto-reload when back online
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "data": {
+    "slug": "ai-content-creation-revolution",
+    "topic": "AI Content Creation Revolution",
+    "description": "The AI content creation revolution is transforming how creators produce and distribute content. With tools like ChatG...",
+    "engagement_score": 0,
+    "mobile_optimized": true,
+    "full_description": "The AI content creation revolution is transforming how creators produce and distribute content. With tools like ChatGPT, Midjourney, and ElevenLabs becoming mainstream, creators are reimagining their workflows and pushing creative boundaries.",
+    "keywords": [],
+    "related_articles": []
+  },
+  "error": null,
+  "meta": {
+    "generated_at": "2025-06-11T16:24:46.517843",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

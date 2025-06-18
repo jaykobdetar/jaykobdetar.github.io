@@ -1,0 +1,16 @@
+# Security Dependencies
+# These are trusted, industry-standard libraries for web security
+
+# HTML Sanitization - industry standard, used by Mozilla, GitHub, etc.
+bleach>=6.0.0
+html5lib>=1.1
+
+# Additional security libraries
+defusedxml>=0.7.1  # Secure XML parsing
+cryptography>=41.0.0  # Cryptographic operations
+urllib3>=2.0.0  # Secure HTTP client
+requests>=2.31.0  # HTTP library with security features
+
+# Input validation and data handling
+validators>=0.22.0  # Additional validation utilities
+python-dateutil>=2.8.2  # Safe date parsing

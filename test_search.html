@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Test</title>
+</head>
+<body>
+    <h1>Search API Test</h1>
+    <input type="text" id="testInput" placeholder="Type 'creator' and press Enter">
+    <button onclick="testSearch()">Test Search</button>
+    <div id="results"></div>
+
+    <script src="assets/js/search-integration.js"></script>
+    <script>
+        async function testSearch() {
+            const query = document.getElementById('testInput').value || 'creator';
+            const resultsDiv = document.getElementById('results');
+            
+            console.log('Testing search for:', query);
+            resultsDiv.innerHTML = 'Searching...';
+            
+            try {
+                if (window.searchAPI) {
+                    console.log('searchAPI found, calling search...');
+                    const results = await window.searchAPI.search(query);
+                    console.log('Search results:', results);
+                    resultsDiv.innerHTML = '<pre>' + JSON.stringify(results, null, 2) + '</pre>';
+                } else {
+                    console.error('searchAPI not found');
+                    resultsDiv.innerHTML = 'ERROR: searchAPI not available';
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                resultsDiv.innerHTML = 'ERROR: ' + error.message;
+            }
+        }
+        
+        document.getElementById('testInput').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                testSearch();
+            }
+        });
+        
+        // Auto-test on page load
+        setTimeout(testSearch, 1000);
+    </script>
+</body>
+</html>

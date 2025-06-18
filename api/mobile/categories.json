@@ -1,0 +1,48 @@
+{
+  "success": true,
+  "data": [
+    {
+      "slug": "business",
+      "name": "Business",
+      "description": "Creator economy, monetization, and business strategies",
+      "mobile_optimized": true
+    },
+    {
+      "slug": "charity",
+      "name": "Charity & Social Impact",
+      "description": "Creator charity work and social impact initiatives",
+      "mobile_optimized": true
+    },
+    {
+      "slug": "creator-economy",
+      "name": "Creator Economy",
+      "description": "Business of content creation and monetization strategies",
+      "mobile_optimized": true
+    },
+    {
+      "slug": "entertainment",
+      "name": "Entertainment",
+      "description": "Celebrity news, drama, and exclusive interviews from the influencer world",
+      "mobile_optimized": true
+    },
+    {
+      "slug": "fashion",
+      "name": "Fashion & Beauty",
+      "description": "Fashion trends, beauty collaborations, and style content",
+      "mobile_optimized": true
+    },
+    {
+      "slug": "technology",
+      "name": "Technology",
+      "description": "Platform updates, AI tools, and tech innovations for creators",
+      "mobile_optimized": true
+    }
+  ],
+  "error": null,
+  "meta": {
+    "total": 6,
+    "generated_at": "2025-06-11T16:24:46.460828",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

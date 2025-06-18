@@ -1,0 +1,134 @@
+# Comprehensive Todo List for Influencer News CMS
+
+## Phase 1: Critical Database & Schema Issues (High Priority)
+[x] Fix Schema Consistency
+    [x] Consolidate schema files (remove duplicates, establish single source of truth)
+    [x] Complete migration script for all tables  
+    [x] Create proper schema versioning system (COMPLETED - added schema_migrator.py)
+    [x] Fix schema_upgrade.sql to be standalone (REMOVED - replaced with full migration)
+
+[x] Add Missing Database Tables/Fields
+    [x] Add mobile fields to articles table (mobile_title, mobile_excerpt, mobile_hero_image_id)
+    [x] Add last_modified field to articles table
+    [x] Create missing views (article_mobile_view)
+    [x] Create missing tables (mobile_metrics, image_variants)
+    [x] Update db_manager.py create_* methods to include all fields (COMPLETED - all fields added)
+
+[x] Fix Full-Text Search
+    [x] Remove FTS references completely (disabled due to compatibility issues)
+    [x] Update search backends to use simple text matching instead
+    [x] Update documentation to reflect actual implementation
+
+## Phase 2: Backend Logic & Integration Issues (High Priority)
+[x] Unify Search Implementation
+    [x] Decided on single search backend (search_backend.py - simplified)
+    [x] Removed duplicate/unused search code
+    [x] Implement proper CGI setup or API endpoint (COMPLETED - added search_api_server.py and CGI script)
+    [x] Remove hardcoded JavaScript fallback results (COMPLETED - now returns empty results with message)
+
+[x] Fix Content Sync & Updates
+    [x] Test and verify update functionality works with last_modified tracking
+    [x] Remove hardcoded author data in ArticleIntegrator (now uses database)
+    [x] Implement proper database lookups for all data
+    [x] Fix fragile HTML injection methods (COMPLETED - added template_engine.py with proper templating)
+
+[x] Complete Mobile API
+    [x] Add missing mobile fields to database (COMPLETED - fields already existed)
+    [x] Implement proper author image handling (COMPLETED - added ImageHandler class)
+    [x] Fix field name inconsistencies (COMPLETED - fixed topic/title, read_time, views, etc.)
+
+## Phase 3: Frontend & User Experience (Medium Priority)
+[x] Dynamic Homepage
+    [x] Implement real "Load More" functionality (COMPLETED - now fetches from search API)
+    [x] Connect to database pagination (COMPLETED - uses offset/limit from backend)
+    [x] Remove dependency on generated JS files (COMPLETED - replaced homepage-dynamic.js with API-based version)
+    [ ] Implement real-time analytics
+
+[x] PWA Completion
+    [x] Fix service worker offline functionality (COMPLETED - service worker v2.0 with comprehensive caching)
+    [x] Add IndexedDB initialization (COMPLETED - full IndexedDB class with all stores)
+    [x] Implement missing API endpoints (COMPLETED - comprehensive PWA API server with 8 endpoints)
+    [x] Ensure all assets are properly cached (COMPLETED - all critical assets in cache manifest)
+
+
+## Phase 4: Security & Configuration (Medium Priority)
+[ ] Security Hardening
+    [ ] Make TrustedSanitizer use config.yaml settings
+    [ ] Implement proper CSP nonce generation
+    [ ] Add CSRF protection
+    [ ] Implement rate limiting
+
+[ ] Configuration Management
+    [ ] Ensure all config options are actually used
+    [ ] Fix default configuration generation
+    [ ] Remove hardcoded values throughout codebase
+
+
+[ ] Code Consistency
+    [ ] Standardize field naming across codebase
+    [ ] Fix import paths consistently
+    [ ] Remove duplicate code
+    [ ] Implement proper logging system
+
+[ ] Documentation
+    [ ] Update all docs to reflect actual state
+    [ ] Add operational documentation
+    [ ] Create troubleshooting guides
+    [ ] Document deployment process
+
+
+## Quick Wins (Can be done immediately)
+[x] Remove or comment out references to non-existent tables in models
+[x] Fix import paths in search_backend.py (COMPLETED)
+[x] Update documentation to reflect actual state
+[x] Remove misleading claims from README
+[x] Add proper error handling to prevent crashes
+[x] Implement basic pagination limits
+
+## Already Completed Items (from suggestions.txt)
+[x] Database Schema Fixed: Created all missing tables (mobile_metrics, image_variants, articles_fts, article_mobile_view)
+[x] Search System Fully Implemented: Fixed imports, backend integration, JavaScript frontend, mobile search
+[x] Dynamic Homepage: Replaced hardcoded content with database-driven article loading
+[x] Content Update System: Implemented bidirectional sync with file timestamp comparison
+[x] Security Hardened: Comprehensive input validation, HTML sanitization, CSP with nonces, trusted libraries only
+[x] PWA Icons Created: Generated all required icon files for progressive web app
+[x] Import Paths Fixed: Corrected relative imports throughout codebase
+[x] Search functionality "only works once" issue fixed in search.html
+[x] Added proper error handling and state reset to search functionality
+[x] Added debounce mechanism to prevent rapid repeated searches
+
+## Code Cleanup (Phase 1 - COMPLETED)
+[x] Remove redundant directories and files
+    [x] Removed entire temp-pages-deploy/ directory (~300MB of duplicate code)
+    [x] Removed obsolete mobile scripts (fix_mobile_integrators.py, mobile_backend_integration.py, etc.)
+    [x] Updated scripts README to reflect current state
+
+[x] Replace generated files with API calls
+    [x] Replaced homepage-dynamic.js auto-generated code with modern API-based implementation
+    [x] Removed hardcoded article data and timestamps
+    [x] Added proper error handling and loading states
+
+[x] Clean model classes
+    [x] Removed disabled search_fts method from Article model
+    [x] Simplified backward compatibility code
+    [x] Consolidated property definitions
+    [x] Fixed field name inconsistencies in mobile methods
+
+[x] Clean imports and fallbacks
+    [x] Removed try/except import fallbacks for script mode
+    [x] Fixed DatabaseManager fallback in mobile_api_generator.py
+    [x] Standardized import patterns across codebase
+
+## Additional Issues from issues.txt
+[x] Fix hardcoded author data in ArticleIntegrator (COMPLETED - now uses database)
+[x] Fix homepage loadMoreArticles placeholder functionality (COMPLETED - real API implementation)
+[x] Remove fallback DatabaseManager in mobile_api_generator.py (COMPLETED - uses main DatabaseManager)
+[x] Add onupgradeneeded handler for IndexedDB in sw.js (COMPLETED - in PWA implementation)
+[x] Define /api/analytics endpoint or remove from sw.js (COMPLETED - analytics API implemented)
+[x] Include offline.html in service worker STATIC_ASSETS (COMPLETED - offline.html cached)
+## Notes
+- Items marked with [x] are already completed
+- Items marked with [ ] need to be done
+- Priority levels indicate importance, not order of execution
+- Quick wins should be tackled first for immediate improvements
+- Each item can be marked complete by changing [ ] to [x]

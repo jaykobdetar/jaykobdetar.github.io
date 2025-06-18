@@ -1,0 +1,50 @@
+Name: {{category.name}}
+Slug: {{category.slug}}
+Icon: {{category.icon}}
+Color: {{category.color}}
+Description: {{category.description}}
+Is_Featured: {{category.is_featured}}
+Sort_Order: {{category.sort_order}}
+Parent_ID: {{category.parent_id}}
+Keywords: {{category.keywords}}
+
+---
+
+{{category.extended_description}}
+
+<!-- CONTENT GUIDELINES:
+
+Include in extended description:
+- What topics are covered in this category
+- Why this category is important
+- What types of articles to expect
+- Target audience for this content
+- Key trends or themes in this space
+- Related subtopics and coverage areas
+
+This content appears on the main category page.
+-->
+
+<!-- TEMPLATE USAGE:
+
+1. Replace all {{variable}} placeholders with actual category data
+2. Fill in dynamic fields from your category management system
+3. Use extended_description for detailed category information
+4. Ensure color values match available theme colors
+
+Dynamic Fields Available:
+- {{category.name}} - Category display name
+- {{category.slug}} - URL-friendly identifier
+- {{category.icon}} - Emoji or icon representation
+- {{category.color}} - Theme color (blue, green, red, purple, orange, pink, yellow, indigo, teal, gray)
+- {{category.description}} - Brief category description
+- {{category.is_featured}} - Homepage feature flag
+- {{category.sort_order}} - Display order
+- {{category.parent_id}} - Parent category ID (for hierarchical structure)
+- {{category.keywords}} - Related keywords for reference
+- {{category.extended_description}} - Detailed category content
+
+Available Colors:
+- blue, green, red, purple, orange, pink, yellow, indigo, teal, gray
+
+-->

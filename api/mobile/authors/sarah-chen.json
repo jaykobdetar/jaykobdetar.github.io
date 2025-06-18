@@ -1,0 +1,24 @@
+{
+  "success": true,
+  "data": {
+    "slug": "sarah-chen",
+    "name": "Sarah Chen",
+    "title": null,
+    "bio": "Creator economy expert with 8 years experience covering the business of content creation and influencer marketing",
+    "expertise": [],
+    "mobile_optimized": true,
+    "image": {
+      "mobile": "/assets/placeholders/author_placeholder.svg",
+      "tablet": "/assets/placeholders/author_placeholder.svg",
+      "desktop": "/assets/placeholders/author_placeholder.svg"
+    },
+    "recent_articles": [],
+    "article_count": 0
+  },
+  "error": null,
+  "meta": {
+    "generated_at": "2025-06-11T16:24:46.453609",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

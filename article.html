@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MrBeast Announces Revolutionary $100M Creator Support Fund - Influencer News</title>
+    <link rel="stylesheet" href="{base_path}assets/css/styles.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            line-height: 1.7; 
+        }
+        .hero-title { 
+            font-family: 'Playfair Display', serif; 
+        }
+        .article-content { 
+            transition: opacity 0.3s ease; 
+        }
+        .nav-link { 
+            position: relative; 
+            transition: all 0.3s ease;
+        }
+        .nav-link::after { 
+            content: ''; 
+            position: absolute; 
+            bottom: -2px; 
+            left: 0; 
+            width: 0; 
+            height: 2px; 
+            background: linear-gradient(90deg, #ffffff, #e0e7ff); 
+            transition: width 0.3s ease; 
+        }
+        .nav-link:hover::after { 
+            width: 100%; 
+        }
+        .live-ticker { 
+            animation: smoothTicker 25s linear infinite; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+        }
+        @keyframes smoothTicker { 
+            0% { transform: translateX(100%); } 
+            100% { transform: translateX(-100%); } 
+        }
+        .share-button { 
+            transition: all 0.2s ease; 
+        }
+        .share-button:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            z-index: 100;
+            transition: width 0.1s ease;
+        }
+        .social-stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .related-card {
+            transition: all 0.3s ease;
+        }
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        .comment-card {
+            transition: all 0.2s ease;
+        }
+        .comment-card:hover {
+            background-color: #f9fafb;
+        }
+        .floating-share {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+        }
+        @media (max-width: 1024px) {
+            .floating-share {
+                display: none;
+            }
+        }
+        
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: #312e81;
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+        
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            z-index: 999;
+        }
+        
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .hamburger {
+            width: 30px;
+            height: 24px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+        
+        .mobile-nav-item {
+            display: block;
+            padding: 1rem 2rem;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s ease;
+        }
+        
+        .mobile-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Mobile Search Overlay */
+        .mobile-search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        
+        .mobile-search-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="p-6 border-b border-indigo-700">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-lg font-bold text-white">IN</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Menu</h2>
+                    </div>
+                </div>
+                <button class="text-white text-2xl" id="closeMobileMenu">&times;</button>
+            </div>
+        </div>
+        <nav class="py-4">
+            <a href="{base_path}index.html" class="mobile-nav-item">🏠 Home</a>
+            <a href="{base_path}search.html" class="mobile-nav-item">🔍 Search</a>
+            <a href="{base_path}authors.html" class="mobile-nav-item">👥 Authors</a>
+            <a href="{base_path}integrated/categories.html" class="mobile-nav-item">📂 Categories</a>
+            <a href="{base_path}integrated/trending.html" class="mobile-nav-item">🔥 Trending</a>
+            <a href="#contact" class="mobile-nav-item">📧 Contact</a>
+        </nav>
+        <div class="p-6 mt-auto">
+            <div class="bg-indigo-700 rounded-lg p-4">
+                <h3 class="text-white font-bold mb-2">Newsletter</h3>
+                <p class="text-indigo-200 text-sm mb-3">Get the latest influencer news</p>
+                <button class="bg-white text-indigo-700 px-4 py-2 rounded-md text-sm font-semibold w-full">Subscribe</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Search Overlay -->
+    <div class="mobile-search-overlay" id="mobileSearchOverlay">
+        <div class="p-4 bg-indigo-900">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-white font-bold text-lg">Search</h3>
+                <button class="text-white text-2xl" id="closeMobileSearch">&times;</button>
+            </div>
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="mobileSearchInput" 
+                    placeholder="Search articles, authors..." 
+                    class="w-full p-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    onkeyup="handleMobileSearch(event)"
+                >
+                <button onclick="performMobileSearch()" class="absolute right-4 top-4 text-gray-600 hover:text-indigo-600 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+            </div>
+            <!-- Mobile Search Suggestions -->
+            <div id="mobileSearchSuggestions" class="mt-4 bg-white rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Reading Progress Bar -->
+    <div class="reading-progress" id="readingProgress"></div>
+
+    <!-- Floating Share Buttons -->
+    <div class="floating-share">
+        <div class="bg-white rounded-2xl shadow-lg p-4 space-y-3">
+            <button onclick="shareArticle('twitter')" class="share-button w-12 h-12 bg-blue-400 text-white rounded-full flex items-center justify-center hover:bg-blue-500">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                </svg>
+            </button>
+            <button onclick="shareArticle('facebook')" class="share-button w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+            </button>
+            <button onclick="shareArticle('linkedin')" class="share-button w-12 h-12 bg-blue-800 text-white rounded-full flex items-center justify-center hover:bg-blue-900">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+            </button>
+            <div class="text-center pt-2">
+                <div class="text-xs text-gray-500 font-semibold" id="shareCount">1.2K</div>
+                <div class="text-xs text-gray-400">Shares</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-4">
+                    <span class="text-2xl font-bold text-white">IN</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
+                    <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
+                </div>
+            </div>
+            <nav class="hidden md:block">
+                <ul class="flex space-x-8">
+                    <li><a href="{base_path}index.html" class="nav-link hover:text-indigo-200 transition font-medium">Home</a></li>
+                    <li><a href="{base_path}search.html" class="nav-link hover:text-indigo-200 transition font-medium">Search</a></li>
+                    <li><a href="{base_path}authors.html" class="nav-link hover:text-indigo-200 transition font-medium">Authors</a></li>
+                    <li><a href="{base_path}integrated/categories.html" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
+                    <li><a href="{base_path}integrated/trending.html" class="nav-link hover:text-indigo-200 transition font-medium">Trending</a></li>
+                    <li><a href="#contact" class="nav-link hover:text-indigo-200 transition font-medium">Contact</a></li>
+                </ul>
+            </nav>
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden hamburger" id="mobileMenuToggle" aria-label="Toggle mobile menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <!-- Enhanced Search Bar - Desktop Only -->
+            <div class="relative hidden md:block">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search breaking news..." 
+                    class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                    onkeyup="handleSearch(event)"
+                >
+                <button onclick="performSearch()" class="absolute right-3 top-3 text-gray-600 hover:text-indigo-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+                <!-- Search Suggestions -->
+                <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg mt-1 hidden max-h-60 overflow-y-auto z-50">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Mobile Search Button -->
+            <button class="md:hidden text-white p-2" id="mobileSearchToggle" aria-label="Toggle mobile search">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="bg-gradient-to-r from-red-600 to-red-700 text-white py-3 overflow-hidden relative">
+            <div class="live-ticker flex items-center space-x-8">
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 bg-red-400 rounded-full animate-ping"></div>
+                    <span class="font-bold text-sm">LIVE</span>
+                </div>
+                <span class="text-sm font-medium">
+                    BREAKING: Emma Chamberlain signs $50M Netflix deal • TikTok announces new creator fund • Charli D'Amelio beauty line sells out in 2 hours • 
+                    <span id="current-time" class="font-bold"></span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Article Container -->
+    <main class="container mx-auto px-4 py-10">
+        <!-- Breadcrumbs -->
+        <nav class="text-sm mb-8">
+            <div class="flex items-center space-x-2 text-gray-500">
+                <a href="{base_path}index.html" class="hover:text-indigo-600">Home</a>
+                <span>/</span>
+                <a href="{base_path}search.html?q=business" class="hover:text-indigo-600">Business</a>
+                <span>/</span>
+                <span class="text-gray-900">MrBeast Creator Fund</span>
+            </div>
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+            <!-- Main Article -->
+            <article class="lg:col-span-3 article-content bg-white rounded-2xl shadow-lg overflow-hidden">
+                <!-- Article Header -->
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=400&fit=crop" alt="MrBeast Creator Fund Announcement" class="w-full h-96 object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 right-6">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <span class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">🔥 BREAKING</span>
+                            <span class="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-bold">💼 BUSINESS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article Content -->
+                <div class="p-8">
+                    <!-- Article Meta -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center space-x-4">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face" alt="Jessica Kim" class="w-12 h-12 rounded-full object-cover">
+                            <div>
+                                <p class="font-semibold text-gray-900">Jessica Kim</p>
+                                <p class="text-sm text-gray-500">Senior Business Reporter</p>
+                            </div>
+                        </div>
+                        <div class="text-right text-sm text-gray-500">
+                            <p>Published 2 hours ago</p>
+                            <p>Updated 37 minutes ago</p>
+                            <p>5 minute read</p>
+                        </div>
+                    </div>
+
+                    <!-- Article Title -->
+                    <h1 class="hero-title text-4xl font-bold text-gray-900 mb-6 leading-tight">
+                        MrBeast Announces Revolutionary $100M Creator Support Fund to Transform YouTube Landscape
+                    </h1>
+
+                    <!-- Social Stats Bar -->
+                    <div class="social-stats rounded-xl p-4 mb-8 text-white">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-6">
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="font-semibold" id="viewCount">1,247,892</span>
+                                    <span class="text-sm opacity-75">views</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="font-semibold">24,156</span>
+                                    <span class="text-sm opacity-75">likes</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="font-semibold">2,847</span>
+                                    <span class="text-sm opacity-75">comments</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="shareArticle('twitter')" class="share-button bg-white/20 hover:bg-white/30 p-2 rounded-full transition">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                                    </svg>
+                                </button>
+                                <button onclick="shareArticle('facebook')" class="share-button bg-white/20 hover:bg-white/30 p-2 rounded-full transition">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                    </svg>
+                                </button>
+                                <button onclick="bookmarkArticle()" class="share-button bg-white/20 hover:bg-white/30 p-2 rounded-full transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Article Body -->
+                    <div class="prose prose-lg max-w-none" id="articleContent">
+                        <p class="text-xl text-gray-700 font-medium mb-6 leading-relaxed">
+                            In an unprecedented move that could reshape the entire creator economy, YouTube's most successful content creator Jimmy "MrBeast" Donaldson announced today the launch of a revolutionary $100 million Creator Support Fund, the largest creator-funded initiative in social media history.
+                        </p>
+
+                        <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Breaking Down the $100M Initiative</h2>
+                        
+                        <p class="text-gray-700 mb-6">
+                            The fund, officially titled "Beast Philanthropy Creator Accelerator," will provide direct financial support, mentorship, and resources to emerging creators across all major platforms. Unlike traditional brand sponsorships or platform creator funds, this initiative is entirely funded by MrBeast's various business ventures and will operate independently of any corporate influence.
+                        </p>
+
+                        <div class="bg-indigo-50 border-l-4 border-indigo-400 p-6 my-8">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="text-sm font-medium text-indigo-800">Key Fund Details</h3>
+                                    <div class="mt-2 text-sm text-indigo-700">
+                                        <ul class="list-disc pl-5 space-y-1">
+                                            <li>$100 million total fund size over 3 years</li>
+                                            <li>Individual grants ranging from $10,000 to $1 million</li>
+                                            <li>No platform exclusivity requirements</li>
+                                            <li>Focus on educational and philanthropic content</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Industry Impact and Reactions</h2>
+                        
+                        <p class="text-gray-700 mb-6">
+                            The announcement has sent shockwaves through the creator economy, with industry experts calling it a "game-changer" that could fundamentally alter how creators fund their content. Dr. Amanda Rodriguez, a digital media professor at Stanford University, described the move as "the most significant creator-led initiative we've ever seen."
+                        </p>
+
+                        <blockquote class="border-l-4 border-gray-300 pl-6 italic text-gray-700 my-8 text-lg">
+                            "This isn't just about money—it's about democratizing opportunity. Jimmy is essentially creating a new pathway for creators that doesn't depend on corporate gatekeepers or algorithmic favor."
+                            <footer class="text-sm text-gray-500 mt-2">— Dr. Amanda Rodriguez, Stanford Digital Media Lab</footer>
+                        </blockquote>
+
+                        <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Application Process and Timeline</h2>
+                        
+                        <p class="text-gray-700 mb-6">
+                            Applications for the first round of funding will open on July 1st, 2025, with selections made by a panel including established creators, philanthropists, and content experts. The fund prioritizes creators who demonstrate:
+                        </p>
+
+                        <ul class="list-disc pl-6 text-gray-700 mb-6 space-y-2">
+                            <li><strong>Educational Impact:</strong> Content that teaches, informs, or inspires positive change</li>
+                            <li><strong>Community Building:</strong> Creators who actively engage and support their audiences</li>
+                            <li><strong>Innovation:</strong> Fresh approaches to content creation and storytelling</li>
+                            <li><strong>Scalability:</strong> Potential for significant audience growth and impact</li>
+                        </ul>
+
+                        <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">What This Means for the Creator Economy</h2>
+                        
+                        <p class="text-gray-700 mb-6">
+                            This announcement comes at a critical time for content creators, many of whom have struggled with platform monetization changes and advertiser volatility. The fund represents a new model where successful creators reinvest in the community rather than traditional corporate sponsorship models.
+                        </p>
+
+                        <p class="text-gray-700 mb-6">
+                            Early recipients will be announced in September 2025, with the first funding disbursements expected by October. MrBeast's team has indicated that successful fund recipients will also gain access to his production team's expertise and potential collaboration opportunities.
+                        </p>
+
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6 my-8">
+                            <h3 class="text-lg font-bold text-green-800 mb-3">💡 Why This Matters</h3>
+                            <p class="text-green-700">
+                                This fund represents the largest creator-to-creator investment in internet history, potentially inspiring other top creators to launch similar initiatives and fundamentally changing how the creator economy operates.
+                            </p>
+                        </div>
+
+                        <p class="text-gray-700 mb-6">
+                            The ripple effects are already being felt, with several other major creators reportedly considering similar initiatives. YouTube's CEO Susan Wojcicki praised the announcement in a statement, calling it "exactly the kind of community-driven innovation that makes our platform special."
+                        </p>
+
+                        <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Looking Ahead</h2>
+                        
+                        <p class="text-gray-700 mb-6">
+                            As the creator economy continues to mature, initiatives like MrBeast's Creator Support Fund may become the new standard for how successful creators give back to their communities. With applications opening in just two months, aspiring creators worldwide are already preparing their submissions for what could be a career-defining opportunity.
+                        </p>
+
+                        <p class="text-gray-700 mb-6">
+                            For more information about the application process and eligibility requirements, creators can visit the official Beast Philanthropy website starting June 15th, 2025.
+                        </p>
+                    </div>
+
+                    <!-- Article Tags -->
+                    <div class="border-t pt-6 mt-8">
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">#MrBeast</span>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">#CreatorEconomy</span>
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">#YouTube</span>
+                            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">#CreatorFund</span>
+                            <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">#Philanthropy</span>
+                        </div>
+                    </div>
+
+                    <!-- Share Buttons -->
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-semibold mb-4">Share this article</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="shareArticle('twitter')" class="share-button bg-blue-400 text-white px-6 py-3 rounded-full hover:bg-blue-500 transition flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                                </svg>
+                                <span>Twitter</span>
+                            </button>
+                            <button onclick="shareArticle('facebook')" class="share-button bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
+                                <span>Facebook</span>
+                            </button>
+                            <button onclick="shareArticle('linkedin')" class="share-button bg-blue-800 text-white px-6 py-3 rounded-full hover:bg-blue-900 transition flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                </svg>
+                                <span>LinkedIn</span>
+                            </button>
+                            <button onclick="copyLink()" class="share-button bg-gray-600 text-white px-6 py-3 rounded-full hover:bg-gray-700 transition flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comments Section -->
+                <div class="border-t bg-gray-50 p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900">Comments (2,847)</h3>
+                        <div class="flex items-center space-x-4">
+                            <select class="text-sm border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                                <option>Latest</option>
+                                <option>Top Rated</option>
+                                <option>Oldest</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Add Comment -->
+                    <div class="mb-8">
+                        <div class="flex space-x-4">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Your Avatar" class="w-10 h-10 rounded-full object-cover">
+                            <div class="flex-1">
+                                <textarea 
+                                    placeholder="Share your thoughts on this groundbreaking announcement..." 
+                                    class="w-full p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+                                    rows="3"
+                                    id="commentText"
+                                ></textarea>
+                                <div class="flex justify-between items-center mt-3">
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <button class="hover:text-indigo-600">😊 Emoji</button>
+                                        <button class="hover:text-indigo-600">📷 Image</button>
+                                        <button class="hover:text-indigo-600">🔗 Link</button>
+                                    </div>
+                                    <button onclick="postComment()" class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition font-semibold">
+                                        Post Comment
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Featured Comments -->
+                    <div class="space-y-6">
+                        <div class="comment-card bg-white p-6 rounded-xl shadow-sm border">
+                            <div class="flex items-start space-x-4">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" alt="Alex Chen" class="w-10 h-10 rounded-full object-cover">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <h4 class="font-semibold text-gray-900">Alex Chen</h4>
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">Verified Creator</span>
+                                        <span class="text-sm text-gray-500">2 hours ago</span>
+                                    </div>
+                                    <p class="text-gray-700 mb-3">
+                                        This is absolutely incredible! As a small creator struggling to fund better equipment and production, this could be life-changing. Jimmy continues to prove that successful creators can lift up the entire community. The application criteria focusing on educational content is brilliant.
+                                    </p>
+                                    <div class="flex items-center space-x-6 text-sm">
+                                        <button class="flex items-center space-x-1 text-gray-500 hover:text-indigo-600">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                                            </svg>
+                                            <span>847</span>
+                                        </button>
+                                        <button class="flex items-center space-x-1 text-gray-500 hover:text-red-600">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path>
+                                            </svg>
+                                            <span>12</span>
+                                        </button>
+                                        <button class="text-gray-500 hover:text-indigo-600">Reply</button>
+                                        <button class="text-gray-500 hover:text-indigo-600">Share</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="comment-card bg-white p-6 rounded-xl shadow-sm border">
+                            <div class="flex items-start space-x-4">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face" alt="Maria Rodriguez" class="w-10 h-10 rounded-full object-cover">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <h4 class="font-semibold text-gray-900">Maria Rodriguez</h4>
+                                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-medium">Industry Expert</span>
+                                        <span class="text-sm text-gray-500">1 hour ago</span>
+                                    </div>
+                                    <p class="text-gray-700 mb-3">
+                                        From a business perspective, this is fascinating. Jimmy is essentially creating a new ecosystem where top creators become venture capitalists for emerging talent. The long-term implications for platform dependence and creator sovereignty are huge. This could spark a whole new model.
+                                    </p>
+                                    <div class="flex items-center space-x-6 text-sm">
+                                        <button class="flex items-center space-x-1 text-gray-500 hover:text-indigo-600">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                                            </svg>
+                                            <span>623</span>
+                                        </button>
+                                        <button class="flex items-center space-x-1 text-gray-500 hover:text-red-600">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path>
+                                            </svg>
+                                            <span>8</span>
+                                        </button>
+                                        <button class="text-gray-500 hover:text-indigo-600">Reply</button>
+                                        <button class="text-gray-500 hover:text-indigo-600">Share</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="comment-card bg-white p-6 rounded-xl shadow-sm border">
+                            <div class="flex items-start space-x-4">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop&crop=face" alt="James Wilson" class="w-10 h-10 rounded-full object-cover">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <h4 class="font-semibold text-gray-900">James Wilson</h4>
+                                        <span class="text-sm text-gray-500">45 minutes ago</span>
+                                    </div>
+                                    <p class="text-gray-700 mb-3">
+                                        The focus on educational and philanthropic content is what really sets this apart. It's not just about entertainment—Jimmy is trying to fund creators who can make a real positive impact. Already working on my application! 🚀
+                                    </p>
+                                    <div class="flex items-center space-x-6 text-sm">
+                                        <button class="flex items-center space-x-1 text-gray-500 hover:text-indigo-600">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                                            </svg>
+                                            <span>312</span>
+                                        </button>
+                                        <button class="flex items-center space-x-1 text-gray-500 hover:text-red-600">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path>
+                                            </svg>
+                                            <span>5</span>
+                                        </button>
+                                        <button class="text-gray-500 hover:text-indigo-600">Reply</button>
+                                        <button class="text-gray-500 hover:text-indigo-600">Share</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Load More Comments -->
+                    <div class="text-center mt-8">
+                        <button onclick="loadMoreComments()" class="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-full hover:bg-gray-50 transition font-semibold">
+                            Load More Comments (2,844 remaining)
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Sidebar -->
+            <aside class="lg:col-span-1">
+                <!-- Author Bio -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                    <div class="text-center mb-6">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face" alt="Jessica Kim" class="w-20 h-20 rounded-full object-cover mx-auto mb-4">
+                        <h3 class="text-xl font-bold text-gray-900">Jessica Kim</h3>
+                        <p class="text-gray-600">Senior Business Reporter</p>
+                        <div class="flex items-center justify-center space-x-4 mt-3 text-sm text-gray-500">
+                            <span>📍 Los Angeles</span>
+                            <span>✍️ 247 articles</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm mb-4 text-center">
+                        Specializing in creator economy trends and digital business innovations. Former TechCrunch senior writer with 8 years covering social media platforms.
+                    </p>
+                    <div class="flex space-x-3">
+                        <button class="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition text-sm font-semibold">
+                            Follow Sarah
+                        </button>
+                        <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-200 transition text-sm">
+                            📧
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Related Articles -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">Related Stories</h3>
+                    <div class="space-y-4">
+                        <div class="related-card border-b pb-4 last:border-b-0 last:pb-0 cursor-pointer">
+                            <div class="flex space-x-3">
+                                <img src="https://images.unsplash.com/photo-1494790108755-2616c395d75b?w=60&h=60&fit=crop" alt="Related Article" class="w-16 h-16 rounded-lg object-cover flex-shrink-0">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-sm text-gray-900 mb-1 hover:text-indigo-600 transition">
+                                        Emma Chamberlain's $50M Netflix Deal Shakes Up Creator Economy
+                                    </h4>
+                                    <p class="text-xs text-gray-500">4 hours ago • Michael Torres</p>
+                                    <div class="flex items-center space-x-2 mt-2 text-xs text-gray-400">
+                                        <span>👁 847K views</span>
+                                        <span>💬 234</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="related-card border-b pb-4 last:border-b-0 last:pb-0 cursor-pointer">
+                            <div class="flex space-x-3">
+                                <img src="https://images.unsplash.com/photo-1607827448387-a67db1383b59?w=60&h=60&fit=crop" alt="Related Article" class="w-16 h-16 rounded-lg object-cover flex-shrink-0">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-sm text-gray-900 mb-1 hover:text-indigo-600 transition">
+                                        TikTok's Algorithm Update Favors Long-Form Content
+                                    </h4>
+                                    <p class="text-xs text-gray-500">6 hours ago • Alex Rivera</p>
+                                    <div class="flex items-center space-x-2 mt-2 text-xs text-gray-400">
+                                        <span>👁 623K views</span>
+                                        <span>💬 189</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="related-card cursor-pointer">
+                            <div class="flex space-x-3">
+                                <img src="https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=60&h=60&fit=crop" alt="Related Article" class="w-16 h-16 rounded-lg object-cover flex-shrink-0">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-sm text-gray-900 mb-1 hover:text-indigo-600 transition">
+                                        Charli D'Amelio Beauty Line Sells Out in Record Time
+                                    </h4>
+                                    <p class="text-xs text-gray-500">8 hours ago • Jessica Kim</p>
+                                    <div class="flex items-center space-x-2 mt-2 text-xs text-gray-400">
+                                        <span>👁 456K views</span>
+                                        <span>💬 145</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Newsletter Signup -->
+                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white mb-8">
+                    <h3 class="text-xl font-bold mb-3">💌 Daily Creator Brief</h3>
+                    <p class="text-sm opacity-90 mb-4">
+                        Get tomorrow's creator economy news delivered to your inbox every morning. Join 50,000+ industry professionals.
+                    </p>
+                    <div class="space-y-3">
+                        <input 
+                            type="email" 
+                            placeholder="Enter your email" 
+                            class="w-full p-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white/50"
+                        >
+                        <button class="w-full bg-white text-indigo-600 p-3 rounded-lg hover:bg-gray-100 transition font-semibold">
+                            Subscribe Free
+                        </button>
+                    </div>
+                    <p class="text-xs opacity-75 mt-3 text-center">
+                        ✅ Daily news • ✅ Exclusive interviews • ✅ No spam
+                    </p>
+                </div>
+
+                <!-- Trending Topics -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                        <span class="text-2xl mr-2">🔥</span>
+                        Trending Now
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            <div>
+                                <p class="font-semibold text-sm">#MrBeastFund</p>
+                                <p class="text-xs text-gray-500">1.2M tweets</p>
+                            </div>
+                            <span class="text-green-500 text-xs font-bold">↗ +2,340%</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            <div>
+                                <p class="font-semibold text-sm">#CreatorEconomy</p>
+                                <p class="text-xs text-gray-500">847K tweets</p>
+                            </div>
+                            <span class="text-green-500 text-xs font-bold">↗ +890%</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            <div>
+                                <p class="font-semibold text-sm">#YouTubeCreators</p>
+                                <p class="text-xs text-gray-500">623K tweets</p>
+                            </div>
+                            <span class="text-green-500 text-xs font-bold">↗ +567%</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-lg font-bold">IN</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Influencer News</h3>
+                            <p class="text-sm text-gray-400">Breaking • Insights • Culture</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        The world's leading source for influencer industry news and exclusive insights.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{base_path}index.html" class="text-gray-300 hover:text-white transition">Latest News</a></li>
+                        <li><a href="{base_path}search.html" class="text-gray-300 hover:text-white transition">Search</a></li>
+                        <li><a href="{base_path}authors.html" class="text-gray-300 hover:text-white transition">Authors</a></li>
+                        <li><a href="{base_path}integrated/categories.html" class="text-gray-300 hover:text-white transition">Categories</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Categories</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{base_path}search.html?category=business" class="text-gray-300 hover:text-white transition">💼 Business</a></li>
+                        <li><a href="{base_path}search.html?category=business" class="text-gray-300 hover:text-white transition">🎥 Entertainment</a></li>
+                        <li><a href="{base_path}search.html?category=business" class="text-gray-300 hover:text-white transition">💄 Beauty & Fashion</a></li>
+                        <li><a href="{base_path}search.html?category=business" class="text-gray-300 hover:text-white transition">⚡ Technology</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact Info</h3>
+                    <div class="space-y-3 text-gray-300">
+                        <p>📧 news@influencernews.com</p>
+                        <p>📞 (555) 123-NEWS</p>
+                        <p>📍 123 Creator Avenue<br>Los Angeles, CA 90210</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center">
+                <p class="text-gray-400 text-sm">© 2025 Influencer News. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // View counter animation
+        let currentViews = 1247892;
+        
+        function updateViewCount() {
+            currentViews += Math.floor(Math.random() * 50) + 10;
+            document.getElementById('viewCount').textContent = currentViews.toLocaleString();
+        }
+
+        // Reading progress bar
+        function updateReadingProgress() {
+            const article = document.getElementById('articleContent');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.offsetHeight;
+            const winHeight = window.innerHeight;
+            const scrollPercent = scrollTop / (docHeight - winHeight);
+            const scrollPercentRounded = Math.round(scrollPercent * 100);
+            
+            document.getElementById('readingProgress').style.width = scrollPercentRounded + '%';
+        }
+
+        // Share functionality
+        function shareArticle(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent("MrBeast Announces Revolutionary $100M Creator Support Fund");
+            
+            let shareUrl;
+            switch(platform) {
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+                    break;
+                case 'facebook':
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+                    break;
+                case 'linkedin':
+                    shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`;
+                    break;
+            }
+            
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'width=600,height=400');
+                // Update share count
+                const currentCount = parseInt(document.getElementById('shareCount').textContent.replace(/[^0-9]/g, ''));
+                document.getElementById('shareCount').textContent = (currentCount + 1) + 'K';
+            }
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('Article link copied to clipboard!');
+            });
+        }
+
+        function bookmarkArticle() {
+            alert('Article bookmarked! You can find it in your saved articles.');
+        }
+
+        function postComment() {
+            const commentText = document.getElementById('commentText').value.trim();
+            if (commentText) {
+                alert('Comment posted successfully! It will appear after moderation.');
+                document.getElementById('commentText').value = '';
+            } else {
+                alert('Please enter a comment before posting.');
+            }
+        }
+
+        function loadMoreComments() {
+            alert('Loading more comments... In a real implementation, this would load additional comments via AJAX.');
+        }
+
+        // Mobile Menu Functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuToggle.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenuFunc() {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', openMobileMenu);
+        }
+        
+        if (closeMobileMenu) {
+            closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+        }
+        
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', closeMobileMenuFunc);
+        }
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-nav-item').forEach(item => {
+            item.addEventListener('click', closeMobileMenuFunc);
+        });
+        
+        // Mobile Search Functionality
+        const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+        const closeMobileSearchBtn = document.getElementById('closeMobileSearch');
+        const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
+        const mobileSearchInput = document.getElementById('mobileSearchInput');
+        const mobileSearchSuggestions = document.getElementById('mobileSearchSuggestions');
+        
+        const searchData = [
+            'MrBeast', 'Emma Chamberlain', 'PewDiePie', 'Charli DAmelio', 'Logan Paul',
+            'Creator Economy', 'TikTok Algorithm', 'YouTube Shorts', 'Instagram Reels',
+            'Brand Partnerships', 'Influencer Marketing', 'Social Media Trends'
+        ];
+        
+        function openMobileSearch() {
+            mobileSearchOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // Focus on search input after animation
+            setTimeout(() => {
+                mobileSearchInput.focus();
+            }, 300);
+        }
+        
+        function closeMobileSearchFunc() {
+            mobileSearchOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            mobileSearchSuggestions.classList.add('hidden');
+            mobileSearchInput.value = '';
+        }
+        
+        if (mobileSearchToggle) {
+            mobileSearchToggle.addEventListener('click', openMobileSearch);
+        }
+        
+        if (closeMobileSearchBtn) {
+            closeMobileSearchBtn.addEventListener('click', closeMobileSearchFunc);
+        }
+        
+        if (mobileSearchOverlay) {
+            mobileSearchOverlay.addEventListener('click', function(e) {
+                if (e.target === mobileSearchOverlay) {
+                    closeMobileSearchFunc();
+                }
+            });
+        }
+        
+        function handleMobileSearch(event) {
+            const query = event.target.value.toLowerCase();
+            
+            if (query.length > 1) {
+                const matches = searchData.filter(item => 
+                    item.toLowerCase().includes(query)
+                ).slice(0, 5);
+                
+                if (matches.length > 0) {
+                    mobileSearchSuggestions.innerHTML = matches.map(match => 
+                        `<div class="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0" onclick="selectMobileSuggestion('${match}')">${match}</div>`
+                    ).join('');
+                    mobileSearchSuggestions.classList.remove('hidden');
+                } else {
+                    mobileSearchSuggestions.classList.add('hidden');
+                }
+            } else {
+                mobileSearchSuggestions.classList.add('hidden');
+            }
+            
+            if (event.key === 'Enter') {
+                performMobileSearch();
+            }
+        }
+        
+        function selectMobileSuggestion(suggestion) {
+            mobileSearchInput.value = suggestion;
+            mobileSearchSuggestions.classList.add('hidden');
+            performMobileSearch();
+        }
+        
+        function performMobileSearch() {
+            const query = mobileSearchInput.value;
+            if (query.trim()) {
+                // Close mobile search and redirect to search page
+                closeMobileSearchFunc();
+                window.location.href = `{base_path}search.html?q=${encodeURIComponent(query)}`;
+            }
+        }
+
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        }
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (query.trim()) {
+                window.location.href = `{base_path}search.html?q=${encodeURIComponent(query)}`;
+            }
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: true, 
+                timeZoneName: 'short' 
+            };
+            const timeElement = document.getElementById('current-time');
+            if (timeElement) {
+                timeElement.textContent = now.toLocaleString('en-US', options);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            setInterval(updateViewCount, 5000);
+            
+            // Add scroll listeners
+            window.addEventListener('scroll', updateReadingProgress);
+            
+            // Smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

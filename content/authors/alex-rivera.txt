@@ -1,0 +1,19 @@
+Name: Alex Rivera
+Slug: alex-rivera
+Title: Tech Correspondent
+Bio: Platform algorithm specialist and former software engineer with extensive experience in their field
+Image: https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=300&fit=crop&crop=face
+Location: San Francisco, CA
+Expertise: Algorithms, Platform Updates, Tech Analysis
+Email: alex.rivera@influencernews.com
+Twitter: @alexrivera
+LinkedIn: linkedin.com/in/alexrivera
+Rating: 4.5
+Is_Active: true
+Joined_Date: 2023-01-15
+
+---
+
+Platform algorithm specialist and former software engineer
+
+With extensive experience in their field, Alex brings unique insights and expertise to our coverage of the influencer industry. Their work has helped shape how we understand and report on the evolving creator economy.

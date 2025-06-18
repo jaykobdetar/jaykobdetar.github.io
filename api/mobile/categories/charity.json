@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "data": {
+    "slug": "charity",
+    "name": "Charity & Social Impact",
+    "description": "Creator charity work and social impact initiatives",
+    "mobile_optimized": true,
+    "recent_articles": [],
+    "article_count": 0
+  },
+  "error": null,
+  "meta": {
+    "generated_at": "2025-06-11T16:24:46.477008",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

@@ -1,0 +1,77 @@
+{
+  "success": true,
+  "data": [
+    {
+      "slug": "alex-rivera",
+      "name": "Alex Rivera",
+      "title": null,
+      "bio": "Platform algorithm specialist and former software engineer with extensive experience in their field",
+      "expertise": [],
+      "mobile_optimized": true,
+      "image": {
+        "mobile": "/assets/placeholders/author_placeholder.svg",
+        "tablet": "/assets/placeholders/author_placeholder.svg",
+        "desktop": "/assets/placeholders/author_placeholder.svg"
+      }
+    },
+    {
+      "slug": "jessica-kim",
+      "name": "Jessica Kim",
+      "title": null,
+      "bio": "Former Vogue digital editor covering beauty influencer partnerships",
+      "expertise": [],
+      "mobile_optimized": true,
+      "image": {
+        "mobile": "/assets/placeholders/author_placeholder.svg",
+        "tablet": "/assets/placeholders/author_placeholder.svg",
+        "desktop": "/assets/placeholders/author_placeholder.svg"
+      }
+    },
+    {
+      "slug": "maria-lopez",
+      "name": "Maria Lopez",
+      "title": null,
+      "bio": "Wellness and lifestyle expert covering creator mental health and work-life balance",
+      "expertise": [],
+      "mobile_optimized": true,
+      "image": {
+        "mobile": "/assets/placeholders/author_placeholder.svg",
+        "tablet": "/assets/placeholders/author_placeholder.svg",
+        "desktop": "/assets/placeholders/author_placeholder.svg"
+      }
+    },
+    {
+      "slug": "michael-torres",
+      "name": "Michael Torres",
+      "title": null,
+      "bio": "Celebrity culture and entertainment industry veteran with over 10 years covering influencer drama and collaborations",
+      "expertise": [],
+      "mobile_optimized": true,
+      "image": {
+        "mobile": "/assets/placeholders/author_placeholder.svg",
+        "tablet": "/assets/placeholders/author_placeholder.svg",
+        "desktop": "/assets/placeholders/author_placeholder.svg"
+      }
+    },
+    {
+      "slug": "sarah-chen",
+      "name": "Sarah Chen",
+      "title": null,
+      "bio": "Creator economy expert with 8 years experience covering the business of content creation and influencer marketing",
+      "expertise": [],
+      "mobile_optimized": true,
+      "image": {
+        "mobile": "/assets/placeholders/author_placeholder.svg",
+        "tablet": "/assets/placeholders/author_placeholder.svg",
+        "desktop": "/assets/placeholders/author_placeholder.svg"
+      }
+    }
+  ],
+  "error": null,
+  "meta": {
+    "total": 5,
+    "generated_at": "2025-06-11T16:24:46.414332",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

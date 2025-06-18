@@ -1,0 +1,99 @@
+{
+  "authors": [
+    {
+      "name": "Jessica Kim",
+      "title": "Beauty & Fashion Editor",
+      "bio": "Former Vogue digital editor covering beauty influencer partnerships",
+      "extended_bio": "Former Vogue digital editor covering beauty influencer partnerships\n\nWith extensive experience in their field, Jessica brings unique insights and expertise to our coverage of the influencer industry. Their work has helped shape how we understand and report on the evolving creator economy.",
+      "image": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=300&fit=crop&crop=face",
+      "location": "Los Angeles, CA",
+      "expertise": [
+        "Beauty",
+        "Fashion",
+        "Influencer Collabs"
+      ],
+      "email": "jessica.kim@influencernews.com",
+      "twitter": "@jessicakim",
+      "linkedin": "linkedin.com/in/jessicakim",
+      "articles_written": 203,
+      "role_category": "contributor",
+      "rating": 4.8,
+      "joined_date": "2020-01-01",
+      "verified": true,
+      "filename": "jessica-kim.txt",
+      "id": 3
+    },
+    {
+      "name": "Maria Lopez",
+      "title": "Lifestyle Contributor",
+      "bio": "Wellness and lifestyle expert covering creator mental health and work-life balance",
+      "extended_bio": "Wellness and lifestyle expert covering creator mental health and work-life balance\n\nWith extensive experience in their field, Maria brings unique insights and expertise to our coverage of the influencer industry. Their work has helped shape how we understand and report on the evolving creator economy.",
+      "image": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=300&fit=crop&crop=face",
+      "location": "Miami, FL",
+      "expertise": [
+        "Wellness",
+        "Lifestyle",
+        "Mental Health"
+      ],
+      "email": "maria.lopez@influencernews.com",
+      "twitter": "@marialopez",
+      "linkedin": "linkedin.com/in/marialopez",
+      "articles_written": 87,
+      "role_category": "contributor",
+      "rating": 4.9,
+      "joined_date": "2020-01-01",
+      "verified": true,
+      "filename": "maria-lopez.txt",
+      "id": 4
+    },
+    {
+      "name": "Michael Torres",
+      "title": "Entertainment Editor",
+      "bio": "Celebrity culture and entertainment industry veteran with over 10 years covering influencer drama and collaborations",
+      "extended_bio": "Michael Torres is the go-to source for all things entertainment in the influencer world. With his finger on the pulse of celebrity culture and creator drama, Michael has broken some of the biggest stories in the industry.\n\nHis career began at Entertainment Weekly, where he pioneered their digital creator coverage. He later moved to TMZ, where he led their influencer desk before joining Influencer News as Entertainment Editor.\n\nMichael's exclusive interviews with top creators have garnered millions of views, and his ability to navigate the complex world of influencer relationships and controversies has made him one of the most respected entertainment journalists in the digital space.\n\nHe holds a Bachelor's degree in Journalism from NYU and has won multiple awards for his investigative reporting on creator controversies. When not chasing the next big story, Michael can be found analyzing reality TV shows on his podcast \"The Drama Files.\"",
+      "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      "location": "New York, NY",
+      "expertise": [
+        "Celebrity News",
+        "Entertainment",
+        "Exclusive Interviews",
+        "Drama Coverage"
+      ],
+      "email": "michael.torres@influencernews.com",
+      "twitter": "@michaeltorres",
+      "linkedin": "linkedin.com/in/michaeltorres",
+      "articles_written": 482,
+      "role_category": "contributor",
+      "rating": 4.8,
+      "joined_date": "2020-01-01",
+      "verified": true,
+      "filename": "michael-torres.txt",
+      "id": 5
+    },
+    {
+      "name": "Alex Rivera",
+      "title": "Tech Correspondent",
+      "bio": "Platform algorithm specialist and former software engineer",
+      "extended_bio": "Platform algorithm specialist and former software engineer\n\nWith extensive experience in their field, Alex brings unique insights and expertise to our coverage of the influencer industry. Their work has helped shape how we understand and report on the evolving creator economy.",
+      "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=300&fit=crop&crop=face",
+      "location": "San Francisco, CA",
+      "expertise": [
+        "Algorithms",
+        "Platform Updates",
+        "Tech Analysis"
+      ],
+      "email": "alex.rivera@influencernews.com",
+      "twitter": "@alexrivera",
+      "linkedin": "linkedin.com/in/alexrivera",
+      "articles_written": 156,
+      "role_category": "correspondent",
+      "rating": 4.6,
+      "joined_date": "2020-01-01",
+      "verified": true,
+      "filename": "alex-rivera.txt",
+      "id": 7
+    }
+  ],
+  "next_id": 8,
+  "last_integration": "2025-06-09T16:54:04.944795"
+}

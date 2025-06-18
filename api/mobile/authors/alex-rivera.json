@@ -1,0 +1,49 @@
+{
+  "success": true,
+  "data": {
+    "slug": "alex-rivera",
+    "name": "Alex Rivera",
+    "title": null,
+    "bio": "Platform algorithm specialist and former software engineer with extensive experience in their field",
+    "expertise": [],
+    "mobile_optimized": true,
+    "image": {
+      "mobile": "/assets/placeholders/author_placeholder.svg",
+      "tablet": "/assets/placeholders/author_placeholder.svg",
+      "desktop": "/assets/placeholders/author_placeholder.svg"
+    },
+    "recent_articles": [
+      {
+        "id": 1,
+        "title": "New Platform Update Changes Everything for Creators",
+        "slug": "new-platform-update-changes-everything-for-creators",
+        "excerpt": "Major social media platform announces algorithm changes that could reshape how creators build audiences and earn reve...",
+        "author": {
+          "name": "Alex Rivera",
+          "slug": ""
+        },
+        "category": {
+          "name": "Technology",
+          "slug": ""
+        },
+        "publication_date": "2025-06-11T16:14:44.739810",
+        "read_time": 5,
+        "views": 0,
+        "mobile_optimized": true,
+        "image": {
+          "mobile": "/assets/placeholders/article_placeholder.svg",
+          "tablet": "/assets/placeholders/article_placeholder.svg",
+          "desktop": "/assets/placeholders/article_placeholder.svg",
+          "fallback": "/assets/placeholders/article_placeholder.svg"
+        }
+      }
+    ],
+    "article_count": 1
+  },
+  "error": null,
+  "meta": {
+    "generated_at": "2025-06-11T16:24:46.423742",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}

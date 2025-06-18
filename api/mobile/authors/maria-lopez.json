@@ -1,0 +1,24 @@
+{
+  "success": true,
+  "data": {
+    "slug": "maria-lopez",
+    "name": "Maria Lopez",
+    "title": null,
+    "bio": "Wellness and lifestyle expert covering creator mental health and work-life balance",
+    "expertise": [],
+    "mobile_optimized": true,
+    "image": {
+      "mobile": "/assets/placeholders/author_placeholder.svg",
+      "tablet": "/assets/placeholders/author_placeholder.svg",
+      "desktop": "/assets/placeholders/author_placeholder.svg"
+    },
+    "recent_articles": [],
+    "article_count": 0
+  },
+  "error": null,
+  "meta": {
+    "generated_at": "2025-06-11T16:24:46.439125",
+    "cache_duration": 300
+  },
+  "mobile_optimized": true
+}
