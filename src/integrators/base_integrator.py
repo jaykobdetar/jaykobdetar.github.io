@@ -46,6 +46,9 @@ class BaseIntegrator(ABC):
         self.db = DatabaseManager()
         self.image_manager = ImageManager()
         
+        # Initialize site integrator for site-wide configuration
+        self._site_integrator = None
+        
         # Progress callback for GUI updates
         self.progress_callback: Optional[Callable] = None
         
@@ -242,6 +245,39 @@ class BaseIntegrator(ABC):
     def get_path_manager(self, current_location: str) -> PathManager:
         """Get path manager for current page location"""
         return PathManager.from_page_location(current_location)
+    
+    def get_site_integrator(self):
+        """Get site integrator instance (lazy loading)"""
+        if self._site_integrator is None:
+            # Import here to avoid circular imports
+            try:
+                from .site_integrator import SiteIntegrator
+            except ImportError:
+                from src.integrators.site_integrator import SiteIntegrator
+            self._site_integrator = SiteIntegrator()
+        return self._site_integrator
+    
+    def get_site_config(self, config_type: str = None) -> Dict[str, Any]:
+        """Get site configuration"""
+        site_integrator = self.get_site_integrator()
+        if config_type:
+            return site_integrator.get_config_by_type(config_type)
+        return site_integrator.get_site_config()
+    
+    def generate_site_header(self, current_page: str = '', page_title: str = None, path_prefix: str = '') -> str:
+        """Generate standardized site header"""
+        site_integrator = self.get_site_integrator()
+        return site_integrator.generate_header_html(current_page, path_prefix)
+    
+    def generate_site_footer(self, path_prefix: str = '') -> str:
+        """Generate standardized site footer"""
+        site_integrator = self.get_site_integrator()
+        return site_integrator.generate_footer_html(path_prefix)
+    
+    def generate_site_meta_tags(self, page_title: str = None, page_description: str = None) -> str:
+        """Generate site meta tags"""
+        site_integrator = self.get_site_integrator()
+        return site_integrator.generate_site_meta_tags(page_title, page_description)
     
     def generate_navigation_html(self, current_location: str, active_page: str = '') -> str:
         """Generate navigation HTML with proper paths"""

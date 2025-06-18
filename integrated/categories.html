@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categories - Influencer News</title>
+    <title>Categories - TheRealNews</title>
     <link rel="stylesheet" href="../assets/css/styles.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,7 @@
             width: 80%;
             max-width: 300px;
             height: 100vh;
-            background: #312e81;
+            background: #059669;
             transition: right 0.3s ease-in-out;
             z-index: 1000;
         }
@@ -117,7 +117,7 @@
     
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-        <div class="p-6 border-b border-indigo-600">
+        <div class="p-6 border-b border-emerald-600">
             <div class="flex justify-between items-center">
                 <h2 class="text-xl font-bold text-white">Menu</h2>
                 <button id="closeMobileMenu" class="text-white text-2xl">&times;</button>
@@ -125,11 +125,11 @@
         </div>
         <nav class="p-6">
             <ul class="space-y-4">
-                <li><a href="../index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Home</a></li>
-                <li><a href="../search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Search</a></li>
-                <li><a href="../authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Authors</a></li>
-                <li><a href="../integrated/categories.html" class="mobile-nav-item block text-indigo-200 text-lg py-2 border-b border-indigo-600/30">Categories</a></li>
-                <li><a href="../integrated/trending.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Trending</a></li>
+                <li><a href="../index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-emerald-600/30">Home</a></li>
+                <li><a href="../search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-emerald-600/30">Search</a></li>
+                <li><a href="../authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-emerald-600/30">Authors</a></li>
+                <li><a href="../integrated/categories.html" class="mobile-nav-item block text-emerald-200 text-lg py-2 border-b border-emerald-600/30">Categories</a></li>
+                <li><a href="../integrated/trending.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-emerald-600/30">Trending</a></li>
             </ul>
         </nav>
     </div>
@@ -143,35 +143,35 @@
             </div>
             <div class="relative mb-6">
                 <input type="text" id="mobileSearchInput" placeholder="Search articles, authors, categories..." 
-                       class="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                       class="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                        onkeyup="handleMobileSearch(event)">
                 <button onclick="performMobileSearch()" 
-                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-600 text-xl">🔍</button>
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-emerald-600 text-xl">🔍</button>
             </div>
             <div id="mobileSearchSuggestions" class="bg-white border border-gray-200 rounded-lg hidden max-h-60 overflow-y-auto"></div>
         </div>
     </div>
     
     <!-- Header -->
-    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+    <header class="bg-emerald-900 text-white sticky top-0 z-50 shadow-2xl">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-4">
-                    <span class="text-2xl font-bold text-white">IN</span>
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mr-4">
+                    <span class="text-2xl font-bold text-white">TRN</span>
                 </div>
                 <div>
-                    <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
-                    <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
+                    <h1 class="text-3xl font-bold hero-title">TheRealNews</h1>
+                    <p class="text-xs text-emerald-200">Truth • Transparency • Real Stories</p>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
                 <nav class="hidden md:block">
                     <ul class="flex space-x-8">
-                        <li><a href="../index.html" class="hover:text-indigo-200 transition font-medium">Home</a></li>
-                        <li><a href="../search.html" class="hover:text-indigo-200 transition font-medium">Search</a></li>
-                        <li><a href="../authors.html" class="hover:text-indigo-200 transition font-medium">Authors</a></li>
-                        <li><a href="../integrated/categories.html" class="hover:text-indigo-200 transition font-medium text-indigo-200">Categories</a></li>
-                        <li><a href="../integrated/trending.html" class="hover:text-indigo-200 transition font-medium">Trending</a></li>
+                        <li><a href="../index.html" class="hover:text-emerald-200 transition font-medium">Home</a></li>
+                        <li><a href="../search.html" class="hover:text-emerald-200 transition font-medium">Search</a></li>
+                        <li><a href="../authors.html" class="hover:text-emerald-200 transition font-medium">Authors</a></li>
+                        <li><a href="../integrated/categories.html" class="hover:text-emerald-200 transition font-medium text-emerald-200">Categories</a></li>
+                        <li><a href="../integrated/trending.html" class="hover:text-emerald-200 transition font-medium">Trending</a></li>
                     </ul>
                 </nav>
                 
@@ -191,7 +191,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-700 text-white py-20">
+    <section class="bg-gradient-to-br from-emerald-900 via-emerald-800 to-indigo-700 text-white py-20">
         <div class="container mx-auto px-4 text-center">
             <h1 class="text-5xl font-bold mb-4 hero-title">Content Categories</h1>
             <p class="text-xl mb-6">Explore our diverse range of influencer and creator content</p>
@@ -309,7 +309,7 @@
     <!-- Footer -->
     <footer class="bg-gray-900 text-gray-300 py-12 mt-20">
         <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2024 Influencer News. All rights reserved.</p>
+            <p>&copy; 2024 TheRealNews. All rights reserved.</p>
         </div>
     </footer>
     <script>

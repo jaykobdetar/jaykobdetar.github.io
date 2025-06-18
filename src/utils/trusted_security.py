@@ -36,10 +36,14 @@ class TrustedSanitizer:
     """HTML sanitization using bleach - industry standard library"""
     
     def __init__(self):
-        """Initialize with secure defaults"""
+        """Initialize with secure defaults from configuration"""
         
-        # Safe HTML tags that are allowed
-        self.ALLOWED_TAGS = [
+        # Get security configuration
+        security_config = config.get_security_config()
+        
+        # Load allowed tags from config, with comprehensive defaults
+        config_tags = security_config.get('allowed_html_tags', [])
+        default_tags = [
             'p', 'br', 'strong', 'em', 'b', 'i', 'u', 'mark',
             'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
             'ul', 'ol', 'li', 'dl', 'dt', 'dd',
@@ -50,8 +54,14 @@ class TrustedSanitizer:
             'hr', 'sub', 'sup', 'small',
         ]
         
-        # Safe HTML attributes
-        self.ALLOWED_ATTRIBUTES = {
+        # Merge config tags with defaults (ensure minimum security)
+        self.ALLOWED_TAGS = list(set(config_tags + default_tags)) if config_tags else default_tags
+        
+        # Get additional security settings from config
+        additional_settings = config.get('security.html_sanitization', {})
+        
+        # Safe HTML attributes (extended if configured)
+        default_attributes = {
             'a': ['href', 'title', 'rel'],
             'img': ['src', 'alt', 'title', 'width', 'height'],
             'blockquote': ['cite'],
@@ -65,18 +75,22 @@ class TrustedSanitizer:
             'h4': ['class'], 'h5': ['class'], 'h6': ['class'],
         }
         
-        # Safe URL protocols
-        self.ALLOWED_PROTOCOLS = ['http', 'https', 'mailto', 'tel']
+        # Allow config to extend attributes
+        config_attributes = additional_settings.get('allowed_attributes', {})
+        self.ALLOWED_ATTRIBUTES = {**default_attributes, **config_attributes}
+        
+        # Safe URL protocols (configurable)
+        self.ALLOWED_PROTOCOLS = additional_settings.get('allowed_protocols', 
+                                                         ['http', 'https', 'mailto', 'tel'])
         
         # CSS sanitizer for safe styling
         if HAS_BLEACH:
-            self.css_sanitizer = CSSSanitizer(
-                allowed_css_properties=[
-                    'color', 'background-color', 'font-size', 'font-weight',
-                    'text-align', 'text-decoration', 'margin', 'padding',
-                    'border', 'border-radius', 'display', 'float',
-                ]
-            )
+            css_properties = additional_settings.get('allowed_css_properties', [
+                'color', 'background-color', 'font-size', 'font-weight',
+                'text-align', 'text-decoration', 'margin', 'padding',
+                'border', 'border-radius', 'display', 'float',
+            ])
+            self.css_sanitizer = CSSSanitizer(allowed_css_properties=css_properties)
     
     def sanitize_html(self, content: str, allow_tags: bool = True) -> str:
         """
@@ -181,18 +195,26 @@ class TrustedValidator:
     """Input validation using secure, trusted patterns"""
     
     def __init__(self):
-        """Initialize validator with secure patterns"""
+        """Initialize validator with secure patterns from configuration"""
         self.sanitizer = TrustedSanitizer()
         
         # Compile regex patterns for performance
         self._compile_patterns()
         
-        # Security limits
-        self.MAX_CONTENT_LENGTH = 100000  # 100KB
-        self.MAX_TITLE_LENGTH = 300
-        self.MAX_BIO_LENGTH = 2000
-        self.MAX_URL_LENGTH = 2048
-        self.MAX_EMAIL_LENGTH = 254  # RFC 5321 limit
+        # Get security configuration
+        security_config = config.get_security_config()
+        
+        # Security limits from config with sensible defaults
+        self.MAX_CONTENT_LENGTH = security_config.get('max_content_length', 50000)
+        self.MAX_TITLE_LENGTH = security_config.get('max_title_length', 200)
+        self.MAX_BIO_LENGTH = config.get('security.max_bio_length', 2000)
+        self.MAX_URL_LENGTH = config.get('security.max_url_length', 2048)
+        self.MAX_EMAIL_LENGTH = config.get('security.max_email_length', 254)  # RFC 5321 limit
+        
+        # Additional configurable limits
+        self.MAX_EXCERPT_LENGTH = config.get('security.max_excerpt_length', 500)
+        self.MAX_SLUG_LENGTH = config.get('security.max_slug_length', 100)
+        self.MIN_SLUG_LENGTH = config.get('security.min_slug_length', 2)
         
     def _compile_patterns(self):
         """Compile regex patterns for validation"""
@@ -346,11 +368,11 @@ class TrustedValidator:
         if not self.slug_pattern.match(slug):
             raise ValueError("Slug can only contain lowercase letters, numbers, and hyphens")
         
-        if len(slug) < 2:
-            raise ValueError("Slug must be at least 2 characters")
+        if len(slug) < self.MIN_SLUG_LENGTH:
+            raise ValueError(f"Slug must be at least {self.MIN_SLUG_LENGTH} characters")
         
-        if len(slug) > 100:
-            raise ValueError("Slug must be no more than 100 characters")
+        if len(slug) > self.MAX_SLUG_LENGTH:
+            raise ValueError(f"Slug must be no more than {self.MAX_SLUG_LENGTH} characters")
         
         if slug.startswith('-') or slug.endswith('-'):
             raise ValueError("Slug cannot start or end with a hyphen")
@@ -404,9 +426,9 @@ class TrustedValidator:
         slug = re.sub(r'[-\s]+', '-', slug)
         slug = slug.strip('-')
         
-        # Limit length
-        if len(slug) > 100:
-            slug = slug[:100].rstrip('-')
+        # Limit length using configured max
+        if len(slug) > self.MAX_SLUG_LENGTH:
+            slug = slug[:self.MAX_SLUG_LENGTH].rstrip('-')
         
         # Ensure it matches our slug pattern
         if not slug or not self.slug_pattern.match(slug):
@@ -420,32 +442,61 @@ class CSPGenerator:
     @staticmethod
     def get_strict_csp(nonce: str = None) -> str:
         """Get strict CSP for maximum security with nonce support - NO UNSAFE FALLBACKS"""
-        script_src = "'self' https://cdn.jsdelivr.net"
-        style_src = "'self' https://fonts.googleapis.com"
+        # Get CSP configuration
+        csp_config = config.get('security.csp', {})
         
+        # Build script-src directive
+        script_sources = csp_config.get('script_sources', ['self', 'https://cdn.jsdelivr.net'])
+        script_src_parts = []
+        for source in script_sources:
+            if source == 'self':
+                script_src_parts.append("'self'")
+            else:
+                script_src_parts.append(source)
+        
+        # Build style-src directive
+        style_sources = csp_config.get('style_sources', ['self', 'https://fonts.googleapis.com'])
+        style_src_parts = []
+        for source in style_sources:
+            if source == 'self':
+                style_src_parts.append("'self'")
+            else:
+                style_src_parts.append(source)
+        
+        # Add nonce if provided
         if nonce:
-            script_src += f" 'nonce-{nonce}'"
-            style_src += f" 'nonce-{nonce}'"
-        else:
-            # NO FALLBACK TO UNSAFE-INLINE - Security first
-            # If no nonce, only allow self and trusted CDN
-            pass
+            script_src_parts.append(f"'nonce-{nonce}'")
+            style_src_parts.append(f"'nonce-{nonce}'")
         
-        return "; ".join([
-            "default-src 'self'",
-            f"script-src {script_src}",
-            f"style-src {style_src}",
-            "img-src 'self' data: https: blob:",
-            "font-src 'self' https://fonts.gstatic.com",
-            "connect-src 'self'",
-            "media-src 'self'",
-            "object-src 'none'",
-            "frame-src 'none'",
-            "base-uri 'self'",
-            "form-action 'self'",
-            "frame-ancestors 'none'",
-            "upgrade-insecure-requests"
-        ])
+        script_src = " ".join(script_src_parts)
+        style_src = " ".join(style_src_parts)
+        
+        # Get other directives from config with secure defaults
+        directives = {
+            "default-src": "'self'",
+            "script-src": script_src,
+            "style-src": style_src,
+            "img-src": csp_config.get('img_sources', "'self' data: https: blob:"),
+            "font-src": csp_config.get('font_sources', "'self' https://fonts.gstatic.com"),
+            "connect-src": csp_config.get('connect_sources', "'self'"),
+            "media-src": csp_config.get('media_sources', "'self'"),
+            "object-src": "'none'",
+            "frame-src": "'none'",
+            "base-uri": "'self'",
+            "form-action": "'self'",
+            "frame-ancestors": "'none'",
+            "upgrade-insecure-requests": ""
+        }
+        
+        # Build CSP header
+        csp_parts = []
+        for directive, value in directives.items():
+            if value:  # Skip empty values
+                csp_parts.append(f"{directive} {value}")
+            else:
+                csp_parts.append(directive)
+        
+        return "; ".join(csp_parts)
     
     @staticmethod
     def get_relaxed_csp() -> str:

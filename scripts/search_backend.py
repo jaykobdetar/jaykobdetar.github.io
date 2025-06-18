@@ -17,7 +17,7 @@ from database.db_manager import DatabaseManager
 
 try:
     from utils.trusted_security import trusted_validator
-    from utils.security_middleware import input_validator
+    from utils.security_middleware import input_validator, csrf_protect, rate_limit
     HAS_SECURITY = True
 except ImportError:
     HAS_SECURITY = False
@@ -29,6 +29,8 @@ class SearchBackend:
     def __init__(self):
         self.db = DatabaseManager()
     
+    @csrf_protect(require_token=False)  # GET requests don't need CSRF protection
+    @rate_limit(limit=50, window_minutes=15)  # 50 searches per 15 minutes
     def search_all(self, query: str, limit: int = 20, offset: int = 0) -> Dict[str, Any]:
         """Search across all content types with input validation"""
         results = {
@@ -75,7 +77,6 @@ class SearchBackend:
             FROM articles a
             JOIN authors au ON a.author_id = au.id
             JOIN categories c ON a.category_id = c.id
-            WHERE a.status = 'published'
             ORDER BY a.publish_date DESC
             LIMIT ? OFFSET ?
             """
@@ -117,8 +118,7 @@ class SearchBackend:
         FROM articles a
         JOIN authors au ON a.author_id = au.id
         JOIN categories c ON a.category_id = c.id
-        WHERE a.status = 'published' 
-        AND (a.title LIKE ? OR a.excerpt LIKE ? OR a.content LIKE ?)
+        WHERE (a.title LIKE ? OR a.excerpt LIKE ? OR a.content LIKE ?)
         ORDER BY a.publish_date DESC
         LIMIT ? OFFSET ?
         """
@@ -232,7 +232,7 @@ class SearchBackend:
         
         # Get article title suggestions
         article_titles = self.db.execute_query(
-            "SELECT title FROM articles WHERE title LIKE ? AND status = 'published' LIMIT ?",
+            "SELECT title FROM articles WHERE title LIKE ? LIMIT ?",
             (search_pattern, limit)
         )
         suggestions.extend([row['title'] for row in article_titles])

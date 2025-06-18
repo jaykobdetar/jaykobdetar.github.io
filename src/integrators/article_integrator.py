@@ -366,9 +366,11 @@ class ArticleIntegrator(BaseIntegrator):
             likes_formatted = f"{int(article['views']) // 50:,}"
             comments_formatted = f"{int(article['comments']):,}"
             
+            # Apply site branding before other replacements
+            template = self._apply_site_branding(template)
+            
             # Replace placeholders
             replacements = {
-            'MrBeast Announces Revolutionary $100M Creator Support Fund - Influencer News': f"{article['title']} - Influencer News",
             'MrBeast Announces Revolutionary $100M Creator Support Fund to Transform YouTube Landscape': article['title'],
             'Sarah Chen': article['author_info']['name'],
             'Senior Business Reporter': article['author_info']['title'],
@@ -427,6 +429,10 @@ class ArticleIntegrator(BaseIntegrator):
             
             # End of old replacement method - assign to output_html
             output_html = template
+            
+            # Add CSP nonces to output HTML for fallback method
+            nonce = self.get_current_nonce()
+            output_html = self._add_nonces_to_html(output_html, nonce)
         
         # Save the article page (using slug-based naming)
         article_filename = self.integrated_dir / f"article_{article['slug']}.html"
@@ -434,6 +440,129 @@ class ArticleIntegrator(BaseIntegrator):
             f.write(output_html)
         
         self.update_progress(f"Created article page: {article_filename}")
+    
+    def _apply_site_branding(self, html_content: str) -> str:
+        """Apply site configuration to HTML content"""
+        try:
+            site_integrator = self.get_site_integrator()
+            branding = site_integrator.get_config_section('branding')
+            contact = site_integrator.get_config_section('contact')
+            
+            # Create replacements dictionary - use site config dynamically
+            replacements = {
+                # Site name replacements
+                'Influencer News': branding.get('site_name'),
+                # Title tag replacements
+                ' - Influencer News': f" - {branding.get('site_name')}",
+                # Header logo text
+                '>IN<': f">{branding.get('logo_text')}<",
+                # Header tagline
+                'Breaking stories • Real insights': branding.get('site_tagline'),
+                # Theme color replacements
+                '#4f46e5': branding.get('theme_color'),
+                '#667eea': branding.get('theme_color'),
+                # Specific Tailwind class replacements
+                'bg-indigo-900': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}900",
+                'bg-indigo-800': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                'bg-indigo-700': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'bg-indigo-600': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'bg-indigo-500': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}500",
+                'bg-indigo-400': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                'text-indigo-900': f"text-{self._get_theme_class_name(branding.get('theme_color'))}900",
+                'text-indigo-800': f"text-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                'text-indigo-700': f"text-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'text-indigo-600': f"text-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'text-indigo-500': f"text-{self._get_theme_class_name(branding.get('theme_color'))}500",
+                'text-indigo-400': f"text-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                'text-indigo-300': f"text-{self._get_theme_class_name(branding.get('theme_color'))}300",
+                'text-indigo-200': f"text-{self._get_theme_class_name(branding.get('theme_color'))}200",
+                'text-indigo-100': f"text-{self._get_theme_class_name(branding.get('theme_color'))}100",
+                'border-indigo-700': f"border-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'border-indigo-600': f"border-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'border-indigo-500': f"border-{self._get_theme_class_name(branding.get('theme_color'))}500",
+                'border-indigo-400': f"border-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                'hover:bg-indigo-700': f"hover:bg-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'hover:bg-indigo-600': f"hover:bg-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'hover:text-indigo-600': f"hover:text-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'hover:text-indigo-200': f"hover:text-{self._get_theme_class_name(branding.get('theme_color'))}200",
+                'focus:ring-indigo-400': f"focus:ring-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                # Footer copyright
+                '© 2025 Influencer News': f"© 2025 {branding.get('site_name')}",
+                # Contact info in footer
+                'news@influencernews.com': contact.get('contact_email'),
+                '(555) 123-NEWS': contact.get('contact_phone'),
+                '123 Creator Avenue': contact.get('business_address'),
+                'Los Angeles, CA 90210': f"{contact.get('city', 'New York')}, {contact.get('state', 'NY')} {contact.get('zip_code', '10001')}"
+            }
+            
+            # Apply all replacements
+            for old_value, new_value in replacements.items():
+                if old_value and new_value:  # Only replace if both values exist and are not None
+                    html_content = html_content.replace(old_value, str(new_value))
+            
+            return html_content
+            
+        except Exception as e:
+            print(f"Warning: Could not apply site branding to article: {e}")
+            return html_content
+    
+    def _get_theme_class_name(self, theme_color: str) -> str:
+        """Convert theme color to appropriate Tailwind class name"""
+        if not theme_color:
+            return 'emerald-'
+        
+        # Map common colors to Tailwind classes
+        color_map = {
+            '#059669': 'emerald-',
+            '#10b981': 'emerald-',
+            '#3b82f6': 'blue-',
+            '#8b5cf6': 'violet-',
+            '#f59e0b': 'amber-',
+            '#ef4444': 'red-',
+            '#6b7280': 'gray-'
+        }
+        
+        return color_map.get(theme_color.lower(), 'emerald-')
+    
+    def _add_nonces_to_html(self, html: str, nonce: str) -> str:
+        """Add nonces to inline scripts and styles"""
+        import re
+        
+        # Add nonce to inline script tags that don't have it
+        script_pattern = re.compile(r'<script(?![^>]*\bnonce=)([^>]*)>', re.IGNORECASE)
+        
+        def add_nonce_to_script(match):
+            attrs = match.group(1)
+            # Skip external scripts (those with src attribute)
+            if 'src=' in attrs:
+                return match.group(0)
+            return f'<script nonce="{nonce}"{attrs}>'
+        
+        html = script_pattern.sub(add_nonce_to_script, html)
+        
+        # Add nonce to inline style tags that don't have it
+        style_pattern = re.compile(r'<style(?![^>]*\bnonce=)([^>]*)>', re.IGNORECASE)
+        
+        def add_nonce_to_style(match):
+            attrs = match.group(1)
+            return f'<style nonce="{nonce}"{attrs}>'
+        
+        html = style_pattern.sub(add_nonce_to_style, html)
+        
+        # Update CSP meta tag with current nonce
+        csp_meta_pattern = re.compile(
+            r'<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]*)"[^>]*>',
+            re.IGNORECASE
+        )
+        
+        def update_csp_meta(match):
+            # Get new CSP with nonce
+            new_csp = self.security_middleware.csp_generator.get_strict_csp(nonce)
+            return f'<meta http-equiv="Content-Security-Policy" content="{new_csp}">'
+        
+        html = csp_meta_pattern.sub(update_csp_meta, html)
+        
+        return html
     
     def update_listing_page(self, articles: List[Dict[str, Any]]):
         """Update homepage with latest articles"""

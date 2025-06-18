@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Editorial Team - Influencer News</title>
+    <title>Our Editorial Team - TheRealNews</title>
     <link rel="stylesheet" href="assets/css/styles.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,7 +52,7 @@
             100% { transform: translateX(-100%); } 
         }
         .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #059669 0%, #764ba2 100%);
             position: relative;
             overflow: hidden;
         }
@@ -98,7 +98,7 @@
             width: 80%;
             max-width: 300px;
             height: 100vh;
-            background: #312e81;
+            background: #059669;
             transition: right 0.3s ease-in-out;
             z-index: 1000;
         }
@@ -195,11 +195,11 @@
     
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-        <div class="p-6 border-b border-indigo-700">
+        <div class="p-6 border-b border-emerald-700">
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
-                        <span class="text-lg font-bold text-white">IN</span>
+                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-lg font-bold text-white">TRN</span>
                     </div>
                     <div>
                         <h2 class="text-xl font-bold text-white">Menu</h2>
@@ -217,17 +217,17 @@
             <a href="#contact" class="mobile-nav-item">📧 Contact</a>
         </nav>
         <div class="p-6 mt-auto">
-            <div class="bg-indigo-700 rounded-lg p-4">
+            <div class="bg-emerald-700 rounded-lg p-4">
                 <h3 class="text-white font-bold mb-2">Newsletter</h3>
-                <p class="text-indigo-200 text-sm mb-3">Get the latest influencer news</p>
-                <button class="bg-white text-indigo-700 px-4 py-2 rounded-md text-sm font-semibold w-full">Subscribe</button>
+                <p class="text-emerald-200 text-sm mb-3">Get the real news</p>
+                <button class="bg-white text-emerald-700 px-4 py-2 rounded-md text-sm font-semibold w-full">Subscribe</button>
             </div>
         </div>
     </div>
     
     <!-- Mobile Search Overlay -->
     <div class="mobile-search-overlay" id="mobileSearchOverlay">
-        <div class="p-4 bg-indigo-900">
+        <div class="p-4 bg-emerald-900">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-white font-bold text-lg">Search</h3>
                 <button class="text-white text-2xl" id="closeMobileSearch">&times;</button>
@@ -237,10 +237,10 @@
                     type="text" 
                     id="mobileSearchInput" 
                     placeholder="Search articles, authors..." 
-                    class="w-full p-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    class="w-full p-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-400"
                     onkeyup="handleMobileSearch(event)"
                 >
-                <button onclick="performMobileSearch()" class="absolute right-4 top-4 text-gray-600 hover:text-indigo-600 transition">
+                <button onclick="performMobileSearch()" class="absolute right-4 top-4 text-gray-600 hover:text-emerald-600 transition">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
@@ -253,15 +253,15 @@
         </div>
     </div>
     <!-- Header -->
-    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+    <header class="bg-emerald-900 text-white sticky top-0 z-50 shadow-2xl">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-4">
-                    <span class="text-2xl font-bold text-white">IN</span>
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mr-4">
+                    <span class="text-2xl font-bold text-white">TRN</span>
                 </div>
                 <div>
-                    <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
-                    <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
+                    <h1 class="text-3xl font-bold hero-title">TheRealNews</h1>
+                    <p class="text-xs text-emerald-200">Truth • Transparency • Real Stories</p>
                 </div>
             </div>
             <!-- Mobile Menu Button -->
@@ -273,12 +273,12 @@
             
             <nav class="hidden md:block">
                 <ul class="flex space-x-8">
-                    <li><a href="index.html" class="nav-link hover:text-indigo-200 transition font-medium">Home</a></li>
-                    <li><a href="search.html" class="nav-link hover:text-indigo-200 transition font-medium">Search</a></li>
-                    <li><a href="authors.html" class="nav-link hover:text-indigo-200 transition font-medium text-indigo-200">Authors</a></li>
-                    <li><a href="integrated/categories.html" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
-                    <li><a href="integrated/trending.html" class="nav-link hover:text-indigo-200 transition font-medium">Trending</a></li>
-                    <li><a href="#contact" class="nav-link hover:text-indigo-200 transition font-medium">Contact</a></li>
+                    <li><a href="index.html" class="nav-link hover:text-emerald-200 transition font-medium">Home</a></li>
+                    <li><a href="search.html" class="nav-link hover:text-emerald-200 transition font-medium">Search</a></li>
+                    <li><a href="authors.html" class="nav-link hover:text-emerald-200 transition font-medium text-emerald-200">Authors</a></li>
+                    <li><a href="integrated/categories.html" class="nav-link hover:text-emerald-200 transition font-medium">Categories</a></li>
+                    <li><a href="integrated/trending.html" class="nav-link hover:text-emerald-200 transition font-medium">Trending</a></li>
+                    <li><a href="#contact" class="nav-link hover:text-emerald-200 transition font-medium">Contact</a></li>
                 </ul>
             </nav>
             
@@ -288,10 +288,10 @@
                     type="text" 
                     id="searchInput" 
                     placeholder="Search breaking news..." 
-                    class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                    class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all"
                     onkeyup="handleSearch(event)"
                 >
-                <button onclick="performSearch()" class="absolute right-3 top-3 text-gray-600 hover:text-indigo-600 transition">
+                <button onclick="performSearch()" class="absolute right-3 top-3 text-gray-600 hover:text-emerald-600 transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
@@ -367,7 +367,7 @@
 
         <!-- Filter Buttons -->
         <div class="flex flex-wrap justify-center gap-3 mb-12">
-            <button onclick="filterAuthors('all')" class="filter-btn bg-indigo-600 text-white px-6 py-3 rounded-full font-medium hover:bg-indigo-700 transition">
+            <button onclick="filterAuthors('all')" class="filter-btn bg-emerald-600 text-white px-6 py-3 rounded-full font-medium hover:bg-emerald-700 transition">
                 All Team Members
             </button>
             <button onclick="filterAuthors('senior')" class="filter-btn bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-full font-medium hover:bg-gray-50 transition">
@@ -490,7 +490,7 @@
             </div>
             
 </div><!-- Join Our Team Section -->
-        <div class="mt-20 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-12 text-center text-white">
+        <div class="mt-20 bg-gradient-to-r from-emerald-600 to-emerald-600 rounded-3xl p-12 text-center text-white">
             <h2 class="text-3xl font-bold mb-6">Join Our Award-Winning Team</h2>
             <p class="text-xl mb-8 max-w-3xl mx-auto opacity-90">
                 We're always looking for talented journalists, analysts, and industry experts 
@@ -514,7 +514,7 @@
                 </div>
             </div>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <button class="bg-white text-indigo-600 px-8 py-4 rounded-full hover:bg-gray-100 transition font-bold text-lg">
+                <button class="bg-white text-emerald-600 px-8 py-4 rounded-full hover:bg-gray-100 transition font-bold text-lg">
                     View Open Positions
                 </button>
                 <button class="bg-white/20 text-white px-8 py-4 rounded-full hover:bg-white/30 transition font-bold text-lg">
@@ -530,16 +530,16 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div>
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
-                            <span class="text-lg font-bold">IN</span>
+                        <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-lg font-bold">TRN</span>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold">Influencer News</h3>
-                            <p class="text-sm text-gray-400">Breaking • Insights • Culture</p>
+                            <h3 class="text-xl font-bold">TheRealNews</h3>
+                            <p class="text-sm text-gray-400">Truth • Transparency • Real Stories</p>
                         </div>
                     </div>
                     <p class="text-gray-300 mb-4">
-                        The world's leading source for influencer industry news and exclusive insights.
+                        Your trusted source for unfiltered news and authentic journalism that matters
                     </p>
                 </div>
                 <div>
@@ -564,13 +564,13 @@
                     <h3 class="text-lg font-bold mb-4">Contact Info</h3>
                     <div class="space-y-3 text-gray-300">
                         <p>📧 editorial@influencernews.com</p>
-                        <p>📞 (555) 123-NEWS</p>
-                        <p>📍 123 Creator Avenue<br>Los Angeles, CA 90210</p>
+                        <p>📞 (555) 123-REAL</p>
+                        <p>📍 456 Truth Boulevard<br>New York, NY 10001</p>
                     </div>
                 </div>
             </div>
             <div class="border-t border-gray-700 pt-8 text-center">
-                <p class="text-gray-400 text-sm">© 2025 Influencer News. All rights reserved.</p>
+                <p class="text-gray-400 text-sm">© 2025 TheRealNews. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -585,7 +585,7 @@
             buttons.forEach(btn => {
                 btn.className = 'filter-btn bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-full font-medium hover:bg-gray-50 transition';
             });
-            event.target.className = 'filter-btn bg-indigo-600 text-white px-6 py-3 rounded-full font-medium hover:bg-indigo-700 transition';
+            event.target.className = 'filter-btn bg-emerald-600 text-white px-6 py-3 rounded-full font-medium hover:bg-emerald-700 transition';
             
             // Filter cards
             cards.forEach(card => {

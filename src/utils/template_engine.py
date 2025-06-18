@@ -139,6 +139,14 @@ class ArticleTemplate(TemplateEngine):
     def __init__(self):
         super().__init__()
         self.article_template = None
+        
+        # Import security middleware for nonce generation
+        try:
+            from .security_middleware import security_middleware
+            self.security_middleware = security_middleware
+        except ImportError:
+            from src.utils.security_middleware import security_middleware
+            self.security_middleware = security_middleware
     
     def load_article_template(self, template_path: str):
         """Load the main article template"""
@@ -146,17 +154,26 @@ class ArticleTemplate(TemplateEngine):
             self.article_template = f.read()
     
     def render_article(self, article_data: Dict[str, Any], base_path: str = '../../') -> str:
-        """Render article with proper data structure"""
+        """Render article with proper data structure and CSP nonces"""
+        
+        # Generate nonce for this article page
+        nonce = self.security_middleware.generate_nonce()
         
         # Prepare context with all needed data
         context = {
             'base_path': base_path,
+            'nonce': nonce,
             'article': article_data,
             'meta': {
                 'title': f"{article_data['title']} - Influencer News",
                 'description': article_data.get('excerpt', ''),
                 'author': article_data.get('author_name', ''),
                 'publish_date': article_data.get('publish_date', ''),
+            },
+            'security': {
+                'csp_meta_tags': self.security_middleware.get_meta_tags(),
+                'nonce': nonce,
+                'csrf_token': self.security_middleware.generate_csrf_token()
             },
             'links': {
                 'home': f"{base_path}index.html",
@@ -175,7 +192,40 @@ class ArticleTemplate(TemplateEngine):
             }
         }
         
-        return self.render(self.article_template, context)
+        # Render template
+        rendered_html = self.render(self.article_template, context)
+        
+        # Add nonces to any remaining inline scripts/styles that weren't templated
+        rendered_html = self._add_nonces_to_inline_content(rendered_html, nonce)
+        
+        return rendered_html
+    
+    def _add_nonces_to_inline_content(self, html: str, nonce: str) -> str:
+        """Add nonces to inline scripts and styles that weren't templated"""
+        import re
+        
+        # Add nonce to inline script tags that don't have it
+        script_pattern = re.compile(r'<script(?![^>]*\bnonce=)([^>]*)>', re.IGNORECASE)
+        
+        def add_nonce_to_script(match):
+            attrs = match.group(1)
+            # Skip external scripts (those with src attribute)
+            if 'src=' in attrs:
+                return match.group(0)
+            return f'<script nonce="{nonce}"{attrs}>'
+        
+        html = script_pattern.sub(add_nonce_to_script, html)
+        
+        # Add nonce to inline style tags that don't have it
+        style_pattern = re.compile(r'<style(?![^>]*\bnonce=)([^>]*)>', re.IGNORECASE)
+        
+        def add_nonce_to_style(match):
+            attrs = match.group(1)
+            return f'<style nonce="{nonce}"{attrs}>'
+        
+        html = style_pattern.sub(add_nonce_to_style, html)
+        
+        return html
 
 
 def main():

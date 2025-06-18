@@ -1,0 +1,25 @@
+METADATA:
+Type: site-content
+Version: 1.0
+
+CONTENT:
+Copyright Text: © 2025 TheRealNews. All rights reserved.
+Newsletter Title: Newsletter
+Newsletter Button Text: Subscribe
+Newsletter CTA: Subscribe
+Privacy Policy URL: #privacy
+Terms of Service URL: #terms
+About Text: Your trusted source for unfiltered news and authentic journalism that matters.
+Footer Description: Your trusted source for unfiltered news and authentic journalism that matters.
+Search Placeholder: Search news, reporters...
+Search Main Placeholder: Search for news articles, reporters, topics...
+No Results Title: No Results Found
+No Results Message: We couldn't find any content matching your search. Try different keywords or browse our categories.
+Initial Search Title: Start Your Search
+Initial Search Message: Enter a search term above to find news articles, reporters, and trending topics.
+Loading Message: Loading...
+Error Message: Something went wrong. Please try again.
+404 Title: Page Not Found
+404 Message: The page you're looking for doesn't exist.
+Offline Title: You're Offline
+Offline Message: Please check your internet connection and try again.

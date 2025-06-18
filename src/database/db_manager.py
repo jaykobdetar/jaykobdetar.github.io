@@ -11,21 +11,28 @@ from contextlib import contextmanager
 from datetime import datetime
 import logging
 
+# Import configuration
+try:
+    from ..utils.config import config
+except ImportError:
+    from src.utils.config import config
+
 class DatabaseManager:
     """Manages SQLite database connections and operations"""
     
-    def __init__(self, db_path: str = "data/infnews.db"):
+    def __init__(self, db_path: str = None):
         """
         Initialize database manager
         
         Args:
-            db_path: Path to SQLite database file
+            db_path: Path to SQLite database file (defaults to config value)
         """
-        self.db_path = db_path
+        # Use config value if no path provided
+        self.db_path = db_path or config.get_database_path()
         self.logger = logging.getLogger(__name__)
         
         # Ensure data directory exists
-        os.makedirs(os.path.dirname(db_path), exist_ok=True)
+        os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         
         # Initialize database if needed
         self._initialize_database()
@@ -182,16 +189,16 @@ class DatabaseManager:
         """Create new article"""
         query = """
         INSERT INTO articles (title, slug, excerpt, content, author_id, category_id,
-                            status, featured, trending, publish_date, image_url, 
+                            featured, trending, publish_date, image_url, 
                             hero_image_url, thumbnail_url, tags, views, likes, 
                             comments, read_time_minutes, seo_title, seo_description,
                             mobile_title, mobile_excerpt, mobile_hero_image_id, 
                             last_modified)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
         params = (
             title, slug, kwargs.get('excerpt'), content, author_id, category_id,
-            kwargs.get('status', 'draft'), kwargs.get('featured', False),
+            kwargs.get('featured', False),
             kwargs.get('trending', False), publish_date, kwargs.get('image_url'),
             kwargs.get('hero_image_url'), kwargs.get('thumbnail_url'),
             kwargs.get('tags'), kwargs.get('views', 0), kwargs.get('likes', 0),
@@ -372,7 +379,7 @@ class DatabaseManager:
     def update_article(self, article_id: int, **kwargs) -> int:
         """Update article record"""
         allowed_fields = ['title', 'slug', 'excerpt', 'content', 'author_id', 'category_id',
-                         'status', 'featured', 'trending', 'publish_date', 'image_url',
+                         'featured', 'trending', 'publish_date', 'image_url',
                          'hero_image_url', 'thumbnail_url', 'tags', 'views', 'likes',
                          'comments', 'read_time_minutes', 'seo_title', 'seo_description',
                          'mobile_title', 'mobile_excerpt', 'mobile_hero_image_id',

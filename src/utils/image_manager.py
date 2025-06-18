@@ -10,17 +10,24 @@ from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 import logging
 
+# Import configuration
+try:
+    from .config import config
+except ImportError:
+    from src.utils.config import config
+
 class ImageManager:
     """Manages image paths and conversions from URLs to local files"""
     
-    def __init__(self, base_path: str = "assets/images"):
+    def __init__(self, base_path: str = None):
         """
         Initialize image manager
         
         Args:
-            base_path: Base path for image storage
+            base_path: Base path for image storage (defaults to config value)
         """
-        self.base_path = base_path
+        # Use config value if no path provided
+        self.base_path = base_path or config.get('paths.images_dir', 'assets/images')
         self.logger = logging.getLogger(__name__)
         
         # Image type mappings
@@ -180,13 +187,17 @@ class ImageManager:
             'dimensions': dimensions or ''
         })
     
-    def save_procurement_list(self, filepath: str = "data/image_procurement_list.csv") -> None:
+    def save_procurement_list(self, filepath: str = None) -> None:
         """
         Save procurement list to CSV file
         
         Args:
-            filepath: Path to save CSV file
+            filepath: Path to save CSV file (defaults to config value)
         """
+        # Use config value if no path provided
+        if filepath is None:
+            filepath = config.get('images.procurement_file', 'data/image_procurement_list.csv')
+        
         if not self.procurement_list:
             self.logger.warning("No images to save in procurement list")
             return
@@ -204,6 +215,55 @@ class ImageManager:
             writer.writerows(self.procurement_list)
         
         self.logger.info(f"Saved {len(self.procurement_list)} images to procurement list")
+    
+    def validate_image_file(self, file_path: str, file_size_bytes: int = None) -> bool:
+        """
+        Validate image file against configuration rules
+        
+        Args:
+            file_path: Path to image file
+            file_size_bytes: File size in bytes (optional)
+            
+        Returns:
+            True if valid, False otherwise
+        """
+        # Check file extension
+        allowed_extensions = config.get('images.allowed_extensions', ['.jpg', '.jpeg', '.png', '.gif', '.webp'])
+        file_ext = os.path.splitext(file_path)[1].lower()
+        
+        if file_ext not in allowed_extensions:
+            self.logger.warning(f"Invalid image extension {file_ext}. Allowed: {allowed_extensions}")
+            return False
+        
+        # Check file size if provided
+        if file_size_bytes is not None:
+            max_size_mb = config.get('images.max_file_size_mb', 10)
+            max_size_bytes = max_size_mb * 1024 * 1024
+            
+            if file_size_bytes > max_size_bytes:
+                self.logger.warning(f"Image file too large: {file_size_bytes} bytes (max: {max_size_bytes} bytes)")
+                return False
+        
+        return True
+    
+    def get_thumbnail_size(self) -> Tuple[int, int]:
+        """
+        Get thumbnail size from configuration
+        
+        Returns:
+            Tuple of (width, height)
+        """
+        size_config = config.get('images.thumbnail_size', [300, 200])
+        return tuple(size_config) if isinstance(size_config, list) else (300, 200)
+    
+    def should_generate_thumbnails(self) -> bool:
+        """
+        Check if thumbnails should be generated based on configuration
+        
+        Returns:
+            True if thumbnails should be generated
+        """
+        return config.get('images.generate_thumbnails', True)
     
     def create_directory_structure(self) -> None:
         """Create necessary directory structure for images"""

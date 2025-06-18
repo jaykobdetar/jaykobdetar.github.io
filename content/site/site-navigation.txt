@@ -1,0 +1,34 @@
+METADATA:
+Type: site-navigation
+Version: 1.0
+
+CONTENT:
+Main Navigation Items:
+- Home: index.html
+- Search: search.html
+- Authors: authors.html
+- Categories: integrated/categories.html
+- Trending: integrated/trending.html
+
+Footer Quick Links:
+- Latest News: index.html
+- Search: search.html
+- Authors: authors.html
+- Categories: integrated/categories.html
+
+Footer Category Links:
+- Business: search.html?category=business
+- Entertainment: search.html?category=entertainment
+- Beauty & Fashion: search.html?category=fashion
+- Technology: search.html?category=technology
+
+Mobile Menu Items:
+- Home: index.html
+- Search: search.html
+- Authors: authors.html
+- Categories: integrated/categories.html
+- Trending: integrated/trending.html
+- Contact: #contact
+
+Breadcrumb Separator: /
+Home Breadcrumb: Home

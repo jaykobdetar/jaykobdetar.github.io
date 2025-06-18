@@ -1,10 +1,10 @@
 
 // Auto-generated homepage data from database
-// Generated at: 2025-06-18T07:58:56.558197
+// Generated at: 2025-06-18T17:11:14.276270
 
 const homepageArticles = [
   {
-    "id": 10,
+    "id": 17,
     "title": "New Platform Update Changes Everything for Creators",
     "excerpt": "Major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025.",
     "slug": "new-platform-update-changes-everything-for-creators",
@@ -14,7 +14,7 @@ const homepageArticles = [
     "category_slug": "technology",
     "category_color": "#3B82F6",
     "category_icon": "\ud83d\ude80",
-    "publish_date": "2025-06-18T07:31:02.336411",
+    "publish_date": "2025-06-18T17:11:14.259243",
     "views": 0,
     "likes": 0,
     "read_time_minutes": 1,

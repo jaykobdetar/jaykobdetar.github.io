@@ -1,0 +1,21 @@
+METADATA:
+Type: site-contact
+Version: 1.0
+
+CONTENT:
+Contact Email: news@therealnews.com
+Contact Phone: (555) 123-REAL
+Business Address: 456 Truth Boulevard
+City: New York
+State: NY
+Zip Code: 10001
+Country: United States
+Twitter: @therealnews
+Instagram: @therealnews
+LinkedIn: therealnews
+Facebook: therealnews
+YouTube: TheRealNewsChannel
+Newsletter Signup Text: Get the real news
+Newsletter Description: Stay informed with authentic journalism, breaking stories, and investigative reports that matter.
+Support Email: support@therealnews.com
+Tips Email: tips@therealnews.com

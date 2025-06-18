@@ -125,7 +125,7 @@
 [x] Remove fallback DatabaseManager in mobile_api_generator.py (COMPLETED - uses main DatabaseManager)
 [x] Add onupgradeneeded handler for IndexedDB in sw.js (COMPLETED - in PWA implementation)
 [x] Define /api/analytics endpoint or remove from sw.js (COMPLETED - analytics API implemented)
-[x] Include offline.html in service worker STATIC_ASSETS (COMPLETED - offline.html cached)
+[x] Include offline.html in service worker STATIC_ASSETS (COMPLETED - offline.html cached)z
 ## Notes
 - Items marked with [x] are already completed
 - Items marked with [ ] need to be done

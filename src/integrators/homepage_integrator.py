@@ -28,6 +28,32 @@ class HomepageIntegrator:
         self.template_file = self.project_root / "templates" / "homepage_template.html"
         self.output_file = self.project_root / "index.html"
         
+        # Import security middleware for nonce generation
+        try:
+            from ..utils.security_middleware import security_middleware
+            from ..utils.config import config
+            self.security_middleware = security_middleware
+            self.config = config
+        except ImportError:
+            from src.utils.security_middleware import security_middleware
+            from src.utils.config import config
+            self.security_middleware = security_middleware
+            self.config = config
+            
+        # Initialize site integrator for site-wide configuration
+        self._site_integrator = None
+    
+    def get_site_integrator(self):
+        """Get site integrator instance (lazy loading)"""
+        if self._site_integrator is None:
+            # Import here to avoid circular imports
+            try:
+                from .site_integrator import SiteIntegrator
+            except ImportError:
+                from src.integrators.site_integrator import SiteIntegrator
+            self._site_integrator = SiteIntegrator()
+        return self._site_integrator
+        
     def generate_homepage(self, force_update: bool = False) -> bool:
         """Generate the homepage with current database content"""
         
@@ -38,9 +64,8 @@ class HomepageIntegrator:
             # Generate JavaScript data file
             self._generate_homepage_js(articles)
             
-            # If index.html doesn't exist or force_update is True, create from template
-            if not self.output_file.exists() or force_update:
-                self._generate_homepage_html(articles)
+            # Always update HTML to ensure proper CSP nonces
+            self._generate_homepage_html(articles)
             
             print(f"✅ Homepage updated with {len(articles)} articles")
             return True
@@ -49,8 +74,12 @@ class HomepageIntegrator:
             print(f"❌ Homepage generation failed: {e}")
             return False
     
-    def _get_homepage_articles(self, limit: int = 6) -> List[Dict[str, Any]]:
+    def _get_homepage_articles(self, limit: int = None) -> List[Dict[str, Any]]:
         """Get latest published articles for homepage"""
+        
+        # Use config limit if none provided
+        if limit is None:
+            limit = self.config.get('limits.articles_per_page', 6)
         
         query = """
         SELECT 
@@ -62,7 +91,6 @@ class HomepageIntegrator:
         FROM articles a
         JOIN authors au ON a.author_id = au.id
         JOIN categories c ON a.category_id = c.id
-        WHERE a.status = 'published'
         ORDER BY a.publish_date DESC
         LIMIT ?
         """
@@ -255,11 +283,152 @@ if (typeof window !== 'undefined') {{
         print(f"✅ Homepage JavaScript updated: {js_file}")
     
     def _generate_homepage_html(self, articles: List[Dict[str, Any]]) -> None:
-        """Generate homepage HTML from template"""
+        """Generate homepage HTML with proper CSP nonces"""
         
-        # For now, we'll keep the existing index.html as it's already properly configured
-        # This method would be used if we had a template-based approach
-        print("📝 Homepage HTML structure maintained (using existing index.html)")
+        # Read the current index.html
+        with open(self.output_file, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        
+        # Generate a new nonce for this page
+        nonce = self.security_middleware.generate_nonce()
+        
+        # Add nonce to all inline script tags
+        import re
+        
+        # Pattern to find script tags without nonce
+        script_pattern = re.compile(r'<script(?![^>]*\bnonce=)([^>]*)>', re.IGNORECASE)
+        
+        def add_nonce_to_script(match):
+            attrs = match.group(1)
+            # Skip external scripts (those with src attribute)
+            if 'src=' in attrs:
+                return match.group(0)
+            return f'<script nonce="{nonce}"{attrs}>'
+        
+        html_content = script_pattern.sub(add_nonce_to_script, html_content)
+        
+        # Add nonce to all inline style tags
+        style_pattern = re.compile(r'<style(?![^>]*\bnonce=)([^>]*)>', re.IGNORECASE)
+        
+        def add_nonce_to_style(match):
+            attrs = match.group(1)
+            return f'<style nonce="{nonce}"{attrs}>'
+        
+        html_content = style_pattern.sub(add_nonce_to_style, html_content)
+        
+        # Update the CSP meta tag with the current nonce
+        csp_meta_pattern = re.compile(
+            r'<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]*)"[^>]*>',
+            re.IGNORECASE
+        )
+        
+        def update_csp_meta(match):
+            old_csp = match.group(1)
+            # Get new CSP with nonce
+            new_csp = self.security_middleware.csp_generator.get_strict_csp(nonce)
+            return f'<meta http-equiv="Content-Security-Policy" content="{new_csp}">'
+        
+        html_content = csp_meta_pattern.sub(update_csp_meta, html_content)
+        
+        # Apply site configuration to HTML content
+        html_content = self._apply_site_branding(html_content)
+        
+        # Write the updated HTML with nonces
+        with open(self.output_file, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+        
+        print(f"📝 Homepage HTML updated with CSP nonce: {nonce}")
+    
+    def _apply_site_branding(self, html_content: str) -> str:
+        """Apply site configuration to HTML content"""
+        site_integrator = self.get_site_integrator()
+        
+        # Get all site configurations
+        branding = site_integrator.get_branding_config()
+        contact = site_integrator.get_contact_config()
+        content_config = site_integrator.get_content_config()
+        
+        # Site branding replacements
+        replacements = {
+            # Title and meta tags
+            'Influencer News - Your Source for Influencer Culture': f"{branding.get('site_name', 'TheRealNews')} - {branding.get('site_description', 'Your trusted source for unfiltered news')}",
+            'Influencer News': branding.get('site_name', 'TheRealNews'),
+            
+            # Theme colors - comprehensive replacement
+            '#4f46e5': branding.get('theme_color', '#059669'),  # indigo-500
+            '#6366f1': branding.get('theme_color', '#059669'),  # indigo-500 variant
+            '#312e81': branding.get('theme_color', '#059669'),  # indigo-900
+            '#4338ca': branding.get('theme_color', '#059669'),  # indigo-700
+            '#3730a3': branding.get('theme_color', '#059669'),  # indigo-800
+            '#1e1b4b': branding.get('theme_color', '#059669'),  # indigo-950
+            '#667eea': branding.get('theme_color', '#059669'),  # custom indigo
+            
+            # Logo text in headers
+            '>IN<': f">{branding.get('logo_text', 'TRN')}<",
+            'text-2xl font-bold text-white">IN<': f'text-2xl font-bold text-white">{branding.get("logo_text", "TRN")}<',
+            
+            # Taglines
+            'Breaking stories • Real insights': branding.get('site_tagline', 'Truth • Transparency • Real Stories'),
+            'Breaking • Insights • Culture': branding.get('site_subtitle', 'Truth • Transparency • Authenticity'),
+            
+            # Tailwind class replacements - comprehensive
+            'bg-indigo-900': f"bg-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}900",
+            'bg-indigo-800': f"bg-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}800",
+            'bg-indigo-700': f"bg-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}700",
+            'bg-indigo-600': f"bg-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}600",
+            'text-indigo-600': f"text-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}600",
+            'text-indigo-200': f"text-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}200",
+            'border-indigo-700': f"border-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}700",
+            'hover:text-indigo-200': f"hover:text-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}200",
+            'hover:text-indigo-600': f"hover:text-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}600",
+            'focus:ring-indigo-400': f"focus:ring-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}400",
+            'from-indigo-400': f"from-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}400",
+            'from-indigo-600': f"from-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}600",
+            'to-purple-600': f"to-{self._get_theme_class_name(branding.get('theme_color', '#059669'))}600",
+            
+            # Contact information
+            'news@influencernews.com': contact.get('contact_email', 'news@therealnews.com'),
+            '(555) 123-NEWS': contact.get('contact_phone', '(555) 123-REAL'),
+            '123 Creator Avenue': contact.get('business_address', '456 Truth Boulevard'),
+            'Los Angeles, CA 90210': f"{contact.get('city', 'New York')}, {contact.get('state', 'NY')} {contact.get('zip_code', '10001')}",
+            
+            # Copyright
+            '© 2025 Influencer News. All rights reserved.': content_config.get('copyright_text', '© 2025 TheRealNews. All rights reserved.'),
+            
+            # Footer description
+            'The world\'s leading source for influencer industry news and exclusive insights.': content_config.get('footer_description', 'Your trusted source for unfiltered news and authentic journalism that matters.'),
+            
+            # Search placeholders
+            'Search articles, authors...': content_config.get('search_placeholder', 'Search news, reporters...'),
+            'Search for articles, authors, topics...': content_config.get('search_main_placeholder', 'Search for news articles, reporters, topics...'),
+            
+            # Newsletter text
+            'Get the latest influencer news': contact.get('newsletter_signup_text', 'Get the real news'),
+        }
+        
+        # Apply all replacements
+        for old_text, new_text in replacements.items():
+            html_content = html_content.replace(old_text, new_text)
+        
+        return html_content
+    
+    def _get_theme_class_name(self, theme_color: str) -> str:
+        """Convert theme color to appropriate Tailwind class name"""
+        if not theme_color:
+            return 'emerald-'
+        
+        # Map common colors to Tailwind classes
+        color_map = {
+            '#059669': 'emerald-',
+            '#10b981': 'emerald-',
+            '#3b82f6': 'blue-',
+            '#8b5cf6': 'violet-',
+            '#f59e0b': 'amber-',
+            '#ef4444': 'red-',
+            '#6b7280': 'gray-'
+        }
+        
+        return color_map.get(theme_color.lower(), 'emerald-')
         
     def sync_with_files(self) -> bool:
         """Sync homepage with current database content"""

@@ -26,7 +26,6 @@ class Article(BaseModel):
         self.content: str = kwargs.get('content', '')  # Full article content
         self.author_id: int = kwargs.get('author_id', 0)
         self.category_id: int = kwargs.get('category_id', 0)
-        self.status: str = kwargs.get('status', 'draft')  # draft, published, archived
         self.featured: bool = kwargs.get('featured', False)
         self.trending: bool = kwargs.get('trending', False)
         self.publish_date: Optional[str] = kwargs.get('publish_date')  # When article was published
@@ -109,7 +108,6 @@ class Article(BaseModel):
             'content': self.content,
             'author_id': self.author_id,
             'category_id': self.category_id,
-            'status': self.status,
             'publish_date': self.publish_date,
             'read_time_minutes': self.read_time_minutes,
             'tags': self.tags,
@@ -157,7 +155,7 @@ class Article(BaseModel):
                 query = """
                 UPDATE articles 
                 SET title = ?, slug = ?, excerpt = ?, content = ?, author_id = ?, category_id = ?,
-                    status = ?, featured = ?, trending = ?, publish_date = ?, image_url = ?,
+                    featured = ?, trending = ?, publish_date = ?, image_url = ?,
                     hero_image_url = ?, thumbnail_url = ?, tags = ?, views = ?, likes = ?,
                     comments = ?, read_time_minutes = ?, seo_title = ?, seo_description = ?,
                     mobile_title = ?, mobile_excerpt = ?, mobile_hero_image_id = ?,
@@ -166,7 +164,7 @@ class Article(BaseModel):
                 """
                 tags_json = json.dumps(self.tags) if self.tags else None
                 params = (self.title, self.slug, self.excerpt, self.content, self.author_id,
-                         self.category_id, self.status, self.featured, self.trending,
+                         self.category_id, self.featured, self.trending,
                          self.publish_date, self.image_url, self.hero_image_url,
                          self.thumbnail_url, tags_json, self.views, self.likes,
                          self.comments, self.read_time_minutes, self.seo_title,
@@ -177,17 +175,17 @@ class Article(BaseModel):
                 # Create new article
                 query = """
                 INSERT INTO articles (title, slug, excerpt, content, author_id, category_id,
-                                    status, featured, trending, publish_date, image_url,
+                                    featured, trending, publish_date, image_url,
                                     hero_image_url, thumbnail_url, tags, views, likes,
                                     comments, read_time_minutes, seo_title, seo_description,
                                     mobile_title, mobile_excerpt, mobile_hero_image_id,
                                     created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
                         CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
                 """
                 tags_json = json.dumps(self.tags) if self.tags else None
                 params = (self.title, self.slug, self.excerpt, self.content, self.author_id,
-                         self.category_id, self.status, self.featured, self.trending,
+                         self.category_id, self.featured, self.trending,
                          self.publish_date, self.image_url, self.hero_image_url,
                          self.thumbnail_url, tags_json, self.views, self.likes,
                          self.comments, self.read_time_minutes, self.seo_title,
@@ -412,25 +410,6 @@ class Article(BaseModel):
             'responsive_images': self.get_responsive_images()
         }
     
-    def publish(self) -> None:
-        """Publish the article"""
-        if self.status != 'published':
-            self.status = 'published'
-            if not self.publish_date:
-                from datetime import datetime
-                self.publish_date = datetime.now().isoformat()
-            self.save()
-    
-    def unpublish(self) -> None:
-        """Unpublish the article (set to draft)"""
-        self.status = 'draft'
-        self.save()
-    
-    def archive(self) -> None:
-        """Archive the article"""
-        self.status = 'archived'
-        self.save()
-    
     def feature(self) -> None:
         """Mark article as featured"""
         self.featured = True
@@ -471,7 +450,7 @@ class Article(BaseModel):
         """Find published articles"""
         db = cls.get_db()
         
-        where_clauses = ["status = 'published'"]
+        where_clauses = []
         params = []
         
         if category_id:
@@ -501,7 +480,7 @@ class Article(BaseModel):
         db = cls.get_db()
         query = """
         SELECT * FROM article_full_view 
-        WHERE featured = 1 AND status = 'published'
+        WHERE featured = 1
         ORDER BY publish_date DESC 
         LIMIT ?
         """
@@ -514,7 +493,7 @@ class Article(BaseModel):
         db = cls.get_db()
         query = """
         SELECT * FROM article_full_view 
-        WHERE trending = 1 AND status = 'published'
+        WHERE trending = 1
         ORDER BY views DESC, publish_date DESC 
         LIMIT ?
         """
@@ -572,4 +551,4 @@ class Article(BaseModel):
     subtitle = property(lambda self: self.excerpt)
 
     def __repr__(self) -> str:
-        return f"<Article id={self.id} slug='{self.slug}' status='{self.status}' title='{self.title}'>"
+        return f"<Article id={self.id} slug='{self.slug}' title='{self.title}'>"

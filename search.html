@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Results - Influencer News</title>
+    <title>Search Results - TheRealNews</title>
     <link rel="stylesheet" href="assets/css/styles.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' http://localhost:8080; media-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-crypto-secure-random-nonce' https://cdn.jsdelivr.net; style-src 'self' 'nonce-crypto-secure-random-nonce' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; media-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     
-    <style>
+    <style nonce="crypto-secure-random-nonce">
         body { 
             font-family: 'Inter', sans-serif; 
             line-height: 1.6; 
@@ -77,7 +78,7 @@
             width: 80%;
             max-width: 300px;
             height: 100vh;
-            background: #312e81;
+            background: #059669;
             transition: right 0.3s ease-in-out;
             z-index: 1000;
         }
@@ -155,11 +156,11 @@
     
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-        <div class="p-6 border-b border-indigo-700">
+        <div class="p-6 border-b border-emerald-700">
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
-                        <span class="text-lg font-bold text-white">IN</span>
+                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-lg font-bold text-white">TRN</span>
                     </div>
                     <div>
                         <h2 class="text-xl font-bold text-white">Menu</h2>
@@ -177,24 +178,24 @@
             <a href="#contact" class="mobile-nav-item">Contact</a>
         </nav>
         <div class="p-6 mt-auto">
-            <div class="bg-indigo-700 rounded-lg p-4">
+            <div class="bg-emerald-700 rounded-lg p-4">
                 <h3 class="text-white font-bold mb-2">Newsletter</h3>
-                <p class="text-indigo-200 text-sm mb-3">Get the latest influencer news</p>
-                <button class="bg-white text-indigo-700 px-4 py-2 rounded-md text-sm font-semibold w-full">Subscribe</button>
+                <p class="text-emerald-200 text-sm mb-3">Get the real news</p>
+                <button class="bg-white text-emerald-700 px-4 py-2 rounded-md text-sm font-semibold w-full">Subscribe</button>
             </div>
         </div>
     </div>
 
     <!-- Header -->
-    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+    <header class="bg-emerald-900 text-white sticky top-0 z-50 shadow-2xl">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-4">
-                    <span class="text-2xl font-bold text-white">IN</span>
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mr-4">
+                    <span class="text-2xl font-bold text-white">TRN</span>
                 </div>
                 <div>
-                    <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
-                    <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
+                    <h1 class="text-3xl font-bold hero-title">TheRealNews</h1>
+                    <p class="text-xs text-emerald-200">Truth • Transparency • Real Stories</p>
                 </div>
             </div>
             <!-- Mobile Menu Button -->
@@ -206,11 +207,11 @@
             
             <nav class="hidden md:block">
                 <ul class="flex space-x-8">
-                    <li><a href="index.html" class="nav-link hover:text-indigo-200 transition font-medium">Home</a></li>
-                    <li><a href="search.html" class="nav-link hover:text-indigo-200 transition font-medium text-indigo-200">Search</a></li>
-                    <li><a href="authors.html" class="nav-link hover:text-indigo-200 transition font-medium">Authors</a></li>
-                    <li><a href="integrated/categories.html" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
-                    <li><a href="integrated/trending.html" class="nav-link hover:text-indigo-200 transition font-medium">Trending</a></li>
+                    <li><a href="index.html" class="nav-link hover:text-emerald-200 transition font-medium">Home</a></li>
+                    <li><a href="search.html" class="nav-link hover:text-emerald-200 transition font-medium text-emerald-200">Search</a></li>
+                    <li><a href="authors.html" class="nav-link hover:text-emerald-200 transition font-medium">Authors</a></li>
+                    <li><a href="integrated/categories.html" class="nav-link hover:text-emerald-200 transition font-medium">Categories</a></li>
+                    <li><a href="integrated/trending.html" class="nav-link hover:text-emerald-200 transition font-medium">Trending</a></li>
                 </ul>
             </nav>
             <div class="relative hidden md:block">
@@ -218,9 +219,10 @@
                     type="text" 
                     id="searchInput" 
                     placeholder="Search articles, authors..." 
-                    class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+                    class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all"
+                    onkeyup="handleSearch(event)"
                 >
-                <button id="headerSearchButton" class="absolute right-3 top-3 text-gray-600 hover:text-indigo-600 transition">
+                <button onclick="performSearch()" class="absolute right-3 top-3 text-gray-600 hover:text-emerald-600 transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
@@ -252,7 +254,7 @@
                     <p id="searchStats" class="text-sm text-gray-500"></p>
                     <div class="flex items-center space-x-2 mt-2">
                         <span class="text-sm text-gray-500">Type:</span>
-                        <select id="typeFilter" class="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                        <select id="typeFilter" onchange="filterResults()" class="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-emerald-400">
                             <option value="all">All Types</option>
                             <option value="article">Articles</option>
                             <option value="author">Authors</option>
@@ -270,9 +272,10 @@
                         type="text" 
                         id="mainSearchInput" 
                         placeholder="Search for articles, authors, topics..." 
-                        class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                        onkeyup="handleMainSearch(event)"
                     >
-                    <button id="mainSearchButton" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">
+                    <button onclick="performMainSearch()" class="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition">
                         Search
                     </button>
                 </div>
@@ -299,7 +302,7 @@
                 We couldn't find any content matching your search. Try different keywords or browse our categories.
             </p>
             <div class="flex flex-wrap justify-center gap-3">
-                <a href="integrated/categories.html" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">Browse Categories</a>
+                <a href="integrated/categories.html" class="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition">Browse Categories</a>
                 <a href="integrated/trending.html" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition">View Trending</a>
             </div>
         </div>
@@ -320,16 +323,16 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div>
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
-                            <span class="text-lg font-bold">IN</span>
+                        <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-lg font-bold">TRN</span>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold">Influencer News</h3>
-                            <p class="text-sm text-gray-400">Breaking • Insights • Culture</p>
+                            <h3 class="text-xl font-bold">TheRealNews</h3>
+                            <p class="text-sm text-gray-400">Truth • Transparency • Real Stories</p>
                         </div>
                     </div>
                     <p class="text-gray-300 mb-4">
-                        The world's leading source for influencer industry news and exclusive insights.
+                        Your trusted source for unfiltered news and authentic journalism that matters
                     </p>
                 </div>
                 <div>
@@ -353,14 +356,14 @@
                 <div>
                     <h3 class="text-lg font-bold mb-4">Contact Info</h3>
                     <div class="space-y-3 text-gray-300">
-                        <p>📧 news@influencernews.com</p>
-                        <p>📞 (555) 123-NEWS</p>
-                        <p>📍 123 Creator Avenue<br>Los Angeles, CA 90210</p>
+                        <p>📧 news@therealnews.com</p>
+                        <p>📞 (555) 123-REAL</p>
+                        <p>📍 456 Truth Boulevard<br>New York, NY 10001</p>
                     </div>
                 </div>
             </div>
             <div class="border-t border-gray-700 pt-8 text-center">
-                <p class="text-gray-400 text-sm">© 2025 Influencer News. All rights reserved.</p>
+                <p class="text-gray-400 text-sm">© 2025 TheRealNews. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -369,7 +372,6 @@
         // Search functionality
         let currentResults = { query: '', articles: [], authors: [], categories: [], trending: [] };
         let filteredResults = { total_results: 0 };
-        let searchTimeout = null;
 
         // Mobile Menu Functionality
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
@@ -431,44 +433,31 @@
 
         function performMainSearch() {
             const query = document.getElementById('mainSearchInput').value;
-            console.log('performMainSearch called with query:', query);
             if (query.trim()) {
-                // Clear any pending search timeout
-                if (searchTimeout) {
-                    clearTimeout(searchTimeout);
-                }
-                
-                // Add a small delay to prevent rapid repeated searches
-                searchTimeout = setTimeout(() => {
-                    console.log('Starting search for:', query);
-                    searchDatabase(query);
-                }, 300);
-            } else {
-                console.log('Empty query, not searching');
+                searchDatabase(query);
             }
         }
 
         async function searchDatabase(query) {
-            console.log('Searching for:', query);
-            
-            // Clear previous results and show loading
+            // Clear previous results and reset state
             clearPreviousResults();
             showLoading();
             hideInitialState();
             hideNoResults();
 
             try {
-                // Use the clean search API
-                const results = await window.searchAPI.search(query, {
+                // Use the search API integration
+                const results = await searchAPI.search(query, {
                     limit: 20,
-                    offset: 0
+                    offset: 0,
+                    content_type: 'all'
                 });
 
                 hideLoading();
+                currentResults = results;
+                filteredResults = results;
                 
-                if (results && results.total_results > 0) {
-                    currentResults = results;
-                    filteredResults = results;
+                if (results.total_results > 0) {
                     displayResults(results);
                     updateSearchStats();
                 } else {
@@ -477,7 +466,7 @@
             } catch (error) {
                 console.error('Search failed:', error);
                 hideLoading();
-                showSearchError(error.message || 'Search failed. Make sure the search API server is running on localhost:8080');
+                showSearchError(error.message);
             }
         }
 
@@ -498,7 +487,7 @@
                                     <span class="category-${article.category_name} bg-gray-100 px-2 py-1 rounded text-xs font-bold uppercase">${article.category_name}</span>
                                     <span class="text-xs text-gray-500">${article.category_icon}</span>
                                 </div>
-                                <h3 class="text-xl font-bold mb-2 hover:text-indigo-600 transition cursor-pointer">
+                                <h3 class="text-xl font-bold mb-2 hover:text-emerald-600 transition cursor-pointer">
                                     <a href="${article.url}">${escapeHtml(article.title)}</a>
                                 </h3>
                                 <p class="text-gray-600 mb-4">${escapeHtml(article.excerpt)}</p>
@@ -631,44 +620,15 @@
                     <div class="text-red-500 text-6xl mb-4">⚠️</div>
                     <h3 class="text-xl font-bold text-gray-800 mb-2">Search Error</h3>
                     <p class="text-gray-600 mb-4">${message}</p>
-                    <button onclick="location.reload()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+                    <button onclick="location.reload()" class="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition">
                         Try Again
                     </button>
                 </div>
             `;
         }
 
-        // Removed old simulated search - now using real API
-
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
-            // Set up event listeners
-            const searchInput = document.getElementById('searchInput');
-            const headerSearchButton = document.getElementById('headerSearchButton');
-            const mainSearchInput = document.getElementById('mainSearchInput');
-            const mainSearchButton = document.getElementById('mainSearchButton');
-            const typeFilter = document.getElementById('typeFilter');
-            
-            if (searchInput) {
-                searchInput.addEventListener('keyup', handleSearch);
-            }
-            
-            if (headerSearchButton) {
-                headerSearchButton.addEventListener('click', performSearch);
-            }
-            
-            if (mainSearchInput) {
-                mainSearchInput.addEventListener('keyup', handleMainSearch);
-            }
-            
-            if (mainSearchButton) {
-                mainSearchButton.addEventListener('click', performMainSearch);
-            }
-            
-            if (typeFilter) {
-                typeFilter.addEventListener('change', filterResults);
-            }
-            
             // Check for search query in URL
             const urlParams = new URLSearchParams(window.location.search);
             const query = urlParams.get('q');
@@ -679,16 +639,16 @@
         });
     </script>
     
-    <!-- Search Integration - Load before inline scripts that use it -->
-    <script src="assets/js/search-integration.js"></script>
-    
     <!-- Security: DOMPurify for HTML sanitization -->
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js" integrity="sha384-LW1Q2+3pcx1jz7WDNJ6X4LWq7l5D7Lrf7K8V9Vq0T6kl5o9S1R7B8tLqGZhcQ2E" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js" crossorigin="anonymous"></script>
     
     <!-- Trusted Sanitization -->
-    <script src="assets/js/trusted-sanitizer.js"></script>
+    <script src="assets/js/trusted-sanitizer.js" nonce="crypto-secure-random-nonce"></script>
+    
+    <!-- Search Integration -->
+    <script src="assets/js/search-integration.js" nonce="crypto-secure-random-nonce"></script>
     
     <!-- Mobile Touch Enhancements -->
-    <script src="assets/js/mobile-touch.js"></script>
+    <script src="assets/js/mobile-touch.js" nonce="crypto-secure-random-nonce"></script>
 </body>
 </html>

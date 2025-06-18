@@ -123,7 +123,6 @@ class PWAAPIHandler(BaseHTTPRequestHandler):
             FROM articles a
             JOIN authors au ON a.author_id = au.id
             JOIN categories c ON a.category_id = c.id
-            WHERE a.status = 'published'
         """
         
         params = []
@@ -191,8 +190,7 @@ class PWAAPIHandler(BaseHTTPRequestHandler):
                 FROM articles a
                 JOIN authors au ON a.author_id = au.id
                 JOIN categories c ON a.category_id = c.id
-                WHERE a.id = ? AND a.status = 'published'
-            """
+                WHERE a.id = ?             """
             
             article_data = self.db.execute_one(query, (article_id,))
             
@@ -276,7 +274,7 @@ class PWAAPIHandler(BaseHTTPRequestHandler):
         query = """
             SELECT id, title, slug, excerpt, publish_date, views, likes, read_time_minutes
             FROM articles 
-            WHERE author_id = ? AND status = 'published'
+            WHERE author_id = ?
             ORDER BY publish_date DESC 
             LIMIT 10
         """
@@ -336,8 +334,7 @@ class PWAAPIHandler(BaseHTTPRequestHandler):
                    au.name as author_name, au.slug as author_slug
             FROM articles a
             JOIN authors au ON a.author_id = au.id
-            WHERE a.category_id = ? AND a.status = 'published'
-            ORDER BY a.publish_date DESC 
+            WHERE a.category_id = ?             ORDER BY a.publish_date DESC 
             LIMIT 20
         """
         recent_articles = self.db.execute_query(query, (category.id,))

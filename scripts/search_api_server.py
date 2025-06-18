@@ -18,6 +18,12 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from search_backend import SearchBackend
 
+# Import configuration
+try:
+    from utils.config import config
+except ImportError:
+    config = None
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -58,9 +64,10 @@ class SearchAPIHandler(BaseHTTPRequestHandler):
         """Handle search endpoint"""
         query_params = parse_qs(parsed_path.query)
         
-        # Extract parameters
+        # Extract parameters with config defaults
         query = query_params.get('q', [''])[0]
-        limit = int(query_params.get('limit', ['20'])[0])
+        default_limit = config.get('limits.search_results_per_page', 20) if config else 20
+        limit = int(query_params.get('limit', [str(default_limit)])[0])
         offset = int(query_params.get('offset', ['0'])[0])
         
         # Perform search
@@ -98,8 +105,12 @@ class SearchAPIHandler(BaseHTTPRequestHandler):
                      format % args))
 
 
-def run_server(port=8080):
+def run_server(port=None):
     """Run the search API server"""
+    # Use config port if available, otherwise default to 8080
+    if port is None:
+        port = config.get('server.port', 8080) if config else 8080
+    
     server_address = ('', port)
     httpd = HTTPServer(server_address, SearchAPIHandler)
     
@@ -117,8 +128,9 @@ if __name__ == '__main__':
     import argparse
     
     parser = argparse.ArgumentParser(description='Search API Server')
-    parser.add_argument('--port', type=int, default=8080,
-                        help='Port to run the server on (default: 8080)')
+    default_port = config.get('server.port', 8080) if config else 8080
+    parser.add_argument('--port', type=int, default=default_port,
+                        help=f'Port to run the server on (default: {default_port})')
     
     args = parser.parse_args()
     run_server(args.port)

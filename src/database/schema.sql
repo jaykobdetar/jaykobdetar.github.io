@@ -52,7 +52,6 @@ CREATE TABLE articles (
     content TEXT,               -- Full article content
     author_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL,
-    status TEXT DEFAULT 'draft', -- draft, published, archived
     featured BOOLEAN DEFAULT 0,
     trending BOOLEAN DEFAULT 0,
     publish_date TEXT,
@@ -182,6 +181,20 @@ CREATE TABLE image_variants (
     FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE
 );
 
+-- Site configuration table for managing site-wide content
+CREATE TABLE site_config (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    config_type TEXT NOT NULL,        -- 'branding', 'contact', 'navigation', 'content'
+    config_key TEXT NOT NULL,         -- specific setting name
+    config_value TEXT,                -- setting value
+    description TEXT,                 -- human-readable description
+    is_active BOOLEAN DEFAULT 1,
+    last_modified TEXT,               -- track source file modifications
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(config_type, config_key)
+);
+
 -- ================================
 -- INDEXES FOR PERFORMANCE
 -- ================================
@@ -231,6 +244,11 @@ CREATE INDEX idx_mobile_metrics_date ON mobile_metrics(date_recorded);
 -- Image variants indexes
 CREATE INDEX idx_image_variants_image ON image_variants(image_id);
 CREATE INDEX idx_image_variants_type ON image_variants(variant_type);
+
+-- Site config indexes
+CREATE INDEX idx_site_config_type ON site_config(config_type);
+CREATE INDEX idx_site_config_key ON site_config(config_key);
+CREATE INDEX idx_site_config_active ON site_config(is_active);
 
 -- ================================
 -- FULL-TEXT SEARCH
@@ -287,6 +305,12 @@ CREATE TRIGGER update_mobile_metrics_timestamp
 AFTER UPDATE ON mobile_metrics
 BEGIN
     UPDATE mobile_metrics SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+END;
+
+CREATE TRIGGER update_site_config_timestamp 
+AFTER UPDATE ON site_config
+BEGIN
+    UPDATE site_config SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
 END;
 
 -- Maintain article counts for authors
