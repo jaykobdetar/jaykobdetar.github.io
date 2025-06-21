@@ -3,9 +3,9 @@
  * Provides offline functionality, caching, and background sync
  */
 
-const CACHE_NAME = 'influencer-news-v1.2';
-const STATIC_CACHE = 'static-cache-v1.2';
-const DYNAMIC_CACHE = 'dynamic-cache-v1.2';
+const CACHE_NAME = 'influencer-news-v2.0';
+const STATIC_CACHE = 'static-cache-v2.0';
+const DYNAMIC_CACHE = 'dynamic-cache-v2.0';
 
 // Static assets to cache immediately
 const STATIC_ASSETS = [
@@ -17,7 +17,16 @@ const STATIC_ASSETS = [
   '/integrated/trending.html',
   '/assets/css/styles.min.css',
   '/assets/js/mobile-touch.js',
-  '/manifest.json'
+  '/assets/js/indexeddb-init.js',
+  '/assets/js/homepage-dynamic.js',
+  '/assets/js/search-integration.js',
+  '/assets/js/trusted-sanitizer.js',
+  '/assets/placeholders/article_placeholder.svg',
+  '/assets/placeholders/author_placeholder.svg',
+  '/assets/placeholders/category_placeholder.svg',
+  '/assets/images/default-article.jpg',
+  '/manifest.json',
+  '/offline.html'
 ];
 
 // Dynamic assets to cache on request
@@ -245,7 +254,7 @@ async function getOfflineFallback(request) {
   });
 }
 
-// Background sync for analytics and form submissions
+// Background sync for content and user preferences only
 self.addEventListener('sync', event => {
   if (event.tag === 'background-sync') {
     event.waitUntil(handleBackgroundSync());
@@ -254,37 +263,12 @@ self.addEventListener('sync', event => {
 
 async function handleBackgroundSync() {
   try {
-    // Sync any pending analytics data
-    await syncAnalytics();
-    
-    // Sync any saved articles or user preferences
+    // Sync any saved articles or user preferences (no analytics)
     await syncUserData();
     
     console.log('Service Worker: Background sync completed');
   } catch (error) {
     console.error('Service Worker: Background sync failed', error);
-  }
-}
-
-async function syncAnalytics() {
-  // Implementation for syncing analytics data when back online
-  const pendingAnalytics = await getStoredData('pendingAnalytics');
-  
-  if (pendingAnalytics && pendingAnalytics.length > 0) {
-    for (const data of pendingAnalytics) {
-      try {
-        await fetch('/api/analytics', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-      } catch (error) {
-        console.error('Failed to sync analytics data', error);
-      }
-    }
-    
-    // Clear synced data
-    await clearStoredData('pendingAnalytics');
   }
 }
 
@@ -296,10 +280,28 @@ async function syncUserData() {
 // Utility functions for IndexedDB storage
 async function getStoredData(key) {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('InfluencerNewsDB', 1);
+    const request = indexedDB.open('InfluencerNewsDB', 2);
+    
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      
+      // Create object stores if they don't exist
+      if (!db.objectStoreNames.contains('syncData')) {
+        const syncStore = db.createObjectStore('syncData', { keyPath: 'key' });
+        syncStore.createIndex('timestamp', 'timestamp', { unique: false });
+      }
+      
+    };
     
     request.onsuccess = () => {
       const db = request.result;
+      
+      if (!db.objectStoreNames.contains('syncData')) {
+        // Store doesn't exist, return null
+        resolve(null);
+        return;
+      }
+      
       const transaction = db.transaction(['syncData'], 'readonly');
       const store = transaction.objectStore('syncData');
       const getRequest = store.get(key);
@@ -321,7 +323,7 @@ async function getStoredData(key) {
 
 async function clearStoredData(key) {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('InfluencerNewsDB', 1);
+    const request = indexedDB.open('InfluencerNewsDB', 2);
     
     request.onsuccess = () => {
       const db = request.result;

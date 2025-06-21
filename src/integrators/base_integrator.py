@@ -22,11 +22,13 @@ try:
     from ..models import Article, Author, Category, TrendingTopic, Image
     from ..utils import ImageManager, PathManager
     from ..utils.trusted_security import trusted_sanitizer, trusted_validator
+    from ..utils.config import config
     from ..utils.security_middleware import security_middleware
 except ImportError:
     from src.models import Article, Author, Category, TrendingTopic, Image
     from src.utils import ImageManager, PathManager
     from src.utils.trusted_security import trusted_sanitizer, trusted_validator
+    from src.utils.config import config
     from src.utils.security_middleware import security_middleware
 
 
@@ -35,16 +37,19 @@ class BaseIntegrator(ABC):
     
     def __init__(self, content_type: str, content_dir: str):
         self.content_type = content_type
-        self.content_dir = Path("content") / content_dir
+        self.content_dir = Path(config.get_content_dir(content_dir))
         self.content_dir.mkdir(parents=True, exist_ok=True)
         
         # Integrated output directory for generated content
-        self.integrated_dir = Path("integrated") / content_dir
+        self.integrated_dir = Path(config.get_integrated_dir(content_dir))
         self.integrated_dir.mkdir(parents=True, exist_ok=True)
         
         # Initialize database and image managers
         self.db = DatabaseManager()
         self.image_manager = ImageManager()
+        
+        # Initialize site integrator for site-wide configuration
+        self._site_integrator = None
         
         # Progress callback for GUI updates
         self.progress_callback: Optional[Callable] = None
@@ -242,6 +247,39 @@ class BaseIntegrator(ABC):
     def get_path_manager(self, current_location: str) -> PathManager:
         """Get path manager for current page location"""
         return PathManager.from_page_location(current_location)
+    
+    def get_site_integrator(self):
+        """Get site integrator instance (lazy loading)"""
+        if self._site_integrator is None:
+            # Import here to avoid circular imports
+            try:
+                from .site_integrator import SiteIntegrator
+            except ImportError:
+                from src.integrators.site_integrator import SiteIntegrator
+            self._site_integrator = SiteIntegrator()
+        return self._site_integrator
+    
+    def get_site_config(self, config_type: str = None) -> Dict[str, Any]:
+        """Get site configuration"""
+        site_integrator = self.get_site_integrator()
+        if config_type:
+            return site_integrator.get_config_by_type(config_type)
+        return site_integrator.get_site_config()
+    
+    def generate_site_header(self, current_page: str = '', page_title: str = None, path_prefix: str = '') -> str:
+        """Generate standardized site header"""
+        site_integrator = self.get_site_integrator()
+        return site_integrator.generate_header_html(current_page, path_prefix)
+    
+    def generate_site_footer(self, path_prefix: str = '') -> str:
+        """Generate standardized site footer"""
+        site_integrator = self.get_site_integrator()
+        return site_integrator.generate_footer_html(path_prefix)
+    
+    def generate_site_meta_tags(self, page_title: str = None, page_description: str = None) -> str:
+        """Generate site meta tags"""
+        site_integrator = self.get_site_integrator()
+        return site_integrator.generate_site_meta_tags(page_title, page_description)
     
     def generate_navigation_html(self, current_location: str, active_page: str = '') -> str:
         """Generate navigation HTML with proper paths"""
@@ -717,28 +755,28 @@ class BaseIntegrator(ABC):
         try:
             if self.content_type == 'articles':
                 # Remove article page
-                article_file = Path("integrated/articles") / f"article_{item.id}.html"
+                article_file = Path(config.get_integrated_dir("articles")) / f"article_{item.id}.html"
                 if article_file.exists():
                     article_file.unlink()
                     self.update_progress(f"Removed {article_file}")
                     
             elif self.content_type == 'authors':
                 # Remove author page
-                author_file = Path("integrated/authors") / f"author_{item.slug}.html"
+                author_file = Path(config.get_integrated_dir("authors")) / f"author_{item.slug}.html"
                 if author_file.exists():
                     author_file.unlink()
                     self.update_progress(f"Removed {author_file}")
                     
             elif self.content_type == 'categories':
                 # Remove category page
-                category_file = Path("integrated/categories") / f"category_{item.slug}.html"
+                category_file = Path(config.get_integrated_dir("categories")) / f"category_{item.slug}.html"
                 if category_file.exists():
                     category_file.unlink()
                     self.update_progress(f"Removed {category_file}")
                     
             elif self.content_type == 'trending':
                 # Remove trending page
-                trend_file = Path("integrated/trending") / f"trend_{item.slug}.html"
+                trend_file = Path(config.get_integrated_dir("trending")) / f"trend_{item.slug}.html"
                 if trend_file.exists():
                     trend_file.unlink()
                     self.update_progress(f"Removed {trend_file}")

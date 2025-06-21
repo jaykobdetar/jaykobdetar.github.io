@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Influencer News CMS manages content through a combination of text files and database operations. Content is created as `.txt` files, parsed and stored in SQLite, then generated as static HTML pages.
+The CMS manages content through a combination of text files and database operations. Content is created as `.txt` files, parsed and stored in SQLite, then generated as static HTML pages. The entire site can be rebranded through configuration files.
 
 ## Current Limitations
 
@@ -33,6 +33,12 @@ Hot topics with heat scores and descriptions.
 
 **Location**: `content/trending/`
 **Generated**: `integrated/trending/trend_{slug}.html`
+
+### 5. Site Configuration
+Site-wide branding and settings that apply to all pages.
+
+**Location**: `content/site/`
+**Applies to**: All generated pages
 
 ## Content File Format
 
@@ -100,6 +106,18 @@ CONTENT:
 Detailed analysis of the trending topic.
 ```
 
+### Site Configuration Format
+```
+Site Name: Your Site Name
+Site Tagline: Your tagline here
+Logo Text: YSN
+Theme Color: #059669
+Footer Description: Your site description
+Copyright Text: © 2025 Your Site Name. All rights reserved.
+```
+
+**Important**: Site configuration is stored in `content/site/site-branding.txt` and applies to all pages when synced.
+
 ## Content Management Commands
 
 ### Basic Sync Operations
@@ -108,6 +126,7 @@ Detailed analysis of the trending topic.
 python scripts/sync_content.py
 
 # Sync specific content type
+python scripts/sync_content.py site
 python scripts/sync_content.py articles
 python scripts/sync_content.py authors
 python scripts/sync_content.py categories
@@ -185,6 +204,7 @@ Templates are available in `docs/templates/`:
 - `author_template.txt` - Author profile template  
 - `category_template.txt` - Category definition
 - `trending_template.txt` - Trending topic template
+- `site_branding_template.txt` - Site configuration template
 
 ## Data Validation
 
@@ -287,7 +307,8 @@ content/
 ├── articles/           # Article .txt files
 ├── authors/           # Author .txt files  
 ├── categories/        # Category .txt files
-└── trending/          # Trending topic .txt files
+├── trending/          # Trending topic .txt files
+└── site/              # Site configuration files
 
 integrated/            # Generated HTML files
 ├── articles/

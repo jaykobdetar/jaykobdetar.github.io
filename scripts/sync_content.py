@@ -35,6 +35,8 @@ try:
     from src.integrators.trending_integrator import TrendingIntegrator
     from src.integrators.article_integrator import ArticleIntegrator
     from src.integrators.homepage_integrator import HomepageIntegrator
+    from src.integrators.site_integrator import SiteIntegrator
+    from src.integrators.static_page_integrator import StaticPageIntegrator
     
 except ImportError as e:
     print(f"❌ Import Error: {e}")
@@ -54,6 +56,8 @@ class ContentSyncTool:
     def __init__(self):
         self.db = DatabaseManager()
         self.integrators = {
+            'site': SiteIntegrator(),
+            'static': StaticPageIntegrator(),
             'authors': AuthorIntegrator(),
             'categories': CategoryIntegrator(),
             'trending': TrendingIntegrator(),
@@ -190,11 +194,11 @@ Common Usage:
   python3 sync_content.py stats             # Show content statistics
   python3 sync_content.py status            # Check database connection
 
-Content Types: articles, authors, categories, trending, homepage
+Content Types: site, articles, authors, categories, trending, homepage
         """)
     
     parser.add_argument('action', nargs='?', default='sync',
-                       choices=['sync', 'articles', 'authors', 'categories', 'trending', 'homepage', 'stats', 'status'],
+                       choices=['sync', 'site', 'articles', 'authors', 'categories', 'trending', 'homepage', 'stats', 'status'],
                        help='What to do: sync all content (default), sync specific type, or show info')
     
     args = parser.parse_args()

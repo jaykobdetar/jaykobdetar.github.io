@@ -81,7 +81,11 @@ CREATE TABLE trending_topics (
     content TEXT,               -- Detailed analysis
     heat_score INTEGER DEFAULT 0,  -- 0-100
     growth_rate REAL DEFAULT 0.0,  -- Percentage
+    momentum REAL DEFAULT 0.0,     -- Rate of heat score change
+    article_count INTEGER DEFAULT 0,
+    related_articles TEXT,         -- JSON array of article IDs
     hashtag TEXT,
+    icon TEXT DEFAULT '🔥',         -- Emoji icon
     category_id INTEGER,
     start_date TEXT DEFAULT CURRENT_TIMESTAMP,
     peak_date TEXT,
@@ -91,6 +95,7 @@ CREATE TABLE trending_topics (
     mentions_instagram INTEGER DEFAULT 0,
     mentions_twitter INTEGER DEFAULT 0,
     mentions_twitch INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT 1,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES categories(id)
@@ -185,11 +190,11 @@ CREATE INDEX idx_related_target ON related_articles(related_article_id);
 -- FULL-TEXT SEARCH
 -- ================================
 
--- Full-text search virtual table
-CREATE VIRTUAL TABLE articles_fts USING fts5(
-    title, excerpt, content, tags,
-    content_rowid=articles
-);
+-- Full-text search disabled due to corruption issues
+-- CREATE VIRTUAL TABLE articles_fts USING fts5(
+--     title, excerpt, content, tags,
+--     content_rowid=articles
+-- );
 
 -- ================================
 -- TRIGGERS FOR DATA INTEGRITY
@@ -310,24 +315,24 @@ BEGIN
     WHERE id = OLD.category_id AND OLD.category_id != NEW.category_id;
 END;
 
--- Maintain FTS index
-CREATE TRIGGER articles_fts_insert AFTER INSERT ON articles
-BEGIN
-    INSERT INTO articles_fts(rowid, title, excerpt, content, tags)
-    VALUES (NEW.id, NEW.title, NEW.excerpt, NEW.content, NEW.tags);
-END;
+-- FTS triggers disabled due to corruption issues
+-- CREATE TRIGGER articles_fts_insert AFTER INSERT ON articles
+-- BEGIN
+--     INSERT INTO articles_fts(rowid, title, excerpt, content, tags)
+--     VALUES (NEW.id, NEW.title, NEW.excerpt, NEW.content, NEW.tags);
+-- END;
 
-CREATE TRIGGER articles_fts_delete AFTER DELETE ON articles
-BEGIN
-    DELETE FROM articles_fts WHERE rowid = OLD.id;
-END;
+-- CREATE TRIGGER articles_fts_delete AFTER DELETE ON articles
+-- BEGIN
+--     DELETE FROM articles_fts WHERE rowid = OLD.id;
+-- END;
 
-CREATE TRIGGER articles_fts_update AFTER UPDATE ON articles
-BEGIN
-    DELETE FROM articles_fts WHERE rowid = OLD.id;
-    INSERT INTO articles_fts(rowid, title, excerpt, content, tags)
-    VALUES (NEW.id, NEW.title, NEW.excerpt, NEW.content, NEW.tags);
-END;
+-- CREATE TRIGGER articles_fts_update AFTER UPDATE ON articles
+-- BEGIN
+--     DELETE FROM articles_fts WHERE rowid = OLD.id;
+--     INSERT INTO articles_fts(rowid, title, excerpt, content, tags)
+--     VALUES (NEW.id, NEW.title, NEW.excerpt, NEW.content, NEW.tags);
+-- END;
 
 -- ================================
 -- SAMPLE DATA

@@ -28,12 +28,9 @@ This directory contains all utility scripts for managing the Influencer News CMS
 
 ### `/mobile` - Mobile Support Scripts
 
-Scripts for mobile API generation and page optimization:
+Scripts for mobile API generation:
 
-- **`mobile_api_generator.py`** - Generate JSON API endpoints
-- **`mobile_backend_integration.py`** - Backend mobile integration
-- **`mobile_search_wrapper.py`** - Mobile search implementation
-- **`regenerate_mobile_pages.py`** - Regenerate mobile-optimized pages
+- **`mobile_api_generator.py`** - Generate JSON API endpoints for mobile apps
 
 ### `/database` - Database Utilities
 
@@ -71,8 +68,7 @@ python3 scripts/database/migrate_schema.py
 
 ### Full System Update
 ```bash
-# Sync content, generate mobile API, update search
+# Sync content and generate mobile API
 python3 scripts/sync_content.py
 python3 scripts/mobile/mobile_api_generator.py
-python3 scripts/mobile/regenerate_mobile_pages.py
 ```

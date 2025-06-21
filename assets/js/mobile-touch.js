@@ -183,7 +183,7 @@ class MobileTouchEnhancer {
     }
     
     setupLongPress() {
-        const longPressElements = document.querySelectorAll('.article-card, .mobile-nav-item, 'picture');
+        const longPressElements = document.querySelectorAll('.article-card, .mobile-nav-item, picture');
         
         longPressElements.forEach(element => {
             let longPressTimer = null;

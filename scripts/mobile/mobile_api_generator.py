@@ -15,25 +15,14 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, asdict
 
 # Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
 try:
-    from database.db_manager import DatabaseManager
-except ImportError:
-    # Fallback to direct SQLite
-    class DatabaseManager:
-        def __init__(self):
-            self.db_path = "data/infnews.db"
-            
-        def get_connection(self):
-            return sqlite3.connect(self.db_path)
-        
-        def execute_one(self, query, params=None):
-            with self.get_connection() as conn:
-                conn.row_factory = sqlite3.Row
-                cursor = conn.execute(query, params or [])
-                result = cursor.fetchone()
-                return dict(result) if result else None
+    from src.database.db_manager import DatabaseManager
+except ImportError as e:
+    print(f"Error: Could not import DatabaseManager: {e}")
+    print("Please ensure you're running from the project root directory")
+    sys.exit(1)
 
 
 @dataclass
@@ -436,12 +425,13 @@ class MobileAPIGenerator:
                 cursor = conn.execute("SELECT * FROM trending_topics")
                 for row in cursor.fetchall():
                     row_dict = dict(row)
-                    topic_field = row_dict.get('topic') or row_dict.get('title', '')
+                    # Use 'title' field from database, not 'topic'
+                    topic_title = row_dict.get('title', '')
                     search_index['trending'].append({
                         'slug': row_dict['slug'],
-                        'topic': topic_field,
+                        'title': topic_title,  # Use consistent field name
                         'description': self.truncate_text(row_dict.get('description', ''), self.mobile_config['max_excerpt_length']),
-                        'search_text': f"{topic_field} {row_dict.get('description', '')}".lower()
+                        'search_text': f"{topic_title} {row_dict.get('description', '')}".lower()
                     })
             
             # Save search index

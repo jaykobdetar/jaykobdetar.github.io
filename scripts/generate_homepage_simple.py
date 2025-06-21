@@ -77,9 +77,9 @@ def generate_homepage_data():
             'publish_date': article_data['publish_date'],
             'views': article_data['views'] or 0,
             'likes': article_data['likes'] or 0,
-            'read_time_minutes': int(article_data['read_time_minutes']) if article_data['read_time_minutes'] else 5,
+            'read_time_minutes': article_data['read_time_minutes'] or '5 min',
             'image_url': article_data['image_url'] or 'assets/images/default-article.jpg',
-            'url': f'integrated/articles/article_{article_data["id"]}.html'
+            'url': f'integrated/articles/article_{article_data["slug"]}.html'
         }
         homepage_data['articles'].append(article_info)
     
@@ -101,11 +101,11 @@ def create_sample_data():
                 'category_color': '#3B82F6',
                 'category_icon': '💻',
                 'publish_date': '2024-01-15',
-                'views': 29552,
-                'likes': 1240,
+                'views': 0,
+                'likes': 0,
                 'read_time_minutes': 7,
                 'image_url': 'assets/images/articles/article_5_hero.jpg',
-                'url': 'integrated/articles/article_1.html'
+                'url': 'integrated/articles/article_platform-update-creators.html'
             }
         ],
         'generated_at': datetime.now().isoformat(),

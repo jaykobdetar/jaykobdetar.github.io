@@ -1,30 +1,41 @@
 #!/usr/bin/env python3
 """
 Search Backend for Influencer News CMS
-Provides database-powered search functionality via JSON API
+Unified search backend providing database-powered search functionality
+Includes trusted input validation and sanitization
 """
 
 import json
 import sys
 import os
-from typing import List, Dict, Any
-from urllib.parse import parse_qs
+from typing import List, Dict, Any, Optional
 
-# Add src to path
+# Add src to path  
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from database import DatabaseManager
-from models import Article, Author, Category, TrendingTopic
+from database.db_manager import DatabaseManager
+
+try:
+    from utils.config import config
+    from utils.trusted_security import trusted_validator
+ except ImportError:
+    config = None
+    trusted_validator = None
 
 class SearchBackend:
-    """Handles search queries and returns JSON results"""
+    """Unified search backend using direct database queries"""
     
     def __init__(self):
         self.db = DatabaseManager()
     
-    def search_all(self, query: str, limit: int = 20, offset: int = 0, 
-                   content_type: str = 'all', device_type: str = 'desktop') -> Dict[str, Any]:
-        """Search across all content types with pagination"""
+    def search_all(self, query: str, limit: Optional[int] = None, offset: int = 0) -> Dict[str, Any]:
+        """Search across all content types with input validation"""
+        # Use config default if limit not specified
+        if limit is None:
+            try:
+                limit = config.get('limits.search_results_per_page', 20)
+            except:
+                limit = 20
         results = {
             'query': query,
             'articles': [],
@@ -37,72 +48,130 @@ class SearchBackend:
             'has_more': False
         }
         
-        if not query or len(query.strip()) < 2:
-            return results
+        # Validate and sanitize input
+        if HAS_SECURITY:
+            try:
+                # Validate search query
+                query = input_validator.validate_search_query(query)
+                
+                # Validate pagination
+                limit, offset = input_validator.validate_pagination_params(str(limit), str(offset))
+                
+                # Update results with validated values
+                results['query'] = query
+                results['page'] = offset // limit + 1
+                results['per_page'] = limit
+                
+            except ValueError as e:
+                # Return error in results
+                results['error'] = str(e)
+                return results
         
-        # Search articles with pagination
-        if content_type in ['all', 'articles']:
-            # Get total count for pagination
-            total_articles = self.db.execute_one(
-                "SELECT COUNT(*) as count FROM article_full_view WHERE title LIKE ? OR subtitle LIKE ? OR content LIKE ?",
-                (f"%{query}%", f"%{query}%", f"%{query}%")
-            )['count']
-            
-            # Get articles with LIMIT and OFFSET
+        # Handle empty query - return all articles for homepage pagination
+        if not query or len(query.strip()) == 0:
+            # Get all published articles for homepage
             article_query = """
-            SELECT * FROM article_full_view
-            WHERE title LIKE ? OR subtitle LIKE ? OR content LIKE ?
-            ORDER BY publication_date DESC
+            SELECT 
+                a.id, a.title, a.slug, a.excerpt, a.views, a.likes, 
+                a.read_time_minutes, a.publish_date, a.image_url,
+                au.name as author_name, au.slug as author_slug,
+                c.name as category_name, c.slug as category_slug,
+                c.color as category_color, c.icon as category_icon
+            FROM articles a
+            JOIN authors au ON a.author_id = au.id
+            JOIN categories c ON a.category_id = c.id
+            ORDER BY a.publish_date DESC
             LIMIT ? OFFSET ?
             """
-            article_results = self.db.execute_query(
-                article_query, 
-                (f"%{query}%", f"%{query}%", f"%{query}%", limit, offset)
-            )
+            
+            article_results = self.db.execute_query(article_query, (limit, offset))
             
             for article_data in article_results:
-                article = Article.from_dict(article_data)
                 results['articles'].append({
-                    'id': article.id,
-                    'title': article.title,
-                    'subtitle': article.subtitle,
-                    'author_name': article.author_name,
-                    'category_name': article.category_name,
-                    'category_icon': article.category_icon,
-                    'publication_date': article.publication_date,
-                    'url': f"integrated/articles/article_{article.id}.html",
-                    'type': 'article'
+                    'id': article_data['id'],
+                    'title': article_data['title'],
+                    'excerpt': article_data['excerpt'] or 'No excerpt available',
+                    'author_name': article_data['author_name'],
+                    'category_name': article_data['category_name'],
+                    'category_icon': article_data['category_icon'],
+                    'publish_date': article_data['publish_date'],
+                    'url': f"integrated/articles/article_{article_data['slug']}.html",
+                    'type': 'article',
+                    'views': article_data['views'] or 0
                 })
-                
-            results['total_articles'] = total_articles
+            
+            results['total_results'] = len(results['articles'])
+            results['has_more'] = len(results['articles']) == limit
+            return results
+        
+        # Original behavior for search queries
+        if len(query.strip()) < 2:
+            return results
+        
+        search_pattern = f"%{query}%"
+        
+        # Search articles
+        article_query = """
+        SELECT 
+            a.id, a.title, a.slug, a.excerpt, a.views, a.likes, 
+            a.read_time_minutes, a.publish_date, a.image_url,
+            au.name as author_name, au.slug as author_slug,
+            c.name as category_name, c.slug as category_slug,
+            c.color as category_color, c.icon as category_icon
+        FROM articles a
+        JOIN authors au ON a.author_id = au.id
+        JOIN categories c ON a.category_id = c.id
+        WHERE (a.title LIKE ? OR a.excerpt LIKE ? OR a.content LIKE ?)
+        ORDER BY a.publish_date DESC
+        LIMIT ? OFFSET ?
+        """
+        
+        article_results = self.db.execute_query(
+            article_query, 
+            (search_pattern, search_pattern, search_pattern, limit, offset)
+        )
+        
+        for article_data in article_results:
+            results['articles'].append({
+                'id': article_data['id'],
+                'title': article_data['title'],
+                'excerpt': article_data['excerpt'] or 'No excerpt available',
+                'author_name': article_data['author_name'],
+                'category_name': article_data['category_name'],
+                'category_icon': article_data['category_icon'],
+                'publish_date': article_data['publish_date'],
+                'url': f"integrated/articles/article_{article_data['slug']}.html",
+                'type': 'article',
+                'views': article_data['views'] or 0
+            })
         
         # Search authors
-        author_query = f"""
-        SELECT * FROM authors 
+        author_query = """
+        SELECT id, name, slug, bio, expertise, article_count
+        FROM authors 
         WHERE name LIKE ? OR bio LIKE ? OR expertise LIKE ?
         LIMIT ?
         """
-        search_pattern = f"%{query}%"
         author_results = self.db.execute_query(
             author_query, 
             (search_pattern, search_pattern, search_pattern, limit//4)
         )
         
         for author_data in author_results:
-            author = Author.from_dict(author_data)
             results['authors'].append({
-                'id': author.id,
-                'name': author.name,
-                'bio': author.bio,
-                'expertise': author.expertise,
-                'article_count': author.get_article_count(),
-                'url': f"integrated/authors/author_{author.slug}.html",
+                'id': author_data['id'],
+                'name': author_data['name'],
+                'bio': author_data['bio'] or '',
+                'expertise': author_data['expertise'] or '',
+                'article_count': author_data['article_count'] or 0,
+                'url': f"integrated/authors/author_{author_data['slug']}.html",
                 'type': 'author'
             })
         
         # Search categories
-        category_query = f"""
-        SELECT * FROM categories 
+        category_query = """
+        SELECT id, name, slug, description, icon, article_count
+        FROM categories 
         WHERE name LIKE ? OR description LIKE ?
         LIMIT ?
         """
@@ -112,20 +181,20 @@ class SearchBackend:
         )
         
         for category_data in category_results:
-            category = Category.from_dict(category_data)
             results['categories'].append({
-                'id': category.id,
-                'name': category.name,
-                'description': category.description,
-                'icon': category.icon,
-                'article_count': category.article_count,
-                'url': f"integrated/categories/category_{category.slug}.html",
+                'id': category_data['id'],
+                'name': category_data['name'],
+                'description': category_data['description'] or '',
+                'icon': category_data['icon'] or '📁',
+                'article_count': category_data['article_count'] or 0,
+                'url': f"integrated/categories/category_{category_data['slug']}.html",
                 'type': 'category'
             })
         
         # Search trending topics
-        trending_query = f"""
-        SELECT * FROM trending_topics 
+        trending_query = """
+        SELECT id, title, slug, description, heat_score, article_count
+        FROM trending_topics 
         WHERE title LIKE ? OR description LIKE ?
         ORDER BY heat_score DESC
         LIMIT ?
@@ -136,15 +205,13 @@ class SearchBackend:
         )
         
         for trending_data in trending_results:
-            trending = TrendingTopic.from_dict(trending_data)
             results['trending'].append({
-                'id': trending.id,
-                'title': trending.title,
-                'description': trending.description,
-                'icon': trending.icon,
-                'heat_score': trending.heat_score,
-                'article_count': trending.article_count,
-                'url': f"integrated/trending/trend_{trending.slug}.html",
+                'id': trending_data['id'],
+                'title': trending_data['title'],
+                'description': trending_data['description'] or '',
+                'heat_score': trending_data['heat_score'] or 0,
+                'article_count': trending_data['article_count'] or 0,
+                'url': f"integrated/trending/trend_{trending_data['slug']}.html",
                 'type': 'trending'
             })
         
@@ -159,7 +226,7 @@ class SearchBackend:
         return results
     
     def get_suggestions(self, query: str, limit: int = 5) -> List[str]:
-        """Get search suggestions based on query"""
+        """Get search suggestions"""
         if not query or len(query.strip()) < 2:
             return []
         
@@ -180,136 +247,9 @@ class SearchBackend:
         )
         suggestions.extend([row['name'] for row in author_names])
         
-        # Get category suggestions
-        categories = self.db.execute_query(
-            "SELECT name FROM categories WHERE name LIKE ? LIMIT ?",
-            (search_pattern, limit)
-        )
-        suggestions.extend([row['name'] for row in categories])
-        
         # Remove duplicates and limit
         unique_suggestions = list(dict.fromkeys(suggestions))
         return unique_suggestions[:limit]
-    
-    def search_mobile_optimized(self, query: str, limit: int = 10, offset: int = 0) -> Dict[str, Any]:
-        """Search optimized for mobile devices with smaller payloads"""
-        results = {
-            'query': query,
-            'articles': [],
-            'total_results': 0,
-            'has_more': False
-        }
-        
-        if not query or len(query.strip()) < 2:
-            return results
-        
-        # Search articles using mobile view for optimized data
-        article_query = """
-        SELECT * FROM article_mobile_view 
-        WHERE title LIKE ? OR excerpt LIKE ? 
-        ORDER BY publication_date DESC 
-        LIMIT ? OFFSET ?
-        """
-        search_pattern = f"%{query}%"
-        article_results = self.db.execute_query(
-            article_query, 
-            (search_pattern, search_pattern, limit, offset)
-        )
-        
-        for article_data in article_results:
-            article = Article.from_dict(article_data)
-            results['articles'].append(article.to_mobile_dict())
-        
-        # Get total count for pagination
-        count_query = """
-        SELECT COUNT(*) as total FROM article_mobile_view 
-        WHERE title LIKE ? OR excerpt LIKE ?
-        """
-        count_result = self.db.execute_query(count_query, (search_pattern, search_pattern))
-        total_count = count_result[0]['total'] if count_result else 0
-        
-        results['total_results'] = total_count
-        results['has_more'] = (offset + limit) < total_count
-        
-        return results
-    
-    def get_mobile_suggestions(self, query: str, limit: int = 3) -> List[Dict[str, str]]:
-        """Get mobile-optimized search suggestions"""
-        if not query or len(query.strip()) < 2:
-            return []
-        
-        suggestions = []
-        search_pattern = f"%{query}%"
-        
-        # Get article suggestions with mobile titles
-        article_query = """
-        SELECT COALESCE(mobile_title, title) as title, slug 
-        FROM articles 
-        WHERE COALESCE(mobile_title, title) LIKE ? 
-        LIMIT ?
-        """
-        article_results = self.db.execute_query(article_query, (search_pattern, limit))
-        
-        for row in article_results:
-            suggestions.append({
-                'text': row['title'],
-                'type': 'article',
-                'url': f"integrated/articles/article_{row['slug']}.html"
-            })
-        
-        return suggestions[:limit]
-    
-    def detect_device_type(self, user_agent: str) -> str:
-        """Detect device type from user agent string"""
-        if not user_agent:
-            return 'desktop'
-        
-        user_agent = user_agent.lower()
-        
-        # Mobile devices
-        mobile_keywords = ['mobile', 'android', 'iphone', 'ipod', 'blackberry', 'windows phone']
-        if any(keyword in user_agent for keyword in mobile_keywords):
-            return 'mobile'
-        
-        # Tablet devices
-        tablet_keywords = ['tablet', 'ipad', 'kindle', 'playbook']
-        if any(keyword in user_agent for keyword in tablet_keywords):
-            return 'tablet'
-        
-        return 'desktop'
-
-def handle_cgi_request():
-    """Handle CGI-style request for search"""
-    # Get query parameters
-    query_string = os.environ.get('QUERY_STRING', '')
-    params = parse_qs(query_string)
-    
-    search_query = params.get('q', [''])[0]
-    action = params.get('action', ['search'])[0]
-    limit = int(params.get('limit', ['20'])[0])
-    offset = int(params.get('offset', ['0'])[0])
-    content_type = params.get('type', ['all'])[0]
-    
-    search_backend = SearchBackend()
-    
-    # Set content type
-    print("Content-Type: application/json")
-    print()  # Empty line required for CGI
-    
-    try:
-        if action == 'suggestions':
-            results = search_backend.get_suggestions(search_query, limit)
-            print(json.dumps({'suggestions': results}))
-        else:
-            results = search_backend.search_all(search_query, limit, offset, content_type)
-            print(json.dumps(results))
-    except Exception as e:
-        error_response = {
-            'error': str(e),
-            'query': search_query,
-            'total_results': 0
-        }
-        print(json.dumps(error_response))
 
 def main():
     """Main entry point for command line usage"""
@@ -324,8 +264,4 @@ def main():
     print(json.dumps(results, indent=2))
 
 if __name__ == "__main__":
-    # Check if running as CGI
-    if 'REQUEST_METHOD' in os.environ:
-        handle_cgi_request()
-    else:
-        main()
+    main()

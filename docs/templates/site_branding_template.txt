@@ -1,0 +1,46 @@
+Site Name: {{site.name}}
+Site Tagline: {{site.tagline}}
+Site Subtitle: {{site.subtitle}}
+Site Description: {{site.description}}
+Logo Text: {{site.logo_text}}
+Theme Color: {{site.theme_color}}
+Footer Description: {{site.footer_description}}
+Copyright Text: {{site.copyright_text}}
+
+<!-- SITE BRANDING TEMPLATE
+
+This template defines the site-wide branding configuration that applies to all pages.
+Place this file in: content/site/site-branding.txt
+
+Field Descriptions:
+- Site Name: The main site name displayed in headers and titles
+- Site Tagline: Short tagline displayed under the site name
+- Site Subtitle: Alternative tagline for different contexts
+- Site Description: Longer description for meta tags and about sections
+- Logo Text: Short text displayed in logo areas (typically 2-3 characters)
+- Theme Color: Hex color code for the primary theme color (e.g., #059669)
+- Footer Description: Site description shown in footer
+- Copyright Text: Copyright notice for footer
+
+Example:
+Site Name: TheRealNews
+Site Tagline: Truth • Transparency • Real Stories
+Site Subtitle: Truth • Transparency • Authenticity
+Site Description: Your trusted source for unfiltered news and authentic journalism that matters
+Logo Text: TRN
+Theme Color: #059669
+Footer Description: Your trusted source for unfiltered news and authentic journalism that matters
+Copyright Text: © 2025 TheRealNews. All rights reserved.
+
+Theme Color Mapping:
+- #059669 -> emerald (green)
+- #dc2626 -> red
+- #2563eb -> blue
+- #7c3aed -> purple
+- #db2777 -> pink
+- #ea580c -> orange
+- #0891b2 -> cyan
+- #4f46e5 -> indigo (default)
+
+Note: After changing this file, run 'python3 scripts/sync_content.py' to apply changes site-wide.
+-->

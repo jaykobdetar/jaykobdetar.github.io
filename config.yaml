@@ -39,7 +39,39 @@ security:
   sanitize_html: true
   max_content_length: 50000
   max_title_length: 200
-  allowed_html_tags: ["p", "br", "strong", "em", "u", "a", "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6"]
+  max_bio_length: 2000
+  max_url_length: 2048
+  max_email_length: 254
+  max_excerpt_length: 500
+  max_slug_length: 100
+  min_slug_length: 2
+  allowed_html_tags: ["p", "br", "strong", "em", "u", "a", "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "code", "pre"]
+  html_sanitization:
+    allowed_attributes:
+      a: ["href", "title", "rel"]
+      img: ["src", "alt", "title", "width", "height"]
+      blockquote: ["cite"]
+      table: ["summary"]
+      td: ["colspan", "rowspan"]
+      th: ["colspan", "rowspan", "scope"]
+      div: ["class"]
+      span: ["class"]
+      p: ["class"]
+      h1: ["class"]
+      h2: ["class"]
+      h3: ["class"]
+      h4: ["class"]
+      h5: ["class"]
+      h6: ["class"]
+    allowed_protocols: ["http", "https", "mailto", "tel"]
+    allowed_css_properties: ["color", "background-color", "font-size", "font-weight", "text-align", "text-decoration", "margin", "padding", "border", "border-radius", "display", "float"]
+  csp:
+    script_sources: ["self", "https://cdn.jsdelivr.net"]
+    style_sources: ["self", "https://fonts.googleapis.com"]
+    img_sources: "'self' data: https: blob:"
+    font_sources: "'self' https://fonts.gstatic.com"
+    connect_sources: "'self'"
+    media_sources: "'self'"
   
 # Logging Configuration
 logging:

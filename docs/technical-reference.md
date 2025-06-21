@@ -2,6 +2,10 @@
 
 ## Database Schema (Current State)
 
+### Important Changes
+- **REMOVED**: `status` column from articles table (no draft/published concept)
+- **ADDED**: `site_config` table for site-wide branding and configuration
+
 ### Core Tables
 ```sql
 -- All tables exist and working
@@ -12,6 +16,7 @@ trending_topics (id, title, slug, description, heat_score, ...)
 images (id, content_type, content_id, image_type, ...)
 article_sections (id, article_id, heading, content, order_num)
 related_articles (id, article_id, related_article_id)
+site_config (id, config_type, config_key, config_value, ...)
 ```
 
 ### Database Views
@@ -71,6 +76,7 @@ integrator.parse_content_file()    # Parse .txt files
 # Content type integrators (all working)
 ArticleIntegrator(), AuthorIntegrator()
 CategoryIntegrator(), TrendingIntegrator()
+SiteIntegrator(), StaticPageIntegrator()
 ```
 
 ### Configuration (`src/utils/config.py`)

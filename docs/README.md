@@ -1,8 +1,8 @@
-# Influencer News CMS Documentation
+# CMS Documentation
 
 ## Current Implementation Status
 
-This documentation reflects the **actual current state** of the Influencer News CMS, not planned or ideal features. Many features appear partially implemented or broken.
+This documentation reflects the **actual current state** of the CMS, not planned or ideal features. The site can be completely rebranded through configuration files.
 
 ## Quick Start
 
@@ -26,7 +26,11 @@ python scripts/sync_content.py status
 # 5. Sync content (most important command)
 python scripts/sync_content.py
 
-# 6. Open index.html in browser
+# 6. Configure site branding (optional)
+# Edit content/site/site-branding.txt
+python scripts/sync_content.py site
+
+# 7. Open index.html in browser
 ```
 
 ### What Actually Works
@@ -36,17 +40,16 @@ python scripts/sync_content.py
 - Author, category, and trending topic management
 
 ### What's Currently Broken
-- Homepage only shows one hardcoded article
-- Search functionality completely non-functional
-- Mobile features reference non-existent database tables
+- Search uses simulated data (backend fixed but not integrated)
 - Image downloading system not implemented
 - PWA missing all icon assets
+- Content updates not supported (only add/delete)
 
 ## Architecture Overview
 
 ### Database Layer
 - **Technology**: SQLite with comprehensive schema
-- **Tables**: authors, categories, articles, trending_topics, images, article_sections, related_articles
+- **Tables**: authors, categories, articles, trending_topics, images, article_sections, related_articles, site_config
 - **Features**: Foreign keys, triggers, indexes
 - **Issues**: Some referenced views don't exist
 

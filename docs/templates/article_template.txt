@@ -2,7 +2,6 @@ Title: {{article.title}}
 Slug: {{article.slug}}
 Author: {{article.author.name}}
 Category: {{article.category.slug}}
-Status: {{article.status}}
 Featured: {{article.featured}}
 Trending: {{article.trending}}
 Image: {{article.image_url}}
@@ -63,7 +62,6 @@ Dynamic Fields Available:
 - {{article.slug}} - URL-friendly identifier
 - {{article.author.name}} - Author's full name
 - {{article.category.slug}} - Category identifier
-- {{article.status}} - Publication status
 - {{article.featured}} - Homepage feature flag
 - {{article.trending}} - Trending section flag
 - {{article.image_url}} - Featured image URL

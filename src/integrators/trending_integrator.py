@@ -60,6 +60,9 @@ class TrendingIntegrator(BaseIntegrator):
             heat_score = getattr(topic, 'heat_score', getattr(topic, 'trend_score', 0))
             description = getattr(topic, 'description', getattr(topic, 'analysis', f'Explore the latest on {topic.title}')[:200] + '...' if getattr(topic, 'analysis', '') else f'Explore the latest on {topic.title}')
             
+            # Apply site branding first
+            content = self._apply_site_branding(template_content)
+            
             # Replace placeholders
             replacements = {
                 '{{TOPIC_TITLE}}': topic.title,
@@ -68,7 +71,6 @@ class TrendingIntegrator(BaseIntegrator):
                 '{{TREND_CONTENT}}': self.generate_trend_content(topic, base_path)
             }
             
-            content = template_content
             for placeholder, value in replacements.items():
                 content = content.replace(placeholder, value)
             
@@ -95,8 +97,11 @@ class TrendingIntegrator(BaseIntegrator):
             # Generate trending cards
             topics_html = self.generate_trending_cards(topics, base_path)
             
+            # Apply site branding first
+            content = self._apply_site_branding(template_content)
+            
             # Replace placeholders
-            content = template_content.replace('{{TRENDING_CONTENT}}', topics_html)
+            content = content.replace('{{TRENDING_CONTENT}}', topics_html)
             content = content.replace('{{TOPIC_COUNT}}', str(len(topics)))
             
             # Save file (listing goes in main integrated dir, not subfolder)
@@ -173,7 +178,7 @@ class TrendingIntegrator(BaseIntegrator):
                     </div>
                 </div>
                 <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 hover:text-indigo-600 transition">
+                    <h3 class="text-xl font-bold mb-3 hover:text-emerald-600 transition">
                         <a href="trending/trend_{topic.slug}.html">{self.escape_html(topic.title)}</a>
                     </h3>
                     <p class="text-gray-700 mb-4 text-sm">
@@ -182,7 +187,7 @@ class TrendingIntegrator(BaseIntegrator):
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-500">{heat_indicator} Heat Score: {heat_score}</span>
                         <a href="trending/trend_{topic.slug}.html" 
-                           class="text-indigo-600 font-medium">Explore →</a>
+                           class="text-emerald-600 font-medium">Explore →</a>
                     </div>
                 </div>
             </div>
@@ -229,7 +234,7 @@ class TrendingIntegrator(BaseIntegrator):
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div class="text-center p-4 bg-gray-50 rounded-lg">
-                        <div class="text-3xl font-bold text-indigo-600">{heat_score:,}</div>
+                        <div class="text-3xl font-bold text-emerald-600">{heat_score:,}</div>
                         <div class="text-sm text-gray-600">Heat Score</div>
                     </div>
                     <div class="text-center p-4 bg-gray-50 rounded-lg">
@@ -257,7 +262,7 @@ class TrendingIntegrator(BaseIntegrator):
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div class="text-center p-4 bg-gray-50 rounded-lg">
-                        <div class="text-3xl font-bold text-indigo-600">{heat_score:,}</div>
+                        <div class="text-3xl font-bold text-emerald-600">{heat_score:,}</div>
                         <div class="text-sm text-gray-600">Heat Score</div>
                     </div>
                     <div class="text-center p-4 bg-gray-50 rounded-lg">
@@ -538,7 +543,7 @@ class TrendingIntegrator(BaseIntegrator):
                        class="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                        onkeyup="handleMobileSearch(event)">
                 <button onclick="performMobileSearch()" 
-                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-600 text-xl">🔍</button>
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-emerald-600 text-xl">🔍</button>
             </div>
             <div id="mobileSearchSuggestions" class="bg-white border border-gray-200 rounded-lg hidden max-h-60 overflow-y-auto"></div>
         </div>
@@ -772,6 +777,99 @@ class TrendingIntegrator(BaseIntegrator):
         """Update listing page - use create_trending_listing instead"""
         pass
         
+    def _apply_site_branding(self, html_content: str) -> str:
+        """Apply site configuration to HTML content"""
+        try:
+            site_integrator = self.get_site_integrator()
+            branding = site_integrator.get_config_section('branding')
+            contact = site_integrator.get_config_section('contact')
+            
+            # Create replacements dictionary - use site config dynamically
+            replacements = {
+                # Site name replacements
+                'Influencer News': branding.get('site_name'),
+                # Title tag replacements
+                ' - Influencer News': f" - {branding.get('site_name')}",
+                '| Influencer News': f"| {branding.get('site_name')}",
+                # Header logo text
+                '>IN<': f">{branding.get('logo_text')}<",
+                # Header tagline
+                'Breaking stories • Real insights': branding.get('site_tagline'),
+                # Theme color replacements - comprehensive
+                '#4f46e5': branding.get('theme_color'),  # indigo-500
+                '#6366f1': branding.get('theme_color'),  # indigo-500 variant
+                '#312e81': branding.get('theme_color'),  # indigo-900
+                '#4338ca': branding.get('theme_color'),  # indigo-700
+                '#3730a3': branding.get('theme_color'),  # indigo-800
+                '#1e1b4b': branding.get('theme_color'),  # indigo-950
+                '#667eea': branding.get('theme_color'),  # custom indigo
+                # Convert specific indigo classes to use theme color
+                'bg-indigo-900': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}900",
+                'bg-indigo-800': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                'bg-indigo-700': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'bg-indigo-600': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'bg-indigo-500': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}500",
+                'bg-indigo-400': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                'bg-indigo-200': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}200",
+                'bg-indigo-100': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}100",
+                'bg-indigo-50': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}50",
+                'text-indigo-900': f"text-{self._get_theme_class_name(branding.get('theme_color'))}900",
+                'text-indigo-800': f"text-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                'text-indigo-700': f"text-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'text-indigo-600': f"text-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'text-indigo-200': f"text-{self._get_theme_class_name(branding.get('theme_color'))}200",
+                'text-indigo-100': f"text-{self._get_theme_class_name(branding.get('theme_color'))}100",
+                'border-indigo-700': f"border-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'border-indigo-600': f"border-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'hover:bg-indigo-600': f"hover:bg-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'hover:text-indigo-600': f"hover:text-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'hover:text-indigo-200': f"hover:text-{self._get_theme_class_name(branding.get('theme_color'))}200",
+                'focus:ring-indigo-400': f"focus:ring-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                'focus:ring-indigo-500': f"focus:ring-{self._get_theme_class_name(branding.get('theme_color'))}500",
+                'from-indigo-400': f"from-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                'from-indigo-600': f"from-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'from-indigo-900': f"from-{self._get_theme_class_name(branding.get('theme_color'))}900",
+                'to-purple-600': f"to-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'to-purple-800': f"to-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                'via-purple-800': f"via-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                # Footer copyright
+                '© 2025 Influencer News': f"© 2025 {branding.get('site_name')}",
+                # Contact info updates
+                'news@influencernews.com': contact.get('contact_email'),
+                '(555) 123-NEWS': contact.get('contact_phone'),
+                '123 Creator Avenue': contact.get('business_address'),
+                'Los Angeles, CA 90210': f"{contact.get('city', 'New York')}, {contact.get('state', 'NY')} {contact.get('zip_code', '10001')}"
+            }
+            
+            # Apply all replacements
+            for old_value, new_value in replacements.items():
+                if old_value and new_value:  # Only replace if both values exist and are not None
+                    html_content = html_content.replace(old_value, str(new_value))
+            
+            return html_content
+            
+        except Exception as e:
+            print(f"Warning: Could not apply site branding to trending page: {e}")
+            return html_content
+    
+    def _get_theme_class_name(self, theme_color: str) -> str:
+        """Convert theme color to appropriate Tailwind class name"""
+        if not theme_color:
+            return 'indigo-'
+        
+        # Map common colors to Tailwind classes
+        color_map = {
+            '#059669': 'emerald-',
+            '#10b981': 'emerald-',
+            '#3b82f6': 'blue-',
+            '#8b5cf6': 'violet-',
+            '#f59e0b': 'amber-',
+            '#ef4444': 'red-',
+            '#6b7280': 'gray-'
+        }
+        
+        return color_map.get(theme_color.lower(), 'emerald-')
+    
     def create_sample_file(self):
         """Create sample file"""
         pass
@@ -983,7 +1081,7 @@ class TrendingIntegrator(BaseIntegrator):
                        class="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                        onkeyup="handleMobileSearch(event)">
                 <button onclick="performMobileSearch()" 
-                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-600 text-xl">🔍</button>
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-emerald-600 text-xl">🔍</button>
             </div>
             <div id="mobileSearchSuggestions" class="bg-white border border-gray-200 rounded-lg hidden max-h-60 overflow-y-auto"></div>
         </div>

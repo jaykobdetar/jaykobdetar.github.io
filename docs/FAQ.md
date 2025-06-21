@@ -2,11 +2,11 @@
 
 ## General Questions
 
-### What is Influencer News CMS?
-Influencer News CMS is a desktop content management system specifically designed for creating and managing static news websites focused on the influencer and creator economy. It provides a GUI interface for managing articles, authors, categories, and trending topics.
+### What is this CMS?
+This is a command-line content management system designed for creating and managing static news websites. It uses text files for content, stores data in SQLite, and generates static HTML pages. The entire site can be rebranded through configuration files.
 
 ### Do I need any programming knowledge?
-No programming knowledge is required! The system uses simple text files with a specific format, and the GUI handles all the technical aspects of HTML generation and website management.
+Basic command-line knowledge is helpful. The system uses simple text files with a specific format, and Python scripts handle all the technical aspects of HTML generation and website management.
 
 ### What platforms does it work on?
 The system works on Windows, macOS, and Linux. It requires Python 3.7 or higher, which includes the tkinter GUI library.
@@ -18,16 +18,34 @@ Only Python 3.7 or higher is required. The system uses built-in Python libraries
 
 ### How do I get started?
 1. Download/clone the project
-2. Run `python3 integration_manager.py`
-3. Click "Setup" buttons to create sample files
-4. Edit the samples or create your own content
-5. Use "Integrate" to process your content
+2. Run `npm install` and `npm run build` for CSS
+3. Create content files in `content/` directories
+4. Run `python3 scripts/sync_content.py` to process content
+5. Open `index.html` in a browser
 
-### The GUI won't start. What's wrong?
+### The sync script won't run. What's wrong?
 - Ensure Python 3.7+ is installed: `python3 --version`
-- Test tkinter availability: `python3 -m tkinter`
-- Try running: `python3 integration_manager.py` (note the "3")
-- Check that you're in the correct directory
+- Check that you're in the project root directory
+- Try: `python3 scripts/sync_content.py status`
+- Ensure the database exists at `data/infnews.db`
+
+## Site Configuration
+
+### How do I rebrand the site?
+Edit `content/site/site-branding.txt` with your site details:
+- Site Name: Your site name
+- Site Tagline: Your tagline
+- Logo Text: 2-3 character logo
+- Theme Color: Hex color code
+Then run `python3 scripts/sync_content.py site`
+
+### What theme colors are available?
+The system maps hex colors to Tailwind classes:
+- #059669 → emerald (green)
+- #dc2626 → red
+- #2563eb → blue
+- #7c3aed → purple
+- #4f46e5 → indigo
 
 ## Content Creation
 
@@ -68,15 +86,17 @@ No, the system tracks processed files in JSON databases to prevent duplicates. I
 ## Content Management
 
 ### How do I update existing content?
-1. Edit the source `.txt` file in the `content/` directory
-2. Remove the old version using the Content Management tab
-3. Re-integrate the updated file
+Currently, the system only supports adding new content. To update:
+1. Delete the source `.txt` file
+2. Run `python3 scripts/sync_content.py`
+3. Re-add the file with updated content
+4. Run sync again
 
 ### How do I remove content?
-Use the Content Management or Content Browser tabs in the integration manager:
-- Remove by ID or filename
-- Use selective removal for multiple items
-- Clean orphaned files periodically
+1. Delete the source `.txt` file from `content/` directory
+2. Run `python3 scripts/sync_content.py`
+3. The system will remove the database entry and HTML file
+4. Note: May fail if content is referenced by other content
 
 ### What are orphaned files?
 Orphaned files are HTML pages in the `integrated/` directory that don't have corresponding entries in the JSON databases. This can happen if files are manually deleted or if integration fails.
@@ -93,12 +113,10 @@ Run `python3 sync_site.py` when:
 ### Can I change the folder structure?
 The basic structure (`content/` → `integrated/`) is required for the system to work. You can rename individual files, but keep them in the correct subdirectories.
 
-### What are the JSON files in the data/ directory?
-These are the databases that track processed content:
-- `articles_db.json` - Article tracking and metadata
-- `authors_db.json` - Author profile information
-- `categories_db.json` - Category definitions and settings
-- `trending_db.json` - Trending topic data and metrics
+### What files are in the data/ directory?
+- `infnews.db` - SQLite database containing all content
+- Legacy JSON files (no longer used)
+- Image procurement tracking files
 
 ### Can I edit the JSON files directly?
 While possible, it's not recommended. Use the GUI tools instead. If you must edit them directly, run `python3 sync_site.py` afterward to ensure consistency.

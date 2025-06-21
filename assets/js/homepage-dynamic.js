@@ -1,33 +1,12 @@
+// Homepage dynamic content loader
+// Loads articles dynamically from database-generated content
 
-// Auto-generated homepage data from database
-// Generated at: 2025-06-17T08:06:48.667185
-
-const homepageArticles = [
-  {
-    "id": 5,
-    "title": "New Platform Update Changes Everything for Creators",
-    "excerpt": "Major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025.",
-    "slug": "new-platform-update-changes-everything-for-creators",
-    "author_name": "Alex Rivera",
-    "author_slug": "alex-rivera",
-    "category_name": "Technology",
-    "category_slug": "technology",
-    "category_color": "#3B82F6",
-    "category_icon": "\ud83d\ude80",
-    "publish_date": "2025-06-11T17:52:45.199348",
-    "views": 0,
-    "likes": 0,
-    "read_time_minutes": 1,
-    "image_url": "assets/images/default-article.jpg",
-    "url": "integrated/articles/article_5.html"
-  }
-];
+let homepageArticles = [];
 
 // Load articles into homepage
 function loadHomepageArticles() {
     const grid = document.getElementById('articlesGrid');
     if (!grid) {
-        console.error('Articles grid not found');
         return;
     }
     
@@ -45,8 +24,6 @@ function loadHomepageArticles() {
         const articleCard = createArticleCard(article, index === 0);
         grid.appendChild(articleCard);
     });
-    
-    console.log(`Loaded ${homepageArticles.length} articles from database`);
 }
 
 function createArticleCard(article, isFeatured = false) {
@@ -104,45 +81,18 @@ function getTimeAgo(date) {
     return `${Math.floor(diffDays / 30)} months ago`;
 }
 
-// Enhanced load more functionality with real search integration
-let allArticles = [...homepageArticles];
-let articlesPerPage = 6;
-let currentPage = 1;
-
+// Load more functionality
 function loadMoreArticles() {
-    console.log('Loading more articles...');
-    
     const loadMoreBtn = document.getElementById('loadMoreBtn');
     if (loadMoreBtn) {
-        loadMoreBtn.innerHTML = '<span class="animate-spin">⟳</span> Loading...';
+        loadMoreBtn.innerHTML = 'No more articles';
         loadMoreBtn.disabled = true;
-        
-        // In production, this would call the search backend for more articles
-        setTimeout(() => {
-            loadMoreBtn.innerHTML = 'No more articles';
-            loadMoreBtn.disabled = true;
-            loadMoreBtn.className = loadMoreBtn.className.replace('hover:from-indigo-700 hover:to-purple-700', 'bg-gray-400 cursor-not-allowed');
-        }, 1000);
+        loadMoreBtn.className = loadMoreBtn.className.replace('hover:from-indigo-700 hover:to-purple-700', 'bg-gray-400 cursor-not-allowed');
     }
-}
-
-// Enhanced search functionality
-function performSearch() {
-    const query = document.getElementById('searchInput').value;
-    if (query.trim()) {
-        // Redirect to search page with query
-        window.location.href = `search.html?q=${encodeURIComponent(query)}`;
-    }
-}
-
-function showSearchResults(query) {
-    // This function now redirects to search page instead of showing inline results
-    window.location.href = `search.html?q=${encodeURIComponent(query)}`;
 }
 
 // Initialize homepage when DOM loads
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Initializing dynamic homepage...');
     loadHomepageArticles();
 });
 
@@ -151,5 +101,4 @@ if (typeof window !== 'undefined') {
     window.homepageArticles = homepageArticles;
     window.loadHomepageArticles = loadHomepageArticles;
     window.createArticleCard = createArticleCard;
-    window.performSearch = performSearch;
 }

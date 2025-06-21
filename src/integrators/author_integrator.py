@@ -5,7 +5,6 @@ Author Integrator
 Manages author profiles and generates author pages using SQLite database
 """
 
-import random
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 try:
@@ -94,9 +93,9 @@ class AuthorIntegrator(BaseIntegrator):
             'email': metadata.get('email', ''),
             'twitter': metadata.get('twitter', ''),
             'linkedin': metadata.get('linkedin', ''),
-            'articles_written': int(metadata.get('articles_written', random.randint(10, 500))),
+            'articles_written': int(metadata.get('articles_written', 0)),
             'role_category': role_category,
-            'rating': round(random.uniform(4.5, 5.0), 1),
+            'rating': float(metadata.get('rating', 0.0)),
             'joined_date': metadata.get('joined_date', '2020-01-01'),
             'verified': metadata.get('verified', 'true').lower() == 'true'
         }
@@ -170,7 +169,7 @@ class AuthorIntegrator(BaseIntegrator):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{author.name} - Author Profile | Influencer News</title>
+    <title>{author.name} - Author Profile | TheRealNews</title>
     <link rel="stylesheet" href="{base_path}assets/css/styles.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -428,7 +427,7 @@ class AuthorIntegrator(BaseIntegrator):
         <div class="p-6 mt-auto">
             <div class="bg-indigo-700 rounded-lg p-4">
                 <h3 class="text-white font-bold mb-2">Newsletter</h3>
-                <p class="text-indigo-200 text-sm mb-3">Get the latest influencer news</p>
+                <p class="text-indigo-200 text-sm mb-3">Get the latest news</p>
                 <button class="bg-white text-indigo-700 px-4 py-2 rounded-md text-sm font-semibold w-full">Subscribe</button>
             </div>
         </div>
@@ -470,7 +469,7 @@ class AuthorIntegrator(BaseIntegrator):
                     <span class="text-2xl font-bold text-white">IN</span>
                 </div>
                 <div>
-                    <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
+                    <h1 class="text-3xl font-bold hero-title">TheRealNews</h1>
                     <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
                 </div>
             </div>
@@ -492,25 +491,6 @@ class AuthorIntegrator(BaseIntegrator):
                 </ul>
             </nav>
             
-            <!-- Enhanced Search Bar - Desktop Only -->
-            <div class="relative hidden md:block">
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    placeholder="Search breaking news..." 
-                    class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
-                    onkeyup="handleSearch(event)"
-                >
-                <button onclick="performSearch()" class="absolute right-3 top-3 text-gray-600 hover:text-indigo-600 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </button>
-                <!-- Search Suggestions -->
-                <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg mt-1 hidden max-h-60 overflow-y-auto z-50">
-                    <!-- Populated by JavaScript -->
-                </div>
-            </div>
             
             <!-- Mobile Search Button -->
             <button class="md:hidden text-white p-2" id="mobileSearchToggle" aria-label="Toggle mobile search">
@@ -520,18 +500,6 @@ class AuthorIntegrator(BaseIntegrator):
             </button>
         </div>
         
-        <div class="bg-gradient-to-r from-red-600 to-red-700 text-white py-3 overflow-hidden relative">
-            <div class="live-ticker flex items-center space-x-8">
-                <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 bg-red-400 rounded-full animate-ping"></div>
-                    <span class="font-bold text-sm">LIVE</span>
-                </div>
-                <span class="text-sm font-medium">
-                    BREAKING: Emma Chamberlain signs $50M Netflix deal • TikTok announces new creator fund • Charli D'Amelio beauty line sells out in 2 hours • 
-                    <span id="current-time" class="font-bold"></span>
-                </span>
-            </div>
-        </div>
     </header>
 
     <!-- Author Profile Section -->
@@ -612,7 +580,7 @@ class AuthorIntegrator(BaseIntegrator):
     <!-- Footer -->
     <footer class="bg-gray-900 text-white py-8 mt-16">
         <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2024 Influencer News. All rights reserved.</p>
+            <p>&copy; 2025 TheRealNews. All rights reserved.</p>
         </div>
     </footer>
 
@@ -736,18 +704,6 @@ class AuthorIntegrator(BaseIntegrator):
             }}
         }}
 
-        function handleSearch(event) {{
-            if (event.key === 'Enter') {{
-                performSearch();
-            }}
-        }}
-
-        function performSearch() {{
-            const query = document.getElementById('searchInput').value;
-            if (query.trim()) {{
-                window.location.href = `{base_path}search.html?q=${{encodeURIComponent(query)}}`;
-            }}
-        }}
 
         function updateTime() {{
             const now = new Date();
@@ -782,6 +738,9 @@ class AuthorIntegrator(BaseIntegrator):
     </script>
 </body>
 </html>'''
+        
+        # Apply site branding before writing
+        html_content = self._apply_site_branding(html_content)
         
         # Write the HTML file
         with open(author_filename, 'w', encoding='utf-8') as f:
@@ -818,7 +777,7 @@ class AuthorIntegrator(BaseIntegrator):
                         <span class="text-gray-500 text-sm ml-auto">{self.format_date_relative(article.publication_date)}</span>
                     </div>
                     <h3 class="text-xl font-semibold mb-2 line-clamp-2">
-                        <a href="{base_path}integrated/articles/article_{article.id}.html" class="hover:text-indigo-600">
+                        <a href="{base_path}integrated/articles/article_{article.slug}.html" class="hover:text-indigo-600">
                             {self.escape_html(article.title)}
                         </a>
                     </h3>
@@ -906,6 +865,92 @@ class AuthorIntegrator(BaseIntegrator):
             
             with open(authors_html_path, 'w', encoding='utf-8') as f:
                 f.write(content)
+    
+    def _apply_site_branding(self, html_content: str) -> str:
+        """Apply site configuration to HTML content"""
+        try:
+            site_integrator = self.get_site_integrator()
+            branding = site_integrator.get_config_section('branding')
+            contact = site_integrator.get_config_section('contact')
+            
+            # Create replacements dictionary - use site config dynamically
+            replacements = {
+                # Site name replacements
+                'Influencer News': branding.get('site_name'),
+                # Title tag replacements
+                'Author Profile | Influencer News': f"Author Profile | {branding.get('site_name')}",
+                # Header logo text
+                '>IN<': f">{branding.get('logo_text')}<",
+                # Header tagline
+                'Breaking stories • Real insights': branding.get('site_tagline'),
+                # Theme color replacements
+                '#4f46e5': branding.get('theme_color'),
+                '#667eea': branding.get('theme_color'),
+                # Convert specific indigo classes to use theme color
+                'bg-indigo-900': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}900",
+                'bg-indigo-800': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                'bg-indigo-700': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'bg-indigo-600': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'bg-indigo-500': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}500",
+                'bg-indigo-400': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                'bg-indigo-200': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}200",
+                'bg-indigo-100': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}100",
+                'bg-indigo-50': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}50",
+                'text-indigo-900': f"text-{self._get_theme_class_name(branding.get('theme_color'))}900",
+                'text-indigo-800': f"text-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                'text-indigo-700': f"text-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'text-indigo-600': f"text-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'text-indigo-200': f"text-{self._get_theme_class_name(branding.get('theme_color'))}200",
+                'text-indigo-100': f"text-{self._get_theme_class_name(branding.get('theme_color'))}100",
+                'border-indigo-700': f"border-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'border-indigo-600': f"border-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'hover:bg-indigo-600': f"hover:bg-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'hover:text-indigo-600': f"hover:text-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'hover:text-indigo-200': f"hover:text-{self._get_theme_class_name(branding.get('theme_color'))}200",
+                'focus:ring-indigo-400': f"focus:ring-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                'focus:ring-indigo-500': f"focus:ring-{self._get_theme_class_name(branding.get('theme_color'))}500",
+                'from-indigo-400': f"from-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                'from-indigo-600': f"from-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'to-purple-600': f"to-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'to-purple-800': f"to-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                # Footer copyright
+                '© 2024 Influencer News': f"© 2025 {branding.get('site_name')}",
+                # Contact info updates
+                'news@influencernews.com': contact.get('contact_email'),
+                '(555) 123-NEWS': contact.get('contact_phone'),
+                '123 Creator Avenue': contact.get('business_address'),
+                'Los Angeles, CA 90210': f"{contact.get('city', 'New York')}, {contact.get('state', 'NY')} {contact.get('zip_code', '10001')}",
+                'editorial@influencernews.com': contact.get('contact_email')
+            }
+            
+            # Apply all replacements
+            for old_value, new_value in replacements.items():
+                if old_value and new_value:  # Only replace if both values exist and are not None
+                    html_content = html_content.replace(old_value, str(new_value))
+            
+            return html_content
+            
+        except Exception as e:
+            print(f"Warning: Could not apply site branding to author page: {e}")
+            return html_content
+    
+    def _get_theme_class_name(self, theme_color: str) -> str:
+        """Convert theme color to appropriate Tailwind class name"""
+        if not theme_color:
+            return 'indigo-'
+        
+        # Map common colors to Tailwind classes
+        color_map = {
+            '#059669': 'emerald-',
+            '#10b981': 'emerald-',
+            '#3b82f6': 'blue-',
+            '#8b5cf6': 'violet-',
+            '#f59e0b': 'amber-',
+            '#ef4444': 'red-',
+            '#6b7280': 'gray-'
+        }
+        
+        return color_map.get(theme_color.lower(), 'emerald-')
     
     def create_sample_file(self):
         """Create a sample author file"""

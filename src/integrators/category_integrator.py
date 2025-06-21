@@ -68,6 +68,9 @@ class CategoryIntegrator(BaseIntegrator):
             search_data = self.generate_dynamic_search_data()
             search_data_js = str(search_data).replace("'", '"')  # Convert to JS array format
             
+            # Apply site branding first
+            content = self._apply_site_branding(template_content)
+            
             # Replace placeholders
             replacements = {
                 '{{CATEGORY_NAME}}': category.name,
@@ -78,7 +81,6 @@ class CategoryIntegrator(BaseIntegrator):
                 '{{SEARCH_DATA}}': search_data_js
             }
             
-            content = template_content
             for placeholder, value in replacements.items():
                 content = content.replace(placeholder, value)
             
@@ -109,8 +111,11 @@ class CategoryIntegrator(BaseIntegrator):
             search_data = self.generate_dynamic_search_data()
             search_data_js = str(search_data).replace("'", '"')  # Convert to JS array format
             
+            # Apply site branding first
+            content = self._apply_site_branding(template_content)
+            
             # Replace placeholders
-            content = template_content.replace('{{CATEGORIES_CONTENT}}', categories_html)
+            content = content.replace('{{CATEGORIES_CONTENT}}', categories_html)
             content = content.replace('{{CATEGORY_COUNT}}', str(len(categories)))
             content = content.replace('{{SEARCH_DATA}}', search_data_js)
             
@@ -203,16 +208,16 @@ class CategoryIntegrator(BaseIntegrator):
                     <div class="flex items-center gap-2 mb-3">
                         <span class="text-gray-500 text-sm">{author_name} • {self.format_date_relative(getattr(article, 'created_at', ''))}</span>
                     </div>
-                    <h3 class="text-lg font-bold mb-3 hover:text-indigo-600 transition">
-                        <a href="{base_path}integrated/articles/article_{article.id}.html">{self.escape_html(article.title)}</a>
+                    <h3 class="text-lg font-bold mb-3 hover:text-emerald-600 transition">
+                        <a href="{base_path}integrated/articles/article_{article.slug}.html">{self.escape_html(article.title)}</a>
                     </h3>
                     <p class="text-gray-700 mb-4 text-sm">
                         {self.escape_html(getattr(article, 'excerpt', article.title)[:150])}...
                     </p>
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-500">👁 {views_formatted} views</span>
-                        <a href="{base_path}integrated/articles/article_{article.id}.html" 
-                           class="text-indigo-600 font-medium">Read →</a>
+                        <a href="{base_path}integrated/articles/article_{article.slug}.html" 
+                           class="text-emerald-600 font-medium">Read →</a>
                     </div>
                 </div>
             </div>
@@ -391,7 +396,7 @@ class CategoryIntegrator(BaseIntegrator):
     
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-        <div class="p-6 border-b border-indigo-600">
+        <div class="p-6 border-b border-emerald-600">
             <div class="flex justify-between items-center">
                 <h2 class="text-xl font-bold text-white">Menu</h2>
                 <button id="closeMobileMenu" class="text-white text-2xl">&times;</button>
@@ -399,11 +404,11 @@ class CategoryIntegrator(BaseIntegrator):
         </div>
         <nav class="p-6">
             <ul class="space-y-4">
-                <li><a href="{base_path}index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Home</a></li>
-                <li><a href="{base_path}search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Search</a></li>
-                <li><a href="{base_path}authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Authors</a></li>
-                <li><a href="{base_path}integrated/categories.html" class="mobile-nav-item block text-indigo-200 text-lg py-2 border-b border-indigo-600/30">Categories</a></li>
-                <li><a href="{base_path}integrated/trending.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Trending</a></li>
+                <li><a href="{base_path}index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-emerald-600/30">Home</a></li>
+                <li><a href="{base_path}search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-emerald-600/30">Search</a></li>
+                <li><a href="{base_path}authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-emerald-600/30">Authors</a></li>
+                <li><a href="{base_path}integrated/categories.html" class="mobile-nav-item block text-emerald-200 text-lg py-2 border-b border-emerald-600/30">Categories</a></li>
+                <li><a href="{base_path}integrated/trending.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-emerald-600/30">Trending</a></li>
             </ul>
         </nav>
     </div>
@@ -417,35 +422,35 @@ class CategoryIntegrator(BaseIntegrator):
             </div>
             <div class="relative mb-6">
                 <input type="text" id="mobileSearchInput" placeholder="Search articles, authors, categories..." 
-                       class="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                       class="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                        onkeyup="handleMobileSearch(event)">
                 <button onclick="performMobileSearch()" 
-                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-600 text-xl">🔍</button>
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-emerald-600 text-xl">🔍</button>
             </div>
             <div id="mobileSearchSuggestions" class="bg-white border border-gray-200 rounded-lg hidden max-h-60 overflow-y-auto"></div>
         </div>
     </div>
     
     <!-- Header -->
-    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+    <header class="bg-emerald-900 text-white sticky top-0 z-50 shadow-2xl">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mr-4">
                     <span class="text-2xl font-bold text-white">IN</span>
                 </div>
                 <div>
                     <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
-                    <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
+                    <p class="text-xs text-emerald-200">Breaking stories • Real insights</p>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
                 <nav class="hidden md:block">
                     <ul class="flex space-x-8">
-                        <li><a href="{base_path}index.html" class="hover:text-indigo-200 transition font-medium">Home</a></li>
-                        <li><a href="{base_path}search.html" class="hover:text-indigo-200 transition font-medium">Search</a></li>
-                        <li><a href="{base_path}authors.html" class="hover:text-indigo-200 transition font-medium">Authors</a></li>
-                        <li><a href="{base_path}integrated/categories.html" class="hover:text-indigo-200 transition font-medium text-indigo-200">Categories</a></li>
-                        <li><a href="{base_path}integrated/trending.html" class="hover:text-indigo-200 transition font-medium">Trending</a></li>
+                        <li><a href="{base_path}index.html" class="hover:text-emerald-200 transition font-medium">Home</a></li>
+                        <li><a href="{base_path}search.html" class="hover:text-emerald-200 transition font-medium">Search</a></li>
+                        <li><a href="{base_path}authors.html" class="hover:text-emerald-200 transition font-medium">Authors</a></li>
+                        <li><a href="{base_path}integrated/categories.html" class="hover:text-emerald-200 transition font-medium text-emerald-200">Categories</a></li>
+                        <li><a href="{base_path}integrated/trending.html" class="hover:text-emerald-200 transition font-medium">Trending</a></li>
                     </ul>
                 </nav>
                 
@@ -663,6 +668,99 @@ class CategoryIntegrator(BaseIntegrator):
         """Update listing page - use create_categories_listing instead"""
         pass
         
+    def _apply_site_branding(self, html_content: str) -> str:
+        """Apply site configuration to HTML content"""
+        try:
+            site_integrator = self.get_site_integrator()
+            branding = site_integrator.get_config_section('branding')
+            contact = site_integrator.get_config_section('contact')
+            
+            # Create replacements dictionary - use site config dynamically
+            replacements = {
+                # Site name replacements
+                'Influencer News': branding.get('site_name'),
+                # Title tag replacements
+                ' - Influencer News': f" - {branding.get('site_name')}",
+                '| Influencer News': f"| {branding.get('site_name')}",
+                # Header logo text
+                '>IN<': f">{branding.get('logo_text')}<",
+                # Header tagline
+                'Breaking stories • Real insights': branding.get('site_tagline'),
+                # Theme color replacements - comprehensive
+                '#4f46e5': branding.get('theme_color'),  # indigo-500
+                '#6366f1': branding.get('theme_color'),  # indigo-500 variant
+                '#312e81': branding.get('theme_color'),  # indigo-900
+                '#4338ca': branding.get('theme_color'),  # indigo-700
+                '#3730a3': branding.get('theme_color'),  # indigo-800
+                '#1e1b4b': branding.get('theme_color'),  # indigo-950
+                '#667eea': branding.get('theme_color'),  # custom indigo
+                # Convert specific indigo classes to use theme color
+                'bg-emerald-900': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}900",
+                'bg-indigo-800': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                'bg-indigo-700': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'bg-indigo-600': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'bg-indigo-500': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}500",
+                'bg-indigo-400': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                'bg-indigo-200': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}200",
+                'bg-indigo-100': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}100",
+                'bg-indigo-50': f"bg-{self._get_theme_class_name(branding.get('theme_color'))}50",
+                'text-indigo-900': f"text-{self._get_theme_class_name(branding.get('theme_color'))}900",
+                'text-indigo-800': f"text-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                'text-indigo-700': f"text-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'text-emerald-600': f"text-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'text-emerald-200': f"text-{self._get_theme_class_name(branding.get('theme_color'))}200",
+                'text-indigo-100': f"text-{self._get_theme_class_name(branding.get('theme_color'))}100",
+                'border-indigo-700': f"border-{self._get_theme_class_name(branding.get('theme_color'))}700",
+                'border-emerald-600': f"border-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'hover:bg-indigo-600': f"hover:bg-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'hover:text-emerald-600': f"hover:text-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'hover:text-emerald-200': f"hover:text-{self._get_theme_class_name(branding.get('theme_color'))}200",
+                'focus:ring-indigo-400': f"focus:ring-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                'focus:ring-emerald-500': f"focus:ring-{self._get_theme_class_name(branding.get('theme_color'))}500",
+                'from-indigo-400': f"from-{self._get_theme_class_name(branding.get('theme_color'))}400",
+                'from-indigo-600': f"from-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'from-indigo-900': f"from-{self._get_theme_class_name(branding.get('theme_color'))}900",
+                'to-purple-600': f"to-{self._get_theme_class_name(branding.get('theme_color'))}600",
+                'to-purple-800': f"to-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                'via-purple-800': f"via-{self._get_theme_class_name(branding.get('theme_color'))}800",
+                # Footer copyright
+                '© 2025 Influencer News': f"© 2025 {branding.get('site_name')}",
+                # Contact info updates
+                'news@influencernews.com': contact.get('contact_email'),
+                '(555) 123-NEWS': contact.get('contact_phone'),
+                '123 Creator Avenue': contact.get('business_address'),
+                'Los Angeles, CA 90210': f"{contact.get('city', 'New York')}, {contact.get('state', 'NY')} {contact.get('zip_code', '10001')}"
+            }
+            
+            # Apply all replacements
+            for old_value, new_value in replacements.items():
+                if old_value and new_value:  # Only replace if both values exist and are not None
+                    html_content = html_content.replace(old_value, str(new_value))
+            
+            return html_content
+            
+        except Exception as e:
+            print(f"Warning: Could not apply site branding to category page: {e}")
+            return html_content
+    
+    def _get_theme_class_name(self, theme_color: str) -> str:
+        """Convert theme color to appropriate Tailwind class name"""
+        if not theme_color:
+            return 'indigo-'
+        
+        # Map common colors to Tailwind classes
+        color_map = {
+            '#059669': 'emerald-',
+            '#10b981': 'emerald-',
+            '#3b82f6': 'blue-',
+            '#8b5cf6': 'violet-',
+            '#f59e0b': 'amber-',
+            '#ef4444': 'red-',
+            '#6b7280': 'gray-'
+        }
+        
+        return color_map.get(theme_color.lower(), 'emerald-')
+    
     def create_sample_file(self):
         """Create sample file"""
         pass
@@ -831,7 +929,7 @@ class CategoryIntegrator(BaseIntegrator):
     
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-        <div class="p-6 border-b border-indigo-600">
+        <div class="p-6 border-b border-emerald-600">
             <div class="flex justify-between items-center">
                 <h2 class="text-xl font-bold text-white">Menu</h2>
                 <button id="closeMobileMenu" class="text-white text-2xl">&times;</button>
@@ -839,11 +937,11 @@ class CategoryIntegrator(BaseIntegrator):
         </div>
         <nav class="p-6">
             <ul class="space-y-4">
-                <li><a href="{base_path}index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Home</a></li>
-                <li><a href="{base_path}search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Search</a></li>
-                <li><a href="{base_path}authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Authors</a></li>
-                <li><a href="{base_path}integrated/categories.html" class="mobile-nav-item block text-indigo-200 text-lg py-2 border-b border-indigo-600/30">Categories</a></li>
-                <li><a href="{base_path}integrated/trending.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-indigo-600/30">Trending</a></li>
+                <li><a href="{base_path}index.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-emerald-600/30">Home</a></li>
+                <li><a href="{base_path}search.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-emerald-600/30">Search</a></li>
+                <li><a href="{base_path}authors.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-emerald-600/30">Authors</a></li>
+                <li><a href="{base_path}integrated/categories.html" class="mobile-nav-item block text-emerald-200 text-lg py-2 border-b border-emerald-600/30">Categories</a></li>
+                <li><a href="{base_path}integrated/trending.html" class="mobile-nav-item block text-white text-lg py-2 border-b border-emerald-600/30">Trending</a></li>
             </ul>
         </nav>
     </div>
@@ -857,35 +955,35 @@ class CategoryIntegrator(BaseIntegrator):
             </div>
             <div class="relative mb-6">
                 <input type="text" id="mobileSearchInput" placeholder="Search articles, authors, categories..." 
-                       class="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                       class="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                        onkeyup="handleMobileSearch(event)">
                 <button onclick="performMobileSearch()" 
-                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-600 text-xl">🔍</button>
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-emerald-600 text-xl">🔍</button>
             </div>
             <div id="mobileSearchSuggestions" class="bg-white border border-gray-200 rounded-lg hidden max-h-60 overflow-y-auto"></div>
         </div>
     </div>
     
     <!-- Header -->
-    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+    <header class="bg-emerald-900 text-white sticky top-0 z-50 shadow-2xl">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mr-4">
                     <span class="text-2xl font-bold text-white">IN</span>
                 </div>
                 <div>
                     <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
-                    <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
+                    <p class="text-xs text-emerald-200">Breaking stories • Real insights</p>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
                 <nav class="hidden md:block">
                     <ul class="flex space-x-8">
-                        <li><a href="{base_path}index.html" class="hover:text-indigo-200 transition font-medium">Home</a></li>
-                        <li><a href="{base_path}search.html" class="hover:text-indigo-200 transition font-medium">Search</a></li>
-                        <li><a href="{base_path}authors.html" class="hover:text-indigo-200 transition font-medium">Authors</a></li>
-                        <li><a href="{base_path}integrated/categories.html" class="hover:text-indigo-200 transition font-medium text-indigo-200">Categories</a></li>
-                        <li><a href="{base_path}integrated/trending.html" class="hover:text-indigo-200 transition font-medium">Trending</a></li>
+                        <li><a href="{base_path}index.html" class="hover:text-emerald-200 transition font-medium">Home</a></li>
+                        <li><a href="{base_path}search.html" class="hover:text-emerald-200 transition font-medium">Search</a></li>
+                        <li><a href="{base_path}authors.html" class="hover:text-emerald-200 transition font-medium">Authors</a></li>
+                        <li><a href="{base_path}integrated/categories.html" class="hover:text-emerald-200 transition font-medium text-emerald-200">Categories</a></li>
+                        <li><a href="{base_path}integrated/trending.html" class="hover:text-emerald-200 transition font-medium">Trending</a></li>
                     </ul>
                 </nav>
                 
@@ -905,7 +1003,7 @@ class CategoryIntegrator(BaseIntegrator):
     </header>
 
     <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-700 text-white py-20">
+    <section class="bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-700 text-white py-20">
         <div class="container mx-auto px-4 text-center">
             <h1 class="text-5xl font-bold mb-4 hero-title">Content Categories</h1>
             <p class="text-xl mb-6">Explore our diverse range of influencer and creator content</p>

@@ -1,0 +1,42 @@
+Business Name: {{site.business_name}}
+Contact Email: {{site.contact_email}}
+Support Email: {{site.support_email}}
+Sales Email: {{site.sales_email}}
+Contact Phone: {{site.contact_phone}}
+Business Address: {{site.business_address}}
+City: {{site.city}}
+State: {{site.state}}
+Zip Code: {{site.zip_code}}
+Country: {{site.country}}
+
+<!-- SITE CONTACT TEMPLATE
+
+This template defines the site-wide contact information that appears in footers and contact pages.
+Place this file in: content/site/site-contact.txt
+
+Field Descriptions:
+- Business Name: Legal business name
+- Contact Email: Primary contact email
+- Support Email: Customer support email
+- Sales Email: Sales inquiries email
+- Contact Phone: Main phone number
+- Business Address: Street address
+- City: City name
+- State: State/Province code
+- Zip Code: Postal code
+- Country: Country name
+
+Example:
+Business Name: TheRealNews Inc.
+Contact Email: news@therealnews.com
+Support Email: support@therealnews.com
+Sales Email: advertise@therealnews.com
+Contact Phone: (555) 123-REAL
+Business Address: 456 Truth Boulevard
+City: New York
+State: NY
+Zip Code: 10001
+Country: USA
+
+Note: After changing this file, run 'python3 scripts/sync_content.py' to apply changes site-wide.
+-->

@@ -52,7 +52,6 @@ CREATE TABLE articles (
     content TEXT,               -- Full article content
     author_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL,
-    status TEXT DEFAULT 'draft', -- draft, published, archived
     featured BOOLEAN DEFAULT 0,
     trending BOOLEAN DEFAULT 0,
     publish_date TEXT,
@@ -66,10 +65,15 @@ CREATE TABLE articles (
     read_time_minutes INTEGER DEFAULT 0,
     seo_title TEXT,
     seo_description TEXT,
+    mobile_title TEXT,          -- Mobile-optimized title
+    mobile_excerpt TEXT,        -- Mobile-optimized excerpt
+    mobile_hero_image_id INTEGER, -- Reference to mobile hero image
+    last_modified TEXT,         -- Track content file modifications
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE RESTRICT,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT,
+    FOREIGN KEY (mobile_hero_image_id) REFERENCES images(id)
 );
 
 -- Trending topics table with comprehensive social media tracking
@@ -144,6 +148,53 @@ CREATE TABLE related_articles (
     UNIQUE(article_id, related_article_id)
 );
 
+-- Mobile metrics for tracking device-specific views and performance
+CREATE TABLE mobile_metrics (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    article_id INTEGER NOT NULL,
+    date_recorded TEXT NOT NULL,
+    mobile_views INTEGER DEFAULT 0,
+    tablet_views INTEGER DEFAULT 0,
+    desktop_views INTEGER DEFAULT 0,
+    avg_load_time_ms INTEGER DEFAULT 0,
+    bounce_rate REAL DEFAULT 0.0,
+    scroll_depth_percent INTEGER DEFAULT 0,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE,
+    UNIQUE(article_id, date_recorded)
+);
+
+-- Image variants for responsive images at different sizes
+CREATE TABLE image_variants (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    image_id INTEGER NOT NULL,
+    variant_type TEXT NOT NULL,       -- mobile, tablet, desktop, thumbnail, etc.
+    width INTEGER NOT NULL,
+    height INTEGER NOT NULL,
+    local_filename TEXT NOT NULL,
+    file_size INTEGER DEFAULT 0,
+    quality INTEGER DEFAULT 80,
+    format TEXT DEFAULT 'webp',
+    is_optimized BOOLEAN DEFAULT 0,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE
+);
+
+-- Site configuration table for managing site-wide content
+CREATE TABLE site_config (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    config_type TEXT NOT NULL,        -- 'branding', 'contact', 'navigation', 'content'
+    config_key TEXT NOT NULL,         -- specific setting name
+    config_value TEXT,                -- setting value
+    description TEXT,                 -- human-readable description
+    is_active BOOLEAN DEFAULT 1,
+    last_modified TEXT,               -- track source file modifications
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(config_type, config_key)
+);
+
 -- ================================
 -- INDEXES FOR PERFORMANCE
 -- ================================
@@ -186,6 +237,19 @@ CREATE INDEX idx_sections_article ON article_sections(article_id, order_num);
 CREATE INDEX idx_related_article ON related_articles(article_id);
 CREATE INDEX idx_related_target ON related_articles(related_article_id);
 
+-- Mobile metrics indexes
+CREATE INDEX idx_mobile_metrics_article ON mobile_metrics(article_id);
+CREATE INDEX idx_mobile_metrics_date ON mobile_metrics(date_recorded);
+
+-- Image variants indexes
+CREATE INDEX idx_image_variants_image ON image_variants(image_id);
+CREATE INDEX idx_image_variants_type ON image_variants(variant_type);
+
+-- Site config indexes
+CREATE INDEX idx_site_config_type ON site_config(config_type);
+CREATE INDEX idx_site_config_key ON site_config(config_key);
+CREATE INDEX idx_site_config_active ON site_config(is_active);
+
 -- ================================
 -- FULL-TEXT SEARCH
 -- ================================
@@ -219,6 +283,12 @@ BEGIN
     UPDATE articles SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
 END;
 
+CREATE TRIGGER update_articles_last_modified 
+AFTER UPDATE ON articles
+BEGIN
+    UPDATE articles SET last_modified = CURRENT_TIMESTAMP WHERE id = NEW.id;
+END;
+
 CREATE TRIGGER update_trending_timestamp 
 AFTER UPDATE ON trending_topics
 BEGIN
@@ -229,6 +299,18 @@ CREATE TRIGGER update_images_timestamp
 AFTER UPDATE ON images
 BEGIN
     UPDATE images SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+END;
+
+CREATE TRIGGER update_mobile_metrics_timestamp 
+AFTER UPDATE ON mobile_metrics
+BEGIN
+    UPDATE mobile_metrics SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+END;
+
+CREATE TRIGGER update_site_config_timestamp 
+AFTER UPDATE ON site_config
+BEGIN
+    UPDATE site_config SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
 END;
 
 -- Maintain article counts for authors
@@ -404,6 +486,9 @@ SELECT
     a.title,
     a.slug,
     a.excerpt,
+    a.mobile_title,
+    a.mobile_excerpt,
+    a.mobile_hero_image_id,
     a.status,
     a.featured,
     a.trending,
@@ -412,6 +497,11 @@ SELECT
     a.likes,
     a.read_time_minutes,
     a.image_url,
+    a.hero_image_url,
+    a.thumbnail_url,
+    a.last_modified,
+    a.created_at,
+    a.updated_at,
     au.id as author_id,
     au.name as author_name,
     au.slug as author_slug,
@@ -424,6 +514,40 @@ SELECT
 FROM articles a
 JOIN authors au ON a.author_id = au.id
 JOIN categories c ON a.category_id = c.id;
+
+CREATE VIEW article_mobile_view AS
+SELECT 
+    a.id,
+    a.title,
+    a.slug,
+    a.excerpt,
+    a.mobile_title,
+    a.mobile_excerpt,
+    a.mobile_hero_image_id,
+    a.status,
+    a.featured,
+    a.trending,
+    a.publish_date,
+    a.views,
+    a.likes,
+    a.read_time_minutes,
+    a.image_url,
+    a.hero_image_url,
+    a.thumbnail_url,
+    a.last_modified,
+    au.id as author_id,
+    au.name as author_name,
+    au.slug as author_slug,
+    au.title as author_title,
+    c.id as category_id,
+    c.name as category_name,
+    c.slug as category_slug,
+    c.color as category_color,
+    c.icon as category_icon
+FROM articles a
+JOIN authors au ON a.author_id = au.id
+JOIN categories c ON a.category_id = c.id
+WHERE a.status = 'published';
 
 -- Performance optimization
 ANALYZE;

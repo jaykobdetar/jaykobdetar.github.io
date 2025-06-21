@@ -101,39 +101,8 @@ def create_missing_tables():
         db.execute_write("CREATE INDEX IF NOT EXISTS idx_image_variants_type ON image_variants(variant_type)")
         print("✓ Indexes created")
         
-        # Try to create FTS table (may fail if FTS not available)
-        print("Attempting to create FTS table...")
-        try:
-            fts_sql = """
-            CREATE VIRTUAL TABLE IF NOT EXISTS articles_fts USING fts5(
-                title, 
-                excerpt, 
-                content, 
-                tags,
-                content_rowid=articles
-            )
-            """
-            db.execute_write(fts_sql)
-            print("✓ articles_fts virtual table created")
-            
-            # Populate FTS with existing articles
-            published_articles = db.execute_query("SELECT id, title, excerpt, content, tags FROM articles WHERE status = 'published'")
-            for article in published_articles:
-                insert_fts = """
-                INSERT INTO articles_fts(rowid, title, excerpt, content, tags)
-                VALUES (?, ?, ?, ?, ?)
-                """
-                db.execute_write(insert_fts, (
-                    article['id'], 
-                    article['title'], 
-                    article['excerpt'] or '', 
-                    article['content'] or '', 
-                    article['tags'] or ''
-                ))
-            print(f"✓ FTS populated with {len(published_articles)} articles")
-            
-        except Exception as e:
-            print(f"⚠ FTS creation failed (may not be available): {e}")
+        # FTS is disabled due to compatibility issues
+        print("⚠ Full-Text Search (FTS) is disabled for compatibility reasons")
             
         print("\nVerifying tables...")
         
@@ -151,10 +120,8 @@ def create_missing_tables():
         else:
             print("✗ image_variants table missing")
             
-        if 'articles_fts' in table_names:
-            print("✓ articles_fts table exists")
-        else:
-            print("⚠ articles_fts table not available (FTS may not be supported)")
+        # FTS is intentionally disabled
+        print("⚠ Full-Text Search (FTS) is disabled by design")
         
         # Check views
         views = db.execute_query("SELECT name FROM sqlite_master WHERE type='view' ORDER BY name")

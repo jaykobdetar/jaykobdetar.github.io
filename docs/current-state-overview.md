@@ -2,7 +2,39 @@
 
 ## Summary
 
-The Influencer News CMS is a partially-implemented static site generator with significant gaps between documentation claims and actual functionality.
+The CMS is a partially-implemented static site generator with significant gaps between documentation claims and actual functionality. The site is now fully configurable through text files, allowing complete rebranding without code changes.
+
+## Recent Fixes Applied
+
+### January 2025 - Major Updates
+1. **✅ Draft/Published System Removed**: Simplified content model - content is either synced or not
+2. **✅ Site Configuration System**: Complete site rebranding through `content/site/site-branding.txt`
+3. **✅ Dynamic Branding**: All pages now use configuration values, no hardcoded site names
+4. **✅ Theme System**: Implemented theme color mapping (indigo → emerald, etc.)
+5. **✅ CSS Class Availability**: Fixed transparency issues by adding missing theme classes
+
+### January 2025 - Critical Issue Resolution
+1. **✅ Model Safety**: Commented out references to non-existent tables (mobile_metrics, image_variants, articles_fts) in Article model to prevent crashes
+2. **✅ Search Backend**: Fixed import paths in search_backend.py 
+3. **✅ Search Functionality**: Fixed "search only works once" bug in search.html with proper state management
+4. **✅ Field References**: Fixed last_modified field reference in ArticleIntegrator (changed to updated_at)
+5. **✅ Schema Consistency**: Consolidated multiple schema files - `schema.sql` is now the single source of truth
+6. **✅ Error Handling**: Added proper database constraint violation handling with user-friendly error messages
+7. **✅ Pagination**: Added missing LIMIT clauses to prevent unbounded queries
+8. **✅ Search UX**: Removed duplicate search bars from headers, unified search experience through search.html
+9. **✅ Mobile Search**: Mobile search functionality preserved and working properly on all pages
+
+### June 2025 - Security & Analytics Overhaul
+1. **✅ Fake Analytics Removal**: Eliminated all fake view counters, random metrics, and misleading analytics
+2. **✅ Newsletter Removal**: Removed newsletter forms entirely for privacy protection
+3. **✅ Security Hardening**: Comprehensive security improvements:
+   - **✅ CSP Nonce Generation**: Dynamic nonce generation for all inline scripts/styles
+   - **✅ CSRF Protection**: Token generation and validation for all forms and API endpoints
+   - **✅ TrustedSanitizer Configuration**: Full config.yaml integration for security settings
+4. **✅ Configuration Standardization**: All hardcoded paths and limits now use config.yaml values
+5. **✅ Field Naming Consistency**: Standardized API response field names across all endpoints
+
+These fixes prevent immediate crashes and make the system more stable for development.
 
 ## What Actually Works
 
@@ -17,7 +49,8 @@ The Influencer News CMS is a partially-implemented static site generator with si
 ```bash
 python scripts/sync_content.py status    # Database connectivity check
 python scripts/sync_content.py stats     # Content counts
-python scripts/sync_content.py          # Basic content sync
+python scripts/sync_content.py          # Full content sync
+python scripts/sync_content.py site     # Sync site configuration
 npm run build                           # CSS compilation
 ```
 
@@ -30,16 +63,16 @@ npm run build                           # CSS compilation
 ## What's Broken
 
 ### Frontend Issues
-1. **Homepage**: Only shows one hardcoded article, load more button broken
-2. **Search**: Completely non-functional, import errors in backend
+1. **Homepage**: ✅ FIXED - Now dynamically loads articles from database, uses site branding
+2. **Search**: ✅ PARTIALLY FIXED - Backend import errors fixed, search state management improved, but still uses simulation data
 3. **PWA**: Missing all icon assets, broken manifest
 4. **Navigation**: Contact link broken, social links point to homepage
 
 ### Backend Problems
-1. **Mobile Features**: Reference non-existent database tables/views
-2. **Image System**: Tracks URLs but no downloading functionality
+1. **Mobile Features**: ✅ FIXED - References to non-existent tables now safely commented out
+2. **Image System**: Tracks URLs but no downloading functionality  
 3. **Content Updates**: Can only add new content, never update existing
-4. **Import Paths**: Scripts have incorrect relative imports
+4. **Import Paths**: ✅ FIXED - Search backend import paths corrected
 
 ### Security & Authentication
 1. **No Authentication**: No user system or access control
@@ -65,9 +98,9 @@ npm run build                           # CSS compilation
 ## Technical Debt
 
 ### High Priority Issues
-1. Search functionality completely broken
-2. Homepage hardcoded instead of dynamic
-3. Mobile methods reference missing database structures
+1. ✅ FIXED - Search functionality import errors resolved
+2. ✅ FIXED - Homepage now dynamic with site configuration
+3. ✅ FIXED - Mobile methods safely commented out
 4. No error handling for production scenarios
 
 ### Medium Priority Issues

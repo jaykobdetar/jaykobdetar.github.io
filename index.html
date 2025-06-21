@@ -3,242 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Influencer News - Your Source for Influencer Culture</title>
+    <title>TheRealNews - Your trusted source for unfiltered news and authentic journalism that matters</title>
     <link rel="stylesheet" href="assets/css/styles.min.css">
+    <link rel="stylesheet" href="assets/css/homepage.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     
     <!-- PWA Configuration -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="theme-color" content="#059669">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Influencer News">
+    <meta name="apple-mobile-web-app-title" content="TheRealNews">
     <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
     <meta name="msapplication-TileImage" content="assets/icons/icon-144x144.png">
-    <meta name="msapplication-TileColor" content="#4f46e5">
+    <meta name="msapplication-TileColor" content="#059669">
     
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-crypto-secure-random-nonce' https://cdn.jsdelivr.net; style-src 'self' 'nonce-crypto-secure-random-nonce' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; media-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'nonce-D1TVTHEZM8UYC8ylC1906A=='; style-src 'self' https://fonts.googleapis.com 'nonce-D1TVTHEZM8UYC8ylC1906A=='; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; media-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     
-    <style nonce="crypto-secure-random-nonce">
-        body { 
-            font-family: 'Inter', sans-serif; 
-            line-height: 1.6; 
-        }
-        .hero-title { 
-            font-family: 'Playfair Display', serif; 
-        }
-        .article-card { 
-            transition: all 0.3s ease; 
-            backdrop-filter: blur(10px);
-        }
-        .article-card:hover { 
-            transform: translateY(-8px); 
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); 
-        }
-        .hero-section { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-section::before { 
-            content: ''; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 1;
-        }
-        .hero-content { 
-            position: relative; 
-            z-index: 2; 
-        }
-        .nav-link { 
-            position: relative; 
-            transition: all 0.3s ease;
-        }
-        .nav-link::after { 
-            content: ''; 
-            position: absolute; 
-            bottom: -2px; 
-            left: 0; 
-            width: 0; 
-            height: 2px; 
-            background: linear-gradient(90deg, #ffffff, #e0e7ff); 
-            transition: width 0.3s ease; 
-        }
-        .nav-link:hover::after { 
-            width: 100%; 
-        }
-        .live-ticker { 
-            animation: smoothTicker 25s linear infinite; 
-            white-space: nowrap; 
-            overflow: hidden; 
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-        }
-        @keyframes smoothTicker { 
-            0% { transform: translateX(100%); } 
-            100% { transform: translateX(-100%); } 
-        }
-        .alert-banner { 
-            animation: fadeInDown 1s ease-out; 
-            background: linear-gradient(90deg, #f59e0b, #d97706);
-        }
-        @keyframes fadeInDown { 
-            from { opacity: 0; transform: translateY(-100%); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-        .trending-badge {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-        .loading-skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-        }
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        .glassmorphism {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .category-tech { color: #3b82f6; }
-        .category-fashion { color: #ec4899; }
-        .category-business { color: #10b981; }
-        .category-entertainment { color: #f59e0b; }
-        .category-charity { color: #8b5cf6; }
-        .social-stat {
-            transition: transform 0.2s ease;
-        }
-        .social-stat:hover {
-            transform: scale(1.05);
-        }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
-    <style>
-        /* Mobile Menu Styles */
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            max-width: 300px;
-            height: 100vh;
-            background: #312e81;
-            transition: right 0.3s ease-in-out;
-            z-index: 1000;
-        }
-        
-        .mobile-menu.active {
-            right: 0;
-        }
-        
-        .mobile-menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-            z-index: 999;
-        }
-        
-        .mobile-menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .hamburger {
-            width: 30px;
-            height: 24px;
-            position: relative;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        
-        .hamburger span {
-            display: block;
-            width: 100%;
-            height: 3px;
-            background: white;
-            border-radius: 3px;
-            transition: all 0.3s ease-in-out;
-        }
-        
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(8px, 8px);
-        }
-        
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-        
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(8px, -8px);
-        }
-        
-        .mobile-nav-item {
-            display: block;
-            padding: 1rem 2rem;
-            color: white;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: background 0.3s ease;
-        }
-        
-        .mobile-nav-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        /* Mobile Search Overlay */
-        .mobile-search-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1001;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-        }
-        
-        .mobile-search-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-    </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
     <!-- Mobile Menu Overlay -->
@@ -246,11 +33,11 @@
     
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
-        <div class="p-6 border-b border-indigo-700">
+        <div class="p-6 border-b border-emerald-700">
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
-                        <span class="text-lg font-bold text-white">IN</span>
+                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-lg font-bold text-white">TRN</span>
                     </div>
                     <div>
                         <h2 class="text-xl font-bold text-white">Menu</h2>
@@ -268,60 +55,26 @@
             <a href="#contact" class="mobile-nav-item">📧 Contact</a>
         </nav>
         <div class="p-6 mt-auto">
-            <div class="bg-indigo-700 rounded-lg p-4">
+            <div class="bg-emerald-700 rounded-lg p-4">
                 <h3 class="text-white font-bold mb-2">Newsletter</h3>
-                <p class="text-indigo-200 text-sm mb-3">Get the latest influencer news</p>
+                <p class="text-emerald-200 text-sm mb-3">Get the real news</p>
                 <button class="bg-white text-indigo-700 px-4 py-2 rounded-md text-sm font-semibold w-full">Subscribe</button>
             </div>
         </div>
     </div>
     
-    <!-- Mobile Search Overlay -->
-    <div class="mobile-search-overlay" id="mobileSearchOverlay">
-        <div class="p-4 bg-indigo-900">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-white font-bold text-lg">Search</h3>
-                <button class="text-white text-2xl" id="closeMobileSearch">&times;</button>
-            </div>
-            <div class="relative">
-                <input 
-                    type="text" 
-                    id="mobileSearchInput" 
-                    placeholder="Search articles, authors..." 
-                    class="w-full p-4 pr-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                    onkeyup="handleMobileSearch(event)"
-                >
-                <button onclick="performMobileSearch()" class="absolute right-4 top-4 text-gray-600 hover:text-indigo-600 transition">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </button>
-            </div>
-            <!-- Mobile Search Suggestions -->
-            <div id="mobileSearchSuggestions" class="mt-4 bg-white rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
-                <!-- Populated by JavaScript -->
-            </div>
-        </div>
-    </div>
     
-    <!-- News Alert Banner -->
-    <div class="alert-banner text-white text-center py-3 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
-        <p class="text-sm font-bold relative z-10">
-            🔥 BREAKING: MrBeast announces $100M creator fund - Full details live now
-        </p>
-    </div>
 
     <!-- Header with Enhanced Navigation -->
-    <header class="bg-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+    <header class="bg-emerald-900 text-white sticky top-0 z-50 shadow-2xl">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-4">
-                    <span class="text-2xl font-bold text-white">IN</span>
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mr-4">
+                    <span class="text-2xl font-bold text-white">TRN</span>
                 </div>
                 <div>
-                    <h1 class="text-3xl font-bold hero-title">Influencer News</h1>
-                    <p class="text-xs text-indigo-200">Breaking stories • Real insights</p>
+                    <h1 class="text-3xl font-bold hero-title">TheRealNews</h1>
+                    <p class="text-xs text-emerald-200">Truth • Transparency • Real Stories</p>
                 </div>
             </div>
             <!-- Mobile Menu Button -->
@@ -333,56 +86,35 @@
             
             <nav class="hidden md:block">
                 <ul class="flex space-x-8">
-                    <li><a href="index.html" class="nav-link hover:text-indigo-200 transition font-medium text-indigo-200">Home</a></li>
-                    <li><a href="search.html" class="nav-link hover:text-indigo-200 transition font-medium">Search</a></li>
-                    <li><a href="authors.html" class="nav-link hover:text-indigo-200 transition font-medium">Authors</a></li>
-                    <li><a href="integrated/categories.html" class="nav-link hover:text-indigo-200 transition font-medium">Categories</a></li>
-                    <li><a href="integrated/trending.html" class="nav-link hover:text-indigo-200 transition font-medium">Trending</a></li>
-                    <li><a href="#contact" class="nav-link hover:text-indigo-200 transition font-medium">Contact</a></li>
+                    <li><a href="index.html" class="nav-link hover:text-emerald-200 transition font-medium text-emerald-200">Home</a></li>
+                    <li><a href="search.html" class="nav-link hover:text-emerald-200 transition font-medium">Search</a></li>
+                    <li><a href="authors.html" class="nav-link hover:text-emerald-200 transition font-medium">Authors</a></li>
+                    <li><a href="integrated/categories.html" class="nav-link hover:text-emerald-200 transition font-medium">Categories</a></li>
+                    <li><a href="integrated/trending.html" class="nav-link hover:text-emerald-200 transition font-medium">Trending</a></li>
+                    <li><a href="#contact" class="nav-link hover:text-emerald-200 transition font-medium">Contact</a></li>
                 </ul>
             </nav>
-            <!-- Enhanced Search Bar - Desktop Only -->
+            
+            <!-- Desktop Search Bar -->
             <div class="relative hidden md:block">
                 <input 
                     type="text" 
                     id="searchInput" 
-                    placeholder="Search breaking news..." 
-                    class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
-                    onkeyup="handleSearch(event)"
+                    placeholder="Search news, reporters..." 
+                    class="p-3 pr-12 rounded-full text-gray-900 w-64 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all"
                 >
-                <button onclick="performSearch()" class="absolute right-3 top-3 text-gray-600 hover:text-indigo-600 transition">
+                <button id="searchButton" class="absolute right-3 top-3 text-gray-600 hover:text-emerald-600 transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
                 </button>
-                <!-- Search Suggestions -->
                 <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg mt-1 hidden max-h-60 overflow-y-auto z-50">
                     <!-- Populated by JavaScript -->
                 </div>
             </div>
             
-            <!-- Mobile Search Button -->
-            <button class="md:hidden text-white p-2" id="mobileSearchToggle" aria-label="Toggle mobile search">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </button>
         </div>
         
-        <!-- Enhanced Live Ticker -->
-        <div class="bg-gradient-to-r from-red-600 to-red-700 text-white py-3 overflow-hidden relative">
-            <div class="live-ticker flex items-center space-x-8">
-                <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 bg-red-400 rounded-full animate-ping"></div>
-                    <span class="font-bold text-sm">LIVE</span>
-                </div>
-                <span class="text-sm font-medium">
-                    Emma Chamberlain signs exclusive $50M deal with Netflix • PewDiePie returns to YouTube after hiatus • Charli D'Amelio launches beauty line • 
-                    Logan Paul's NFT project raises $25M • Addison Rae joins Marvel Universe • 
-                    <span id="current-time" class="font-bold"></span>
-                </span>
-            </div>
-        </div>
     </header>
 
     <!-- Hero Section with Real Content -->
@@ -408,29 +140,11 @@
             
             <!-- CTA Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                <a href="#articles" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full hover:from-indigo-700 hover:to-purple-700 transition text-base md:text-lg font-semibold shadow-lg hover:shadow-xl">
+                <a href="#articles" class="bg-gradient-to-r from-emerald-600 to-emerald-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full hover:from-indigo-700 hover:to-purple-700 transition text-base md:text-lg font-semibold shadow-lg hover:shadow-xl">
                     🔥 Latest Breaking News
-                </a>
-                <a href="#newsletter" class="glassmorphism text-white px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-white/20 transition text-base md:text-lg font-semibold">
-                    📧 Join 50K+ Subscribers
                 </a>
             </div>
 
-            <!-- Live Stats -->
-            <div class="grid grid-cols-3 gap-4 md:gap-8 max-w-2xl mx-auto glassmorphism rounded-2xl p-4 md:p-6">
-                <div class="social-stat text-center">
-                    <div class="text-xl md:text-2xl font-bold" id="liveReaders">47,892</div>
-                    <div class="text-xs md:text-sm opacity-75">Live Readers</div>
-                </div>
-                <div class="social-stat text-center">
-                    <div class="text-xl md:text-2xl font-bold">156</div>
-                    <div class="text-xs md:text-sm opacity-75">Stories Today</div>
-                </div>
-                <div class="social-stat text-center">
-                    <div class="text-xl md:text-2xl font-bold">2.1M</div>
-                    <div class="text-xs md:text-sm opacity-75">Monthly Views</div>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -444,27 +158,30 @@
                 <h2 class="text-3xl font-bold text-gray-900">What's Hot Right Now</h2>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
-                    <div class="text-3xl mb-2">📈</div>
-                    <h3 class="font-bold mb-2">Creator Economy Boom</h3>
-                    <p class="text-sm text-gray-600">$104B market size reached</p>
+                    <div class="text-3xl mb-2">🤖</div>
+                    <h3 class="font-bold mb-2">AI Content Creation Revolution</h3>
+                    <p class="text-sm text-gray-600">Transforming creator workflows</p>
+                    <a href="integrated/trending/trend_ai-content-creation-revolution.html" class="text-emerald-600 text-sm font-medium">Learn more →</a>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
-                    <div class="text-3xl mb-2">🎥</div>
-                    <h3 class="font-bold mb-2">Short-Form Dominance</h3>
-                    <p class="text-sm text-gray-600">87% engagement increase</p>
+                    <div class="text-3xl mb-2">😰</div>
+                    <h3 class="font-bold mb-2">Creator Burnout Crisis</h3>
+                    <p class="text-sm text-gray-600">Mental health challenges rising</p>
+                    <a href="integrated/trending/trend_creator-burnout-crisis.html" class="text-emerald-600 text-sm font-medium">Learn more →</a>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
-                    <div class="text-3xl mb-2">🤝</div>
-                    <h3 class="font-bold mb-2">Brand Partnerships</h3>
-                    <p class="text-sm text-gray-600">2.3x spending growth</p>
+                    <div class="text-3xl mb-2">🔥</div>
+                    <h3 class="font-bold mb-2">MrBeast Creator Fund</h3>
+                    <p class="text-sm text-gray-600">$100M initiative announced</p>
+                    <a href="integrated/trending/trend_mrbeast-creator-fund.html" class="text-emerald-600 text-sm font-medium">Learn more →</a>
                 </div>
-                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
-                    <div class="text-3xl mb-2">🌍</div>
-                    <h3 class="font-bold mb-2">Global Reach</h3>
-                    <p class="text-sm text-gray-600">4.8B social users</p>
-                </div>
+            </div>
+            <div class="text-center mt-8">
+                <a href="integrated/trending.html" class="bg-emerald-600 text-white px-6 py-3 rounded-full hover:bg-emerald-700 transition font-semibold">
+                    View All Trending Topics
+                </a>
             </div>
         </div>
     </section>
@@ -485,71 +202,19 @@
             </div>
 
             <div id="articlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-                <div class="article-card bg-white rounded-xl shadow-lg overflow-hidden md:col-span-2 lg:col-span-1">
-                    <div class="relative">
-                        <img src="assets/images/articles/article_5_hero.jpg" alt="New Platform Update Changes Everything for Creators" class="w-full h-48 object-cover">
-                        <div class="absolute top-4 right-4">
-                            <span class="category-Technology bg-white/90 px-2 py-1 rounded text-xs font-bold uppercase">Technology</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="text-gray-500 text-sm">Alex Rivera • 5 days ago</span>
-                        </div>
-                        <h3 class="text-lg font-bold mb-3 hover:text-indigo-600 transition cursor-pointer">
-                            New Platform Update Changes Everything for Creators
-                        </h3>
-                        <p class="text-gray-700 mb-4 text-sm">
-                            Major social media platform announces algorithm changes that could reshape how creators build audiences and earn revenue in 2025.
-                        </p>
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-500">👁 18,037 views</span>
-                            <a href="integrated/articles/article_5.html" class="text-indigo-600 font-medium cursor-pointer">Read →</a>
-                        </div>
-                    </div>
-                </div>
-            
-            </div></div>
+                <!-- Articles loaded dynamically by homepage-dynamic.js -->
+            </div>
 
             <!-- Load More Button -->
             <div class="text-center mt-12">
-                <button id="loadMoreBtn" onclick="loadMoreArticles()" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-full hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-lg">
+                <button id="loadMoreBtn" onclick="loadMoreArticles()" class="bg-gradient-to-r from-emerald-600 to-emerald-600 text-white px-8 py-3 rounded-full hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-lg">
                     Load More Stories
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- Newsletter Section -->
-    <section id="newsletter" class="py-20 bg-gradient-to-r from-indigo-900 to-purple-900 text-white">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-4xl font-bold mb-6">Join the Insider Circle</h2>
-            <p class="text-xl mb-8 max-w-2xl mx-auto opacity-90">
-                Get exclusive interviews, breaking news, and insider analysis delivered to your inbox every morning. 
-                Join 50,000+ industry professionals who trust our insights.
-            </p>
-            <div class="max-w-md mx-auto">
-                <div class="flex gap-4">
-                    <input 
-                        type="email" 
-                        id="newsletterEmail" 
-                        placeholder="Enter your email address" 
-                        class="flex-1 p-4 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    >
-                    <button 
-                        onclick="subscribeNewsletter()" 
-                        class="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-4 rounded-full hover:from-yellow-500 hover:to-orange-600 transition font-bold shadow-lg"
-                    >
-                        Subscribe
-                    </button>
-                </div>
-                <p class="text-sm opacity-75 mt-4">
-                    ✅ Daily breaking news • ✅ Exclusive interviews • ✅ Industry insights • ✅ No spam, ever
-                </p>
-            </div>
-        </div>
-    </section>
+    <!-- Newsletter Section Removed -->
 
     <!-- Enhanced Footer -->
     <footer class="bg-gray-900 text-white py-16">
@@ -557,12 +222,12 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div>
                     <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
-                            <span class="text-lg font-bold">IN</span>
+                        <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-lg font-bold">TRN</span>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold">Influencer News</h3>
-                            <p class="text-sm text-gray-400">Breaking • Insights • Culture</p>
+                            <h3 class="text-xl font-bold">TheRealNews</h3>
+                            <p class="text-sm text-gray-400">Truth • Transparency • Authenticity</p>
                         </div>
                     </div>
                     <p class="text-gray-300 mb-4">
@@ -608,125 +273,99 @@
                                 <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
                                 <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
                             </svg>
-                            <a href="mailto:news@influencernews.com" class="hover:text-white">news@influencernews.com</a>
+                            <a href="mailto:news@therealnews.com" class="hover:text-white">news@therealnews.com</a>
                         </p>
                         <p class="flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
                             </svg>
-                            (555) 123-NEWS
+                            (555) 123-REAL
                         </p>
                         <p class="flex items-start">
                             <svg class="w-5 h-5 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
                             </svg>
-                            <span>123 Creator Avenue<br>Los Angeles, CA 90210</span>
+                            <span>456 Truth Boulevard<br>New York, NY 10001</span>
                         </p>
                     </div>
                 </div>
             </div>
             <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center">
                 <p class="text-gray-400 text-sm mb-4 md:mb-0">
-                    © 2025 Influencer News. All rights reserved. | 
+                    © 2025 TheRealNews. All rights reserved. | 
                     <a href="index.html" class="hover:text-white">Privacy Policy</a> | 
                     <a href="index.html" class="hover:text-white">Terms of Service</a>
                 </p>
-                <div class="flex items-center space-x-4 text-sm text-gray-400">
-                    <span>🌐 Available in 12 languages</span>
-                    <span>•</span>
-                    <span>📊 2.1M monthly readers</span>
-                </div>
             </div>
         </div>
     </footer>
 
-    <script nonce="crypto-secure-random-nonce">
+    <script nonce="{{nonce}}">
         // Enhanced functionality
-        const searchData = [
-            'MrBeast', 'Emma Chamberlain', 'PewDiePie', 'Charli DAmelio', 'Logan Paul',
-            'Creator Economy', 'TikTok Algorithm', 'YouTube Shorts', 'Instagram Reels',
-            'Brand Partnerships', 'Influencer Marketing', 'Social Media Trends'
-        ];
 
-        let currentReaders = 47892;
-        
-        // Update live reader count
-        function updateLiveReaders() {
-            currentReaders += Math.floor(Math.random() * 10) - 2;
-            if (currentReaders < 40000) currentReaders = 40000;
-            if (currentReaders > 60000) currentReaders = 60000;
-            
-            const element = document.getElementById('liveReaders');
-            if (element) {
-                element.textContent = currentReaders.toLocaleString();
-            }
-        }
 
-        // Enhanced search with suggestions
+
+
+        // Desktop Search functionality
         function handleSearch(event) {
-            const query = event.target.value.toLowerCase();
-            const suggestions = document.getElementById('searchSuggestions');
-            
-            if (query.length > 1) {
-                const matches = searchData.filter(item => 
-                    item.toLowerCase().includes(query)
-                ).slice(0, 5);
-                
-                if (matches.length > 0) {
-                    suggestions.innerHTML = matches.map(match => 
-                        `<div class="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0" onclick="selectSuggestion('${match}')">${match}</div>`
-                    ).join('');
-                    suggestions.classList.remove('hidden');
-                } else {
-                    suggestions.classList.add('hidden');
-                }
-            } else {
-                suggestions.classList.add('hidden');
-            }
-            
             if (event.key === 'Enter') {
                 performSearch();
             }
         }
 
-        function selectSuggestion(suggestion) {
-            document.getElementById('searchInput').value = suggestion;
-            document.getElementById('searchSuggestions').classList.add('hidden');
-            performSearch();
-        }
-
-        // Search functions are now handled by homepage-dynamic.js
-        // These are fallbacks in case the dynamic script doesn't load
         function performSearch() {
             const query = document.getElementById('searchInput').value;
             if (query.trim()) {
-                // Redirect to search page
+                // Always redirect to search page for reliable functionality
                 window.location.href = `search.html?q=${encodeURIComponent(query)}`;
             }
         }
 
-        function showSearchResults(query) {
-            // Redirect to search page instead of inline results
-            window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+        async function showSearchResults(query) {
+            try {
+                const results = await window.searchAPI.search(query, {
+                    limit: 5,
+                    offset: 0,
+                    content_type: 'all'
+                });
+                
+                // Show results in suggestions dropdown
+                const suggestions = document.getElementById('searchSuggestions');
+                if (results.total_results > 0) {
+                    let html = '';
+                    
+                    // Add articles
+                    if (results.articles && results.articles.length > 0) {
+                        html += results.articles.slice(0, 3).map(article => 
+                            `<div class="p-3 hover:bg-gray-100 cursor-pointer border-b" onclick="window.location.href='${article.url}'">
+                                <div class="font-medium text-gray-900">${article.title}</div>
+                                <div class="text-sm text-gray-600">${article.author_name} • ${article.category_name}</div>
+                            </div>`
+                        ).join('');
+                    }
+                    
+                    // Add "See all results" link
+                    html += `<div class="p-3 bg-gray-50 text-center">
+                        <a href="search.html?q=${encodeURIComponent(query)}" class="text-emerald-600 font-medium">See all results for "${query}"</a>
+                    </div>`;
+                    
+                    suggestions.innerHTML = html;
+                    suggestions.classList.remove('hidden');
+                } else {
+                    suggestions.innerHTML = `<div class="p-3 text-gray-500 text-center">No results found for "${query}"</div>`;
+                    suggestions.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Search failed:', error);
+                // Fallback to search page redirect
+                window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+            }
         }
 
         // Article loading functionality now handled by homepage-dynamic.js
 
-        function handleSearch(event) {
-            if (event.key === 'Enter') {
-                performSearch();
-            }
-        }
 
-        function subscribeNewsletter() {
-            const email = document.getElementById('newsletterEmail').value;
-            if (email && email.includes('@')) {
-                alert(`Thank you for subscribing with ${email}!\n\n✅ Welcome email sent\n✅ You'll receive tomorrow's newsletter\n✅ Exclusive content unlocked`);
-                document.getElementById('newsletterEmail').value = '';
-            } else {
-                alert('Please enter a valid email address.');
-            }
-        }
+        // Newsletter function removed - no newsletter functionality
 
         function updateTime() {
             const now = new Date();
@@ -746,14 +385,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateTime();
             setInterval(updateTime, 1000);
-            setInterval(updateLiveReaders, 3000);
             
-            // Close search suggestions when clicking outside
-            document.addEventListener('click', function(event) {
-                if (!event.target.closest('#searchInput') && !event.target.closest('#searchSuggestions')) {
-                    document.getElementById('searchSuggestions').classList.add('hidden');
-                }
-            });
+            // Set up search event listeners
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            
+            if (searchInput) {
+                searchInput.addEventListener('keyup', handleSearch);
+            }
+            
+            if (searchButton) {
+                searchButton.addEventListener('click', performSearch);
+            }
         });
 
         // Smooth scrolling for anchor links
@@ -804,89 +447,8 @@
             item.addEventListener('click', closeMobileMenuFunc);
         });
         
-        // Mobile Search Functionality
-        const mobileSearchToggle = document.getElementById('mobileSearchToggle');
-        const closeMobileSearch = document.getElementById('closeMobileSearch');
-        const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
-        const mobileSearchInput = document.getElementById('mobileSearchInput');
-        const mobileSearchSuggestions = document.getElementById('mobileSearchSuggestions');
         
-        function openMobileSearch() {
-            mobileSearchOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            // Focus on search input after animation
-            setTimeout(() => {
-                mobileSearchInput.focus();
-            }, 300);
-        }
         
-        function closeMobileSearchFunc() {
-            mobileSearchOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-            mobileSearchSuggestions.classList.add('hidden');
-            mobileSearchInput.value = '';
-        }
-        
-        if (mobileSearchToggle) {
-            mobileSearchToggle.addEventListener('click', openMobileSearch);
-        }
-        
-        if (closeMobileSearch) {
-            closeMobileSearch.addEventListener('click', closeMobileSearchFunc);
-        }
-        
-        if (mobileSearchOverlay) {
-            mobileSearchOverlay.addEventListener('click', function(e) {
-                if (e.target === mobileSearchOverlay) {
-                    closeMobileSearchFunc();
-                }
-            });
-        }
-        
-        function handleMobileSearch(event) {
-            const query = event.target.value.toLowerCase();
-            
-            if (query.length > 1) {
-                const matches = searchData.filter(item => 
-                    item.toLowerCase().includes(query)
-                ).slice(0, 5);
-                
-                if (matches.length > 0) {
-                    mobileSearchSuggestions.innerHTML = matches.map(match => 
-                        `<div class="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0" onclick="selectMobileSuggestion('${match}')">${match}</div>`
-                    ).join('');
-                    mobileSearchSuggestions.classList.remove('hidden');
-                } else {
-                    mobileSearchSuggestions.classList.add('hidden');
-                }
-            } else {
-                mobileSearchSuggestions.classList.add('hidden');
-            }
-            
-            if (event.key === 'Enter') {
-                performMobileSearch();
-            }
-        }
-        
-        function selectMobileSuggestion(suggestion) {
-            mobileSearchInput.value = suggestion;
-            mobileSearchSuggestions.classList.add('hidden');
-            performMobileSearch();
-        }
-        
-        function performMobileSearch() {
-            const query = mobileSearchInput.value;
-            if (query.trim()) {
-                // Close mobile search and redirect to search page
-                closeMobileSearchFunc();
-                window.location.href = `search.html?q=${encodeURIComponent(query)}`;
-            }
-        }
-        
-        // Add some analytics simulation
-        setTimeout(() => {
-            console.log('📊 Analytics: Page viewed, user engagement tracked');
-        }, 2000);
         
         // Service Worker Registration for PWA
         if ('serviceWorker' in navigator) {
@@ -927,7 +489,7 @@
                 bottom: 20px;
                 left: 20px;
                 right: 20px;
-                background: linear-gradient(135deg, #4f46e5, #7c3aed);
+                background: linear-gradient(135deg, #059669, #7c3aed);
                 color: white;
                 padding: 16px;
                 border-radius: 12px;
@@ -941,11 +503,11 @@
             
             installBanner.innerHTML = `
                 <div>
-                    <div style="font-weight: 600; margin-bottom: 4px;">📱 Install Influencer News</div>
+                    <div style="font-weight: 600; margin-bottom: 4px;">📱 Install TheRealNews</div>
                     <div style="font-size: 14px; opacity: 0.9;">Get faster access and offline reading</div>
                 </div>
                 <div>
-                    <button id="installButton" style="background: white; color: #4f46e5; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; margin-right: 8px; cursor: pointer;">Install</button>
+                    <button id="installButton" style="background: white; color: #059669; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; margin-right: 8px; cursor: pointer;">Install</button>
                     <button id="dismissInstall" style="background: transparent; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 12px; border-radius: 8px; cursor: pointer;">×</button>
                 </div>
             `;
@@ -1017,12 +579,18 @@
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js" integrity="sha384-LW1Q2+3pcx1jz7WDNJ6X4LWq7l5D7Lrf7K8V9Vq0T6kl5o9S1R7B8tLqGZhcQ2E" crossorigin="anonymous"></script>
     
     <!-- Trusted Sanitization -->
-    <script src="assets/js/trusted-sanitizer.js" nonce="crypto-secure-random-nonce"></script>
+    <script src="assets/js/trusted-sanitizer.js"></script>
+    
+    <!-- IndexedDB Initialization -->
+    <script src="assets/js/indexeddb-init.js"></script>
+    
+    <!-- Search Integration -->
+    <script src="assets/js/search-integration.js"></script>
     
     <!-- Dynamic Homepage Content -->
-    <script src="assets/js/homepage-dynamic.js" nonce="crypto-secure-random-nonce"></script>
+    <script src="assets/js/homepage-dynamic.js"></script>
     
     <!-- Mobile Touch Enhancements -->
-    <script src="assets/js/mobile-touch.js" nonce="crypto-secure-random-nonce"></script>
+    <script src="assets/js/mobile-touch.js"></script>
 </body>
 </html>

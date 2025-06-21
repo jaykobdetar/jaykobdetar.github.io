@@ -253,8 +253,132 @@ class SchemaMigrator:
                 
             print(f"   ✅ Migrated {len(old_data.get('articles', []))} articles")
             
-            # Migrate other tables...
-            # (Continue with trending_topics, images, etc.)
+            # Migrate trending topics
+            for topic in old_data.get('trending', []):
+                topic_data = {
+                    'id': topic.get('id'),
+                    'title': topic.get('title'),
+                    'slug': topic.get('slug'),
+                    'description': topic.get('description'),
+                    'content': topic.get('content'),
+                    'heat_score': topic.get('heat_score', 0),
+                    'growth_rate': topic.get('growth_rate', 0.0),
+                    'momentum': topic.get('momentum', 0.0),
+                    'article_count': topic.get('article_count', 0),
+                    'related_articles': topic.get('related_articles'),
+                    'hashtag': topic.get('hashtag'),
+                    'icon': topic.get('icon', '🔥'),
+                    'category_id': topic.get('category_id'),
+                    'start_date': topic.get('start_date'),
+                    'peak_date': topic.get('peak_date'),
+                    'status': topic.get('status', 'active'),
+                    'mentions_youtube': topic.get('mentions_youtube', 0),
+                    'mentions_tiktok': topic.get('mentions_tiktok', 0),
+                    'mentions_instagram': topic.get('mentions_instagram', 0),
+                    'mentions_twitter': topic.get('mentions_twitter', 0),
+                    'mentions_twitch': topic.get('mentions_twitch', 0),
+                    'is_active': topic.get('is_active', 1),
+                    'created_at': topic.get('created_at'),
+                    'updated_at': topic.get('updated_at')
+                }
+                
+                conn.execute("""
+                    INSERT INTO trending_topics (id, title, slug, description, content, heat_score, 
+                                               growth_rate, momentum, article_count, related_articles,
+                                               hashtag, icon, category_id, start_date, peak_date, status,
+                                               mentions_youtube, mentions_tiktok, mentions_instagram,
+                                               mentions_twitter, mentions_twitch, is_active, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    topic_data['id'], topic_data['title'], topic_data['slug'], topic_data['description'],
+                    topic_data['content'], topic_data['heat_score'], topic_data['growth_rate'],
+                    topic_data['momentum'], topic_data['article_count'], topic_data['related_articles'],
+                    topic_data['hashtag'], topic_data['icon'], topic_data['category_id'],
+                    topic_data['start_date'], topic_data['peak_date'], topic_data['status'],
+                    topic_data['mentions_youtube'], topic_data['mentions_tiktok'], topic_data['mentions_instagram'],
+                    topic_data['mentions_twitter'], topic_data['mentions_twitch'], topic_data['is_active'],
+                    topic_data['created_at'], topic_data['updated_at']
+                ))
+                
+            print(f"   ✅ Migrated {len(old_data.get('trending', []))} trending topics")
+            
+            # Migrate images
+            for image in old_data.get('images', []):
+                image_data = {
+                    'id': image.get('id'),
+                    'filename': image.get('filename'),
+                    'url': image.get('url'),
+                    'alt_text': image.get('alt_text'),
+                    'caption': image.get('caption'),
+                    'content_type': image.get('content_type'),
+                    'content_id': image.get('content_id'),
+                    'image_type': image.get('image_type', 'hero'),
+                    'file_size': image.get('file_size', 0),
+                    'width': image.get('width', 0),
+                    'height': image.get('height', 0),
+                    'is_processed': image.get('is_processed', 0),
+                    'created_at': image.get('created_at'),
+                    'updated_at': image.get('updated_at')
+                }
+                
+                conn.execute("""
+                    INSERT INTO images (id, filename, url, alt_text, caption, content_type, content_id,
+                                      image_type, file_size, width, height, is_processed, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    image_data['id'], image_data['filename'], image_data['url'], image_data['alt_text'],
+                    image_data['caption'], image_data['content_type'], image_data['content_id'],
+                    image_data['image_type'], image_data['file_size'], image_data['width'],
+                    image_data['height'], image_data['is_processed'], image_data['created_at'],
+                    image_data['updated_at']
+                ))
+                
+            print(f"   ✅ Migrated {len(old_data.get('images', []))} images")
+            
+            # Migrate article sections
+            for section in old_data.get('sections', []):
+                section_data = {
+                    'id': section.get('id'),
+                    'article_id': section.get('article_id'),
+                    'section_title': section.get('section_title'),
+                    'content': section.get('content'),
+                    'section_order': section.get('section_order', 1),
+                    'section_type': section.get('section_type', 'text'),
+                    'created_at': section.get('created_at'),
+                    'updated_at': section.get('updated_at')
+                }
+                
+                conn.execute("""
+                    INSERT INTO article_sections (id, article_id, section_title, content, section_order,
+                                                section_type, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    section_data['id'], section_data['article_id'], section_data['section_title'],
+                    section_data['content'], section_data['section_order'], section_data['section_type'],
+                    section_data['created_at'], section_data['updated_at']
+                ))
+                
+            print(f"   ✅ Migrated {len(old_data.get('sections', []))} article sections")
+            
+            # Migrate related articles
+            for relation in old_data.get('related', []):
+                relation_data = {
+                    'id': relation.get('id'),
+                    'article_id': relation.get('article_id'),
+                    'related_article_id': relation.get('related_article_id'),
+                    'relation_strength': relation.get('relation_strength', 1.0),
+                    'created_at': relation.get('created_at')
+                }
+                
+                conn.execute("""
+                    INSERT INTO related_articles (id, article_id, related_article_id, relation_strength, created_at)
+                    VALUES (?, ?, ?, ?, ?)
+                """, (
+                    relation_data['id'], relation_data['article_id'], relation_data['related_article_id'],
+                    relation_data['relation_strength'], relation_data['created_at']
+                ))
+                
+            print(f"   ✅ Migrated {len(old_data.get('related', []))} related article relationships")
             
             # Commit all changes
             conn.commit()

@@ -1,0 +1,14 @@
+METADATA:
+Type: site-branding
+Version: 1.0
+
+CONTENT:
+Site Name: TheRealNews
+Site Tagline: Truth • Transparency • Real Stories
+Site Description: Your trusted source for unfiltered news and authentic journalism that matters
+Logo Text: TRN
+Logo Alt: TheRealNews Logo
+Site Subtitle: Truth • Transparency • Authenticity
+Meta Description: Get real news without the spin. Breaking stories, investigative journalism, and authentic reporting that cuts through the noise.
+Site Keywords: real news, authentic journalism, unfiltered news, breaking stories, investigative reporting, truth in media
+Theme Color: #059669
